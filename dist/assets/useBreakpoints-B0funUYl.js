@@ -1,0 +1,1 @@
+import{r as s,ak as o,al as t}from"./index-DJ1jHABu.js";function a(){const e=s(""),n=()=>{const i=window.innerWidth;i<768?e.value="sm":i<1024?e.value="md":i<1280&&(e.value="lg")};return o(()=>{window.addEventListener("resize",n),n()}),t(()=>{window.removeEventListener("resize",n)}),{screenSize:e}}export{a as u};
