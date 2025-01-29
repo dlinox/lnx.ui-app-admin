@@ -1,0 +1,92 @@
+import { http } from "@/core/http";
+
+import {
+  type DataTableResponseDTO,
+  initValuesDataTableResponse,
+} from "@/core/types/DataTable.types";
+import { type ResponseServiceDTO } from "@/core/types/Response.types";
+
+import type {
+  StudentDTO,
+  StudentFormDTO,
+  StudentDataTableItemDTO,
+  StudentFormErrorsDTO,
+} from "@/app/modules/Student/types/Student.types";
+import { _getStudentFormInitValues } from "../configs/form.configs";
+
+export const _loadDataTable = async (
+  request: any
+): Promise<DataTableResponseDTO<StudentDataTableItemDTO>> => {
+  try {
+    const response = await http().post("/student/load-data-table", request);
+    return response.data.data as DataTableResponseDTO<StudentDataTableItemDTO>;
+  } catch (error) {
+    return initValuesDataTableResponse();
+  }
+};
+
+export const _getItemById = async (id: number): Promise<StudentFormDTO> => {
+  try {
+    const response = await http().get(`/student/item/by-id/${id}`);
+    return response.data.data as StudentFormDTO;
+  } catch (error) {
+    return _getStudentFormInitValues();
+  }
+};
+
+export const _storeItem = async (
+  request: StudentFormDTO
+): Promise<ResponseServiceDTO<StudentDTO | StudentFormErrorsDTO>> => {
+  try {
+    let reponse = await http().post("/student", request);
+    return {
+      status: true,
+      data: reponse.data.data as StudentFormDTO,
+    };
+  } catch (error: any) {
+    if (error.response.status === 422) {
+      return {
+        status: false,
+        data: error.response.data.errors as StudentFormErrorsDTO,
+      };
+    }
+    return {
+      status: false,
+      data: null,
+    };
+  }
+};
+
+export const _updateItem = async (
+  request: StudentFormDTO
+): Promise<ResponseServiceDTO<StudentDTO | StudentFormErrorsDTO>> => {
+  try {
+    let reponse = await http().put("/student", request);
+    return {
+      status: true,
+      data: reponse.data.data as StudentFormDTO,
+    };
+  } catch (error: any) {
+    if (error.response.status === 422) {
+      return {
+        status: false,
+        data: error.response.data.errors as StudentFormErrorsDTO,
+      };
+    }
+    return {
+      status: false,
+      data: null,
+    };
+  }
+};
+
+export const _deleteItem = async (
+  request: StudentDataTableItemDTO
+): Promise<boolean> => {
+  try {
+    await http().delete("/student", { data: { id: request.id } });
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
