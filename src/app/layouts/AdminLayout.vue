@@ -65,7 +65,17 @@
         </n-layout-content>
       </n-layout>
     </n-layout>
-    <n-layout-footer bordered position="absolute" style="height: 48px ; display: flex; justify-content: end; align-items: center; padding: 0 16px">
+    <n-layout-footer
+      bordered
+      position="absolute"
+      style="
+        height: 48px;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        padding: 0 16px;
+      "
+    >
       dev @ {{ new Date().getFullYear() }}
     </n-layout-footer>
   </n-layout>
@@ -122,6 +132,18 @@ const menuOptions: MenuOption[] = [
             label: "Metodos de pago",
             key: "PaymentType",
             route: "PaymentType",
+            iconName: "tag",
+          }),
+          menuItem({
+            label: "Horarios",
+            key: "Schedule",
+            route: "Schedule",
+            iconName: "tag",
+          }),
+          menuItem({
+            label: "Horas de la sesión",
+            key: "SessionTime",
+            route: "SessionTime",
             iconName: "tag",
           }),
         ],

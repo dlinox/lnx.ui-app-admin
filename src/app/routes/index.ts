@@ -14,6 +14,8 @@ import ModuleRoutes from "@/app/modules/Module/routes";
 import CourseRoutes from "@/app/modules/Course/routes";
 import LaboratoryRoutes from "@/app/modules/Laboratory/routes";
 import CurriculumRoutes from "@/app/modules/Curriculum/routes";
+import ScheduleRoutes from "@/app/modules/Schedule/routes";
+import SessionTimeRoutes from "@/app/modules/SessionTime/routes";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -36,6 +38,8 @@ const routes: RouteRecordRaw[] = [
       ...CourseRoutes,
       ...LaboratoryRoutes,
       ...CurriculumRoutes,
+      ...ScheduleRoutes,
+      ...SessionTimeRoutes,
     ],
   },
 ];
