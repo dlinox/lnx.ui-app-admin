@@ -11,47 +11,39 @@ export interface CurriculumFormErrorsDTO {
   isEnabled: string | null;
 }
 
-export interface CurriculumModuleDTO {
-  id: number | null;
-  order: number;
-  module: string | null;
-  area: string | null;
-  isExtracurricular: boolean;
-  isEnabled: boolean;
-}
-
-export interface CurriculumModuleFormDTO {
-  id: number | null;
-  order: number;
-  areaId: number | null;
-  moduleId: number | null;
-  curriculumId: number | null;
-  isExtracurricular: boolean;
-  isEnabled: boolean;
-}
-
-export interface CurriculumModuleFormErrorsDTO {
-  order: string | null;
-  areaId: string | null;
-  moduleId: string | null;
-  curriculumId: string | null;
-  isExtracurricular: string | null;
-  isEnabled: string | null;
-}
-
-export interface CurriculumModuleCourseDTO {
+export interface CurriculumCourseDTO {
   id: number | null;
   order: number;
   code: string | null;
-  hoursPractice: number;
-  hoursTheory: number;
+  hoursPractice: number | null;
+  hoursTheory: number | null;
   credits: number;
   course: string | null;
+  area: string | null;
+  module: string | null;
+  curriculumId: number;
   preRequisite: string | null;
+  isExtracurricular: boolean;
   isEnabled: boolean;
 }
 
-export interface CurriculumModuleCourseFormDTO {
+export interface CurriculumCourseDataTableItemDTO {
+  id: number;
+  order: number;
+  code: string | null;
+  hoursPractice: number | null;
+  hoursTheory: number | null;
+  credits: number;
+  course: string;
+  area: string;
+  module: string;
+  curriculumId: number;
+  preRequisite: string | null;
+  isExtracurricular: boolean;
+  isEnabled: boolean;
+}
+
+export interface CurriculumCourseFormDTO {
   id: number | null;
   order: number;
   code: string | null;
@@ -59,19 +51,25 @@ export interface CurriculumModuleCourseFormDTO {
   hoursTheory: number;
   credits: number;
   courseId: string | null;
-  curriculumModuleId: number | null;
+  areaId: number | null;
+  moduleId: number | null;
+  curriculumId: number | null;
   preRequisiteId: number | null;
+  isExtracurricular: boolean;
   isEnabled: boolean;
 }
 
-export interface CurriculumModuleCourseFormErrorsDTO {
+export interface CurriculumCourseFormErrorsDTO {
   order: string | null;
   code: string | null;
   hoursPractice: string | null;
   hoursTheory: string | null;
   credits: string | null;
   courseId: string | null;
-  curriculumModuleId: string | null;
+  areaId: string | null;
+  moduleId: string | null;
+  curriculumId: string | null;
   preRequisiteId: string | null;
+  isExtracurricular: string | null;
   isEnabled: string | null;
 }

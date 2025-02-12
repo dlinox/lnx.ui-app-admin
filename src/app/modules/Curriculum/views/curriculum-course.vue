@@ -11,31 +11,31 @@
     </template>
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">
-        Agregar
+        Agregar curso
       </n-button>
     </template>
   </n-card>
-  <ModuleDataTable>
+  <CurriculumCourseDataTable>
     <template #extra="{ reLoadDataTable, selectables }">
-      <CurriculumModuleForm
+      <CurriculumCourseForm
         v-model="showModal"
         :item="null"
-        @success="reLoadDataTable"
         :selectables="selectables"
+        @success="reLoadDataTable"
       />
     </template>
-  </ModuleDataTable>
+  </CurriculumCourseDataTable>
 </template>
 <script lang="ts" setup>
 import { ref, provide } from "vue";
 import { renderIcon } from "@/core/utils/icon.utils";
 import { _createColumns } from "@/app/modules/Curriculum/configs/dataTable.configs";
-import CurriculumModuleForm from "@/app/modules/Curriculum/components/CurriculumModuleForm.vue";
-import ModuleDataTable from "@/app/modules/Curriculum/components/DataTable/ModuleDataTable.vue";
 import type { CurriculumDTO } from "../types/Curriculum.types";
 import { useRoute } from "vue-router";
 
 import { _getDataItem } from "@/app/modules/Curriculum/services/curriculum.services";
+import CurriculumCourseDataTable from "../components/DataTable/CurriculumCourseDataTable.vue";
+import CurriculumCourseForm from "../components/CurriculumCourseForm.vue";
 
 const curriculum = ref<CurriculumDTO>();
 

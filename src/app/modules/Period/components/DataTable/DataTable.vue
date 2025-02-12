@@ -33,24 +33,18 @@
       </n-col>
     </n-row>
 
-    <slot
-      name="extra"
-      :reLoadDataTable="reLoadDataTable"
-      :selectables="selectables"
-    >
-    </slot>
+    <slot name="extra" :reLoadDataTable="reLoadDataTable"> </slot>
   </div>
-  <CurriculumModuleCourseForm
+  <PeriodForm
     v-model="showModal"
     :item="editItem"
     @success="reLoadDataTable"
-    :selectables="selectables"
   />
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 
-import type { CurriculumModuleCourseDTO } from "@/app/modules/Curriculum/types/Curriculum.types";
+import type { PeriodDTO } from "@/app/modules/Period/types/Period.types";
 
 import {
   type DataTableRequestDTO,
@@ -59,56 +53,44 @@ import {
 } from "@/core/types/DataTable.types";
 
 import {
-  _createCourseColumns,
+  _createColumns,
   _createPagination,
-} from "@/app/modules/Curriculum/configs/dataTable.configs";
+} from "@/app/modules/Period/configs/dataTable.configs";
 
 import {
   _loadDataTable,
   _deleteItem,
-} from "@/app/modules/Curriculum/services/curriculumModuleCourse.services";
+} from "@/app/modules/Period/services/period.services";
 
-import CurriculumModuleCourseForm from "@/app/modules/Curriculum/components/CurriculumModuleCourseForm.vue";
+import PeriodForm from "@/app/modules/Period/components/PeriodForm.vue";
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 
-import { __getCoursesForSelect, __getPreRequisiteByCurriculumItemsForSelect } from "@/app/modules/Course/services/course.services";
-
-import { useRoute } from "vue-router";
-import type { ItemSelectDTO } from "@/core/types/Select.types";
-
-const route = useRoute();
-
 const loadingTable = ref(false);
-const items = ref<CurriculumModuleCourseDTO[]>([]);
+const items = ref<PeriodDTO[]>([]);
 const showModal = ref<boolean>(false);
-const editItem = ref<CurriculumModuleCourseDTO | null>(null);
+const editItem = ref<PeriodDTO | null>(null);
 const pagination = reactive({ ...initValuesDataTablePagination() });
 const request = ref<DataTableRequestDTO>({
   search: null,
   page: pagination.page,
   pageSize: pagination.pageSize,
 } as DataTableRequestDTO);
-const response = ref<DataTableResponseDTO<CurriculumModuleCourseDTO>>(
-  {} as DataTableResponseDTO<CurriculumModuleCourseDTO>
+const response = ref<DataTableResponseDTO<PeriodDTO>>(
+  {} as DataTableResponseDTO<PeriodDTO>
 );
 
-const selectables = ref<any>({
-  courseItems: [] as ItemSelectDTO[],
-  preRequisiteItems: [] as ItemSelectDTO[],
-});
-
-const openFormModal = (item: CurriculumModuleCourseDTO | null) => {
+const openFormModal = (item: PeriodDTO | null) => {
   editItem.value = item;
   showModal.value = true;
 };
 
-const deleteItem = async (item: CurriculumModuleCourseDTO) => {
+const deleteItem = async (item: PeriodDTO) => {
   await _deleteItem(item);
   await reLoadDataTable();
 };
 
-const columns = _createCourseColumns(openFormModal, deleteItem);
+const columns = _createColumns(openFormModal, deleteItem);
 
 const reLoadDataTable = async () => {
   request.value.page = 1;
@@ -117,8 +99,7 @@ const reLoadDataTable = async () => {
 
 const loadDataTable = async () => {
   loadingTable.value = true;
-  const id = route.params?.id;
-  response.value = await _loadDataTable(request.value, id);
+  response.value = await _loadDataTable(request.value);
   items.value = response.value.data;
   pagination.total = response.value.total;
   pagination.pageSize = response.value.per_page;
@@ -144,9 +125,6 @@ const onPageSizeChange = async (pageSize: number) => {
 
 const init = async () => {
   await loadDataTable();
-  selectables.value.courseItems = await __getCoursesForSelect();
-  const id = route.params?.id;
-  selectables.value.preRequisiteItems = await __getPreRequisiteByCurriculumItemsForSelect(id);
 };
 
 init();

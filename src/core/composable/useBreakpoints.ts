@@ -10,7 +10,7 @@ export default function useBreakpoints(): { screenSize: Ref<string> } {
       screenSize.value = "sm";
     } else if (width < 1024) {
       screenSize.value = "md";
-    } else if (width < 1280) {
+    } else if (width >= 1024) {
       screenSize.value = "lg";
     }
   };

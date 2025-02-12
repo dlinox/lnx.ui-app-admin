@@ -7,19 +7,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/app/modules/Curriculum/views/index.vue"),
   },
   {
-    path: "curriculum/:id/modules",
-    name: "CurriculumModule",
-    component: () =>
-      import("@/app/modules/Curriculum/views/curriculum-module.vue"),
-  },
-  //CurriculumModuleCourse
-  {
     path: "curriculum/:id/courses",
-    name: "CurriculumModuleCourse",
+    name: "CurriculumCourse",
     component: () =>
-      import("@/app/modules/Curriculum/views/curriculum-module-course.vue"),
+      import("@/app/modules/Curriculum/views/curriculum-course.vue"),
   },
-  
 ];
 
 export default routes;

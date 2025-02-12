@@ -3,12 +3,28 @@ import { NTag, type DataTableColumns } from "naive-ui";
 
 import type { CurriculumDTO } from "@/app/modules/Curriculum/types/Curriculum.types";
 import DataTableOp from "@/app/modules/Curriculum/components/DataTable/DataTableOp.vue";
-import ModuleDataTableOp from "@/app/modules/Curriculum/components/DataTable/ModuleDataTableOp.vue";
 import {
   type DataTablePaginationDTO,
   initValuesDataTablePagination,
 } from "@/core/types/DataTable.types";
-import DataTableCourseOp from "../components/DataTable/DataTableCourseOp.vue";
+import CurriculumCourseDataTableOp from "@/app/modules/Curriculum/components/DataTable/CurriculumCourseDataTableOp.vue";
+
+export const _createPagination = (
+  data: DataTablePaginationDTO = initValuesDataTablePagination()
+) => {
+  return {
+    page: data.page,
+    total: data.total,
+    pageSize: data.pageSize,
+    pageCount: data.pageCount,
+    showSizePicker: true,
+    pageSizes: [10, 50, 100, 500, 1000, 5000],
+    style: { paddingRight: "16px", paddingBottom: "12px" },
+    prefix() {
+      return `Total ${data.total} registros`;
+    },
+  };
+};
 
 export const _createColumns = (
   openModal: (item: CurriculumDTO) => void,
@@ -62,24 +78,7 @@ export const _createColumns = (
   },
 ];
 
-export const _createPagination = (
-  data: DataTablePaginationDTO = initValuesDataTablePagination()
-) => {
-  return {
-    page: data.page,
-    total: data.total,
-    pageSize: data.pageSize,
-    pageCount: data.pageCount,
-    showSizePicker: true,
-    pageSizes: [10, 50, 100, 500, 1000, 5000],
-    style: { paddingRight: "16px", paddingBottom: "12px" },
-    prefix() {
-      return `Total ${data.total} registros`;
-    },
-  };
-};
-
-export const _createModuleColumns = (
+export const _createCurriculumCourseColumns = (
   openModal: (item: any) => void,
   deleteItem: (item: any) => void
 ): DataTableColumns => [
@@ -91,7 +90,7 @@ export const _createModuleColumns = (
     render(rowData: any) {
       const rowItem = rowData as any;
       return h(
-        ModuleDataTableOp,
+        CurriculumCourseDataTableOp,
         {
           onEdit: () => {
             openModal(rowItem);
@@ -123,78 +122,6 @@ export const _createModuleColumns = (
     key: "module",
     minWidth: "150px",
   },
-
-  {
-    title: "Extracurricular",
-    key: "isExtracurricular",
-    width: "150px",
-    render: (row) => {
-      return h(
-        NTag,
-        {
-          type: row.isExtracurricular ? "success" : "error",
-          tertiary: true,
-          bordered: false,
-          strong: true,
-        },
-        { default: () => (row.isExtracurricular ? "	Si" : "No") }
-      );
-    },
-  },
-  {
-    title: "Habilitado",
-    key: "isEnabled",
-    width: "150px",
-    render: (row) => {
-      return h(
-        NTag,
-        {
-          type: row.isEnabled ? "success" : "error",
-          tertiary: true,
-          bordered: false,
-          strong: true,
-        },
-        { default: () => (row.isEnabled ? "	Habilitado" : "Deshabilitado") }
-      );
-    },
-  },
-];
-
-
-export const _createCourseColumns = (
-  openModal: (item: any) => void,
-  deleteItem: (item: any) => void
-): DataTableColumns => [
-  {
-    title: "Ops.",
-    key: "ops",
-    width: "80px",
-    fixed: "left",
-    render(rowData: any) {
-      const rowItem = rowData as any;
-      return h(
-        DataTableCourseOp,
-        {
-          onEdit: () => {
-            openModal(rowItem);
-          },
-          onDelete: () => {
-            deleteItem(rowItem);
-          },
-          item: rowItem,
-        },
-        {
-          default: () => "Editar",
-        }
-      );
-    },
-  },
-  {
-    title: "Orden",
-    key: "order",
-    minWidth: "70px",
-    align: "right",
-  },
   {
     title: "Codigo",
     key: "code",
@@ -203,7 +130,7 @@ export const _createCourseColumns = (
   {
     title: "Curso",
     key: "course",
-    minWidth: "300px",
+    minWidth: "150px",
   },
   {
     title: "Hrs. Practica",
@@ -224,6 +151,23 @@ export const _createCourseColumns = (
     title: "Pre Requisito",
     key: "preRequisite",
     minWidth: "200px",
+  },
+  {
+    title: "Extracurricular",
+    key: "isExtracurricular",
+    width: "150px",
+    render: (row) => {
+      return h(
+        NTag,
+        {
+          type: row.isExtracurricular ? "success" : "error",
+          tertiary: true,
+          bordered: false,
+          strong: true,
+        },
+        { default: () => (row.isExtracurricular ? "	Si" : "No") }
+      );
+    },
   },
   {
     title: "Habilitado",

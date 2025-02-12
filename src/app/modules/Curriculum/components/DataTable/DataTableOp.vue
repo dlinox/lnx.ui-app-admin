@@ -23,13 +23,13 @@ const router = useRouter();
 
 const options = [
   {
-    label: "Malla Curricular",
-    key: "CurriculumModule",
+    label: "Gestionar cursos",
+    key: "CurriculumCourse",
     icon: renderIcon("grid-2"),
     props: {
       onClick: () =>
         router.push({
-          name: "CurriculumModule",
+          name: "CurriculumCourse",
           params: { id: props.item.id },
         }),
     },

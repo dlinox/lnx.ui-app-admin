@@ -9,30 +9,16 @@
 <script setup lang="ts">
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import { renderIcon } from "@/core/utils/icon.utils";
-import { useRouter } from "vue-router";
+import { useDialog } from "naive-ui";
+const dialog = useDialog();
 
 const emit = defineEmits(["edit", "delete"]);
 
-const props = defineProps<{
+defineProps<{
   item: any;
 }>();
 
-const router = useRouter();
-
 const options = [
-  {
-    label: "Cursos",
-    key: "CurriculumModuleCourse",
-    icon: renderIcon("grid-2"),
-    props: {
-      onClick: () =>
-        router.push({
-          name: "CurriculumModuleCourse",
-          params: { id: props.item.id },
-        }),
-    },
-  },
-
   {
     label: "Editar",
     key: "edit",
@@ -49,8 +35,30 @@ const options = [
       style: {
         color: "red",
       },
-      onClick: () => emit("delete"),
+      onClick: () => {
+        dialog.warning({
+          title: "Confirmar",
+          content: "¿Está seguro que desea eliminar este registro?",
+          positiveText: "Eliminar",
+          negativeText: "Cancelar",
+          closable: false,
+          showIcon: false,
+          negativeButtonProps: {
+            secondary: true,
+            type: "tertiary",
+            size: "large",
+          },
+          positiveButtonProps: {
+            size: "large",
+            type: "error",
+          },
+          onPositiveClick: () => {
+            emit("delete");
+          },
+        });
+      },
     },
   },
 ];
 </script>
+

@@ -174,6 +174,12 @@ const menuOptions: MenuOption[] = [
         key: "academic",
         children: [
           menuItem({
+            label: "Periodos académicos",
+            key: "Period",
+            route: "Period",
+            iconName: "calendar-2",
+          }),
+          menuItem({
             label: "Planes de estudio",
             key: "Curriculum",
             route: "Curriculum",
@@ -296,16 +302,12 @@ const menuOptions: MenuOption[] = [
     key: "academic-load",
     icon: renderIcon("archive"),
     children: [
-      {
-        label: "Asignación de docentes",
-        key: "teachers-assignment",
-        icon: renderIcon("teacher"),
-      },
-      {
-        label: "Aperura de grupos",
-        key: "group-opening",
-        icon: renderIcon("calendar-add"),
-      },
+      menuItem({
+        label: "Apertura de grupos",
+        key: "Group",
+        route: "Group",
+        iconName: "calendar-add",
+      }),
     ],
   },
   {
