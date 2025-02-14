@@ -11,7 +11,6 @@ import type {
   StudentTypeFormDTO,
   StudentTypeFormErrorsDTO,
 } from "@/app/modules/StudentType/types/StudentType.types";
-import type { ItemSelectDTO } from "@/core/types/Select.types";
 import type { SelectOption } from "naive-ui";
 
 export const _loadDataTable = async (
