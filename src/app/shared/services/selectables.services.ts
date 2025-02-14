@@ -60,3 +60,25 @@ export const __searchLaboratories = async (
     return [];
   }
 };
+
+export const __searchModulesByCurriculum = async (
+  id: number
+): Promise<SelectOption[]> => {
+  try {
+    const response = await http().get(
+      `/module/items/for-select/curriculum/${id}`
+    );
+    return response.data.data as SelectOption[];
+  } catch (error) {
+    return [];
+  }
+};
+
+export const __getStudentTypesForSelect = async (): Promise<SelectOption[]> => {
+  try {
+    const response = await http().get(`/student-type/items/for-select`);
+    return response.data.data as SelectOption[];
+  } catch (error) {
+    return [];
+  }
+};

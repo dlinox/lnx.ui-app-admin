@@ -12,6 +12,7 @@ import type {
   StudentTypeFormErrorsDTO,
 } from "@/app/modules/StudentType/types/StudentType.types";
 import type { ItemSelectDTO } from "@/core/types/Select.types";
+import type { SelectOption } from "naive-ui";
 
 export const _loadDataTable = async (
   request: any
@@ -84,12 +85,10 @@ export const _deleteItem = async (
   }
 };
 
-export const __getStudentTypesForSelect = async (): Promise<
-  ItemSelectDTO[]
-> => {
+export const __getStudentTypesForSelect = async (): Promise<SelectOption[]> => {
   try {
     let response = await http().get("/student-type/items/for-select");
-    return response.data.data as ItemSelectDTO[];
+    return response.data.data as SelectOption[];
   } catch (error) {
     return [];
   }

@@ -76,7 +76,7 @@
         padding: 0 16px;
       "
     >
-      dev @ {{ new Date().getFullYear() }}
+      v1.0
     </n-layout-footer>
   </n-layout>
 </template>
@@ -132,18 +132,6 @@ const menuOptions: MenuOption[] = [
             label: "Metodos de pago",
             key: "PaymentType",
             route: "PaymentType",
-            iconName: "tag",
-          }),
-          menuItem({
-            label: "Horarios",
-            key: "Schedule",
-            route: "Schedule",
-            iconName: "tag",
-          }),
-          menuItem({
-            label: "Horas de la sesión",
-            key: "SessionTime",
-            route: "SessionTime",
             iconName: "tag",
           }),
         ],
@@ -236,16 +224,12 @@ const menuOptions: MenuOption[] = [
         label: "Financiero",
         key: "financial",
         children: [
-          {
+          menuItem({
             label: "Costos",
-            key: "costs",
-            icon: renderIcon("moneys"),
-          },
-          // {
-          //   label: "Pagos",
-          //   key: "payments",
-          //   icon: renderIcon("bank"),
-          // },
+            key: "Price",
+            route: "Price",
+            iconName: "moneys",
+          }),
         ],
       },
     ],
