@@ -1,1 +1,0 @@
-import{d as e,ad as t,a7 as n}from"./index-0x39NIhi.js";const a={style:{display:"flex","flex-wrap":"wrap","justify-content":"center","align-items":"center",gap:"10px","margin-top":"20px","margin-bottom":"20px"}},c=e({__name:"index",setup(o){return(p,r)=>(n(),t("div",a))}});export{c as default};
