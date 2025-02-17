@@ -1,0 +1,219 @@
+<template>
+  <n-card
+    :segmented="{
+      header: true,
+      footer: true,
+      content: true,
+    }"
+  >
+    <template #header>
+      <h6 style="color: #999; margin: 0">Matricular estudiante</h6>
+      Nombre del estudiante
+    </template>
+    <template #header-extra>
+      <n-select
+        v-model:value="curriculumId"
+        placeholder="Seleccionar Plan de estudio"
+        filterable
+        :options="curriculumItems"
+        :virtual-scroll="false"
+        :default-value="1"
+        @update:value="getDataEnrollment"
+      />
+    </template>
+    <template #action> </template>
+  </n-card>
+
+  <n-row :gutter="16" style="padding: 1rem">
+    <n-col span="6">
+      <n-card>
+        <n-space vertical>
+          <n-statistic class="small" label="Tipo de estudiante">
+            {{ student?.studentType }}
+          </n-statistic>
+
+          <n-statistic class="small" label="Documento">
+            {{ student?.documentType }} {{ student?.documentNumber }}
+          </n-statistic>
+
+          <n-statistic class="small" label="Nombres">
+            {{ student?.name }} {{ student?.lastNameFather }}
+            {{ student?.lastNameMother }}
+          </n-statistic>
+
+          <n-statistic class="small" label="Correo electronico">
+            {{ student?.email ? student?.email : "No registrado" }}
+          </n-statistic>
+
+          <n-statistic class="small" label="Telefono">
+            {{ student?.phone ? student?.phone : "No registrado" }}
+          </n-statistic>
+        </n-space>
+      </n-card>
+    </n-col>
+    <n-col span="18" style="border: 1px solid #efefef; padding: 1rem 0">
+      <n-statistic
+        value="Matriculas"
+        style="padding: 0rem 1rem 1rem 1rem"
+      ></n-statistic>
+      <n-tabs
+        v-if="student?.enrollments"
+        animated
+        addable
+        @add="handleAddModule"
+        type="card"
+        :default-value="
+          student?.enrollments.length > 0 ? student?.enrollments[0].id : ''
+        "
+      >
+        <template #prefix>
+          <span style="font-weight: 600; margin-left: 1rem"> Modulos </span>
+        </template>
+        <n-tab-pane
+          v-for="module in student?.enrollments"
+          :name="module.id"
+          :tab="module.moduleName"
+        >
+          <n-card
+            v-for="course in module.courses"
+            size="small"
+            :key="course.id"
+            :title="course.courseName"
+            style="margin-bottom: 1rem; padding: 0rem"
+          >
+            <n-table
+              :single-line="false"
+              size="small"
+              v-if="course.enrollmentCourse.length > 0"
+            >
+              <thead>
+                <tr>
+                  <th>Período</th>
+                  <th>Grupo</th>
+                  <th>Nota</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="enrollment in course.enrollmentCourse">
+                  <td>
+                    {{ enrollment.periodYear }} - {{ enrollment.periodMonth }}
+                  </td>
+                  <td>{{ enrollment.groupName }}</td>
+                  <td>
+                    <n-tag
+                      :bordered="false"
+                      :type="
+                        enrollment.grade >= 11
+                          ? 'success'
+                          : enrollment.grade == null
+                          ? 'warning'
+                          : 'error'
+                      "
+                    >
+                      {{
+                        enrollment.grade == null ? "Sin nota" : enrollment.grade
+                      }}
+                    </n-tag>
+                  </td>
+                </tr>
+              </tbody>
+            </n-table>
+            <n-space v-else>
+              <n-space>
+                <n-button
+                  type="primary"
+                  size="small"
+                  @click="openEnrollmentGroupModal(course.id)"
+                >
+                  Matricular
+                </n-button>
+              </n-space>
+            </n-space>
+          </n-card>
+        </n-tab-pane>
+      </n-tabs>
+    </n-col>
+  </n-row>
+  <AddModuleForm
+    v-if="student"
+    v-model="showAddModuleForm"
+    :studentId="student.id"
+    :curriculumId="curriculumId"
+    @success="getDataEnrollment"
+  />
+  <EnrollmentGroupForm
+    v-model="showModal"
+    :studentId="student.id"
+    :curriculumId="curriculumId"
+    :curriculumCourseId="curriculumCourseId"
+    @success="getDataEnrollment"
+  />
+</template>
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
+import { _createColumns } from "@/app/modules/Course/configs/dataTable.configs";
+import { useRoute } from "vue-router";
+
+import AddModuleForm from "../components/Form/AddModuleForm.vue";
+
+import { _getStudentEnrollment } from "@/app/modules/Enrollment/services/enrollment.services";
+
+import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
+import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
+import { __searchCurriculums } from "@/app/shared/services/selectables.services";
+import EnrollmentGroupForm from "../components/Form/EnrollmentGroupForm.vue";
+const route = useRoute();
+
+const showAddModuleForm = ref<boolean>(false);
+const showModal = ref<boolean>(false);
+
+const curriculumId = ref<number | null>(null);
+const curriculumItems = ref<any>([]);
+const loadingView = ref<boolean>(true);
+const student = ref<any>({});
+
+const curriculumCourseId = ref<number | null>(null);
+
+const handleAddModule = () => {
+  showAddModuleForm.value = true;
+  console.log("Add module");
+};
+
+const getDataEnrollment = async () => {
+  const id = route.params.id;
+
+  const response = await _getStudentEnrollment(id, curriculumId.value!);
+  student.value = response.data;
+};
+
+const openEnrollmentGroupModal = (courseId: number) => {
+  curriculumCourseId.value = courseId;
+  showModal.value = true;
+};
+
+const initView = async () => {
+  curriculumItems.value = await __searchCurriculums("");
+  curriculumId.value = curriculumItems.value[0].value;
+  loadingView.value = true;
+  await getDataEnrollment();
+  loadingView.value = false;
+};
+
+onMounted(() => {
+  initView();
+});
+</script>
+
+<style>
+.n-statistic.small {
+  .n-statistic-value {
+    line-height: 1rem;
+    margin-top: 0.1rem;
+    font-size: 0.5rem;
+    span {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+  }
+}
+</style>

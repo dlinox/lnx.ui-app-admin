@@ -1,0 +1,1 @@
+import{r as s,aY as o,aR as t}from"./index-Cti78UEY.js";function a(){const e=s(""),n=()=>{const i=window.innerWidth;i<768?e.value="sm":i<1024?e.value="md":i>=1024&&(e.value="lg")};return o(()=>{window.addEventListener("resize",n),n()}),t(()=>{window.removeEventListener("resize",n)}),{screenSize:e}}export{a as u};

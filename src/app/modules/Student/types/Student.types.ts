@@ -36,3 +36,22 @@ export interface StudentFormErrorsDTO {
   phone: string | null;
   studentType: string | null;
 }
+
+export interface StudentListItemDTO {
+  id: number;
+  name: string;
+  documentType: string;
+  documentNumber: string;
+  lastName: string;
+  studentType: string;
+  isEnabled: boolean;
+}
+
+
+export interface StudentSearchListRequestDTO {
+  code: string | null;
+  documentNumber: string;
+  name: string;
+  lastNameFather: string;
+  lastNameMother: string;
+}

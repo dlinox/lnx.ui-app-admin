@@ -26,7 +26,7 @@ export const noAuthMiddleware = async (
   const auth = await user();
   if (auth) {
     console.log("Redirecting to dashboard...");
-    next(auth.user.redirect_to);
+    next(auth.user.redirectTo);
   } else {
     next();
   }

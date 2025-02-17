@@ -33,8 +33,9 @@
 import { ref } from "vue";
 import { useMessage } from "naive-ui";
 
+
 import { type AuthRequestDTO } from "../types/Auth.types";
-import { signIn } from "../services/auth.services";
+import { _signIn, _clearSession } from "../services/auth.services";
 
 const formRef = ref(null);
 const message = useMessage();
@@ -62,11 +63,17 @@ const submitForm = async () => {
     message.error("Por favor, complete todos los campos");
     return;
   }
-  const response = await signIn(form.value);
+  const response = await _signIn(form.value);
   if (response) {
     message.success("Inicio de sesión exitoso");
   }
 };
+
+const initView = () => {
+  // _clearSession();
+};
+
+initView();
 </script>
 
 <style scoped>

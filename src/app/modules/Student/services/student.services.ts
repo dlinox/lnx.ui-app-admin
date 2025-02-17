@@ -4,6 +4,7 @@ import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
 } from "@/core/types/DataTable.types";
+
 import { type ResponseServiceDTO } from "@/core/types/Response.types";
 
 import type {
@@ -11,6 +12,8 @@ import type {
   StudentFormDTO,
   StudentDataTableItemDTO,
   StudentFormErrorsDTO,
+  StudentListItemDTO,
+  StudentSearchListRequestDTO,
 } from "@/app/modules/Student/types/Student.types";
 import { _getStudentFormInitValues } from "../configs/form.configs";
 
@@ -88,5 +91,16 @@ export const _deleteItem = async (
     return true;
   } catch (error) {
     return false;
+  }
+};
+
+export const __searchListStudent = async (
+  request: StudentSearchListRequestDTO
+): Promise<StudentListItemDTO[]> => {
+  try {
+    const response = await http().post("/student/search/list", request);
+    return response.data.data as StudentListItemDTO[];
+  } catch (error) {
+    return [];
   }
 };

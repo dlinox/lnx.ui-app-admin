@@ -10,7 +10,8 @@ import { useAuthStore } from "@/app/store/auth.stores";
 
 import { type AuthRequestDTO } from "../types/Auth.types";
 
-export const signIn = async (form: AuthRequestDTO): Promise<boolean> => {
+export const _signIn = async (form: AuthRequestDTO): Promise<boolean> => {
+  removeSessionToken();
   const authStore = useAuthStore();
   try {
     let response = await http().post(`/auth/sign-in`, form);
@@ -38,7 +39,7 @@ export const signOut = async () => {
 export const user = async () => {
   const authStore = useAuthStore();
   try {
-    let token = getSessionToken()
+    let token = getSessionToken();
     if (!token) {
       console.log("No token found");
       removeSessionToken();
@@ -54,8 +55,8 @@ export const user = async () => {
   }
 };
 
-export const clearSession = async () => {
+export const _clearSession = async () => {
   const authStore = useAuthStore();
-  localStorage.removeItem("token");
+  removeSessionToken();
   authStore.clearAuthState();
 };

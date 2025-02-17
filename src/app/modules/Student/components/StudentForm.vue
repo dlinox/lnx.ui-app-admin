@@ -264,7 +264,7 @@ const handleSubmit = async () => {
       if (!response.status) {
         formErrors.value = response.data as StudentFormErrorsDTO;
       } else {
-        emit("success");
+        emit("success", form.value);
         showModal.value = false;
       }
     } else {

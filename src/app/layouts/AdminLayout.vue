@@ -240,16 +240,13 @@ const menuOptions: MenuOption[] = [
     key: "enrollments",
     icon: renderIcon("folder"),
     children: [
-      {
-        label: "Matriculas nuevas",
-        key: "new-enrollments",
-        icon: renderIcon("folder-add"),
-      },
-      {
-        label: "Matriculas regulares",
-        key: "regular-enrollments",
-        icon: renderIcon("folder-favorite"),
-      },
+      menuItem({
+        label: "Matriculas",
+        key: "enrollment",
+        route: "Enrollment",
+        iconName: "folder-add",
+      }),
+
       {
         label: "Matriculas virtuales",
         key: "virtual-enrollments",
