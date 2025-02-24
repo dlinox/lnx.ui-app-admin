@@ -17,10 +17,7 @@ export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<PeriodDTO>> => {
   try {
-    const response = await http().post(
-      "/period/load-data-table",
-      request
-    );
+    const response = await http().post("/period/load-data-table", request);
     return response.data.data as DataTableResponseDTO<PeriodDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -73,9 +70,7 @@ export const _updateItem = async (
   }
 };
 
-export const _deleteItem = async (
-  request: PeriodFormDTO
-): Promise<boolean> => {
+export const _deleteItem = async (request: PeriodFormDTO): Promise<boolean> => {
   try {
     await http().delete("/period", { data: { id: request.id } });
     return true;
@@ -84,13 +79,20 @@ export const _deleteItem = async (
   }
 };
 
-export const __getPeriodsForSelect = async (): Promise<
-  ItemSelectDTO[]
-> => {
+export const __getPeriodsForSelect = async (): Promise<ItemSelectDTO[]> => {
   try {
     let response = await http().get("/period/items/for-select");
     return response.data.data as ItemSelectDTO[];
   } catch (error) {
     return [];
+  }
+};
+
+export const __current = async (): Promise<ItemSelectDTO | null> => {
+  try {
+    let response = await http().get("/period/current");
+    return response.data.data as ItemSelectDTO;
+  } catch (error) {
+    return null;
   }
 };

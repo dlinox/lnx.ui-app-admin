@@ -5,38 +5,38 @@ import {
 } from "@/core/types/DataTable.types";
 
 import type {
-  PriceDataTableItemDTO,
-  PriceDTO,
-  PriceFormDTO,
-  PriceFormErrorsDTO,
-} from "@/app/modules/Price/types/Price.types";
+  ModulePriceDataTableItemDTO,
+  ModulePriceDTO,
+  ModulePriceFormDTO,
+  ModulePriceFormErrorsDTO,
+} from "@/app/modules/ModulePrice/types/ModulePrice.types";
 import type { ResponseServiceDTO } from "@/core/types/Response.types";
 
 export const _loadDataTable = async (
   request: any
-): Promise<DataTableResponseDTO<PriceDataTableItemDTO>> => {
+): Promise<DataTableResponseDTO<ModulePriceDataTableItemDTO>> => {
   try {
     const response = await http().post("/module-price/load-data-table", request);
-    return response.data.data as DataTableResponseDTO<PriceDataTableItemDTO>;
+    return response.data.data as DataTableResponseDTO<ModulePriceDataTableItemDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
   }
 };
 
 export const _storeItem = async (
-  request: PriceFormDTO
-): Promise<ResponseServiceDTO<PriceDTO | PriceFormErrorsDTO>> => {
+  request: ModulePriceFormDTO
+): Promise<ResponseServiceDTO<ModulePriceDTO | ModulePriceFormErrorsDTO>> => {
   try {
     let reponse = await http().post("/price", request);
     return {
       status: true,
-      data: reponse.data.data as PriceFormDTO,
+      data: reponse.data.data as ModulePriceFormDTO,
     };
   } catch (error: any) {
     if (error.response.status === 422) {
       return {
         status: false,
-        data: error.response.data.errors as PriceFormErrorsDTO,
+        data: error.response.data.errors as ModulePriceFormErrorsDTO,
       };
     }
     return {
@@ -47,19 +47,19 @@ export const _storeItem = async (
 };
 
 export const _updateItem = async (
-  request: PriceFormDTO
-): Promise<ResponseServiceDTO<PriceDTO | PriceFormErrorsDTO>> => {
+  request: ModulePriceFormDTO
+): Promise<ResponseServiceDTO<ModulePriceDTO | ModulePriceFormErrorsDTO>> => {
   try {
     let reponse = await http().put("/price", request);
     return {
       status: true,
-      data: reponse.data.data as PriceFormDTO,
+      data: reponse.data.data as ModulePriceFormDTO,
     };
   } catch (error: any) {
     if (error.response.status === 422) {
       return {
         status: false,
-        data: error.response.data.errors as PriceFormErrorsDTO,
+        data: error.response.data.errors as ModulePriceFormErrorsDTO,
       };
     }
     return {
@@ -69,7 +69,7 @@ export const _updateItem = async (
   }
 };
 
-export const _deleteItem = async (request: PriceDataTableItemDTO): Promise<boolean> => {
+export const _deleteItem = async (request: ModulePriceDataTableItemDTO): Promise<boolean> => {
   try {
     await http().delete("/price", { data: { id: request.id } });
     return true;

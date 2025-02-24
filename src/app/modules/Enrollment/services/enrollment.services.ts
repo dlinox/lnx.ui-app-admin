@@ -60,11 +60,18 @@ export const _getEnabledGroupEnrollment = async (
 
 export const _getStudentEnrollment = async (
   id: any,
-  curriculumId: number
+  curriculumId: number,
+  periodId: number
 ): Promise<ResponseServiceDTO<any>> => {
   try {
     let reponse = await http().post(
-      `/enrollment/${id}/student-enrollment/${curriculumId}/curriculum`
+      // `/enrollment/${id}/student-enrollment/${curriculumId}/curriculum`
+      `/enrollment/student-enrollment-avaliable`,
+      {
+        studentId: id,
+        curriculumId: curriculumId,
+        periodId: periodId,
+      }
     );
     return {
       status: true,

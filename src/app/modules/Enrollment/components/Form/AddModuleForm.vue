@@ -20,6 +20,7 @@
             :virtual-scroll="false"
             clearable
             filterable
+            @update:value="onSelectedModule"
           />
         </n-col>
         <n-col span="24" v-if="form.payment.length == 0">
@@ -74,7 +75,7 @@
         </n-col>
         <n-col span="24">
           <n-statistic
-            style="background-color: #15ffaa66; padding: 0.5rem"
+            style="background-color: #afc9d5c2; padding: 0.5rem"
             v-for="item in form.payment"
             :key="item.sequenceNumber"
             :label="`${item.sequenceNumber} | ${
@@ -141,6 +142,16 @@ const form = ref<any>({
   payment: [],
 });
 
+const onSelectedModule = (value: any) => {
+  console.log("Seleccionando modulo", value);
+
+  form.value.payment = [];
+  moduleItems.value.forEach((item: any) => {
+    if (item.value == value) {
+      paymentRequest.value.amount = item.price;
+    }
+  });
+};
 const handleValidatePayment = async () => {
   paymentRequest.value.studentId = props.studentId;
   loadingPaymentValidation.value = true;

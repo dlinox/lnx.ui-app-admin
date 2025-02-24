@@ -225,9 +225,15 @@ const menuOptions: MenuOption[] = [
         key: "financial",
         children: [
           menuItem({
-            label: "Costos",
-            key: "Price",
-            route: "Price",
+            label: "Costos de matricula(Modulos)",
+            key: "ModulePrice",
+            route: "ModulePrice",
+            iconName: "moneys",
+          }),
+          menuItem({
+            label: "Costos de mensualidad(Cursos)",
+            key: "CoursePrice",
+            route: "CoursePrice",
             iconName: "moneys",
           }),
         ],

@@ -51,11 +51,15 @@
         </n-space>
       </n-card>
     </n-col>
-    <n-col span="18" style="border: 1px solid #efefef; padding: 1rem 0">
-      <n-statistic
-        value="Matriculas"
-        style="padding: 0rem 1rem 1rem 1rem"
-      ></n-statistic>
+    <n-col span="18" style="border: 1px solid #efefef; padding: 0rem 0">
+      <n-card title="Matricula" :bordered="false">
+        <template #header-extra>
+          <n-tag type="info">
+            Periodo: <strong> {{ periodCurrent?.label }} </strong>
+          </n-tag>
+        </template>
+      </n-card>
+
       <n-tabs
         v-if="student?.enrollments"
         animated
@@ -81,43 +85,48 @@
             :title="course.courseName"
             style="margin-bottom: 1rem; padding: 0rem"
           >
-            <n-table
-              :single-line="false"
-              size="small"
+            <n-list
+              hoverable
+              clickable
               v-if="course.enrollmentCourse.length > 0"
             >
-              <thead>
-                <tr>
-                  <th>Período</th>
-                  <th>Grupo</th>
-                  <th>Nota</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="enrollment in course.enrollmentCourse">
-                  <td>
-                    {{ enrollment.periodYear }} - {{ enrollment.periodMonth }}
-                  </td>
-                  <td>{{ enrollment.groupName }}</td>
-                  <td>
-                    <n-tag
-                      :bordered="false"
-                      :type="
-                        enrollment.grade >= 11
-                          ? 'success'
-                          : enrollment.grade == null
-                          ? 'warning'
-                          : 'error'
-                      "
-                    >
-                      {{
-                        enrollment.grade == null ? "Sin nota" : enrollment.grade
-                      }}
-                    </n-tag>
-                  </td>
-                </tr>
-              </tbody>
-            </n-table>
+              <n-list-item
+                v-for="item in course.enrollmentCourse"
+                :key="item.id"
+              >
+                <n-thing :title="`${item.groupName} - S/. ${item.price}`">
+                  <template #header-extra>
+                    <n-button :render-icon="renderIcon('printer')"></n-button>
+                    <n-button
+                      style="margin-left: 0.5rem"
+                      :render-icon="renderIcon('setting-5')"
+                    ></n-button>
+                  </template>
+                  <template #description>
+                    <n-space size="small" style="margin-top: 4px">
+                      <n-tag :bordered="false" type="info" size="small">
+                        {{ item.modality }}
+                      </n-tag>
+                    </n-space>
+                  </template>
+
+                  Docente: <b> {{ item.teacher }} </b>
+                  <br />
+                  Laboratorio: <b> {{ item.laboratory }} </b>
+                  <br />
+                  <n-tag
+                    v-for="(j, index) in item.schedules"
+                    :key="index"
+                    :bordered="false"
+                    type="info"
+                    size="small"
+                  >
+                    {{ j.day }} - {{ j.startHour }} - {{ j.endHour }}
+                  </n-tag>
+                </n-thing>
+              </n-list-item>
+            </n-list>
+
             <n-space v-else>
               <n-space>
                 <n-button
@@ -157,17 +166,21 @@ import { useRoute } from "vue-router";
 import AddModuleForm from "../components/Form/AddModuleForm.vue";
 
 import { _getStudentEnrollment } from "@/app/modules/Enrollment/services/enrollment.services";
+import { __current } from "@/app/modules/Period/services/period.services";
 
 import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
 import { __searchCurriculums } from "@/app/shared/services/selectables.services";
 import EnrollmentGroupForm from "../components/Form/EnrollmentGroupForm.vue";
+import { renderIcon } from "@/core/utils/icon.utils";
 const route = useRoute();
 
 const showAddModuleForm = ref<boolean>(false);
 const showModal = ref<boolean>(false);
 
 const curriculumId = ref<number | null>(null);
+const periodCurrent = ref<any | null>(null);
+
 const curriculumItems = ref<any>([]);
 const loadingView = ref<boolean>(true);
 const student = ref<any>({});
@@ -181,8 +194,12 @@ const handleAddModule = () => {
 
 const getDataEnrollment = async () => {
   const id = route.params.id;
-
-  const response = await _getStudentEnrollment(id, curriculumId.value!);
+  const periodId = periodCurrent.value?.value;
+  const response = await _getStudentEnrollment(
+    id,
+    curriculumId.value!,
+    periodId
+  );
   student.value = response.data;
 };
 
@@ -193,6 +210,7 @@ const openEnrollmentGroupModal = (courseId: number) => {
 
 const initView = async () => {
   curriculumItems.value = await __searchCurriculums("");
+  periodCurrent.value = await __current();
   curriculumId.value = curriculumItems.value[0].value;
   loadingView.value = true;
   await getDataEnrollment();

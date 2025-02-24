@@ -13,14 +13,53 @@
     >
       <n-row :gutter="[16, 16]">
         <n-col span="24">
-          <n-select
-            v-model:value="form.groupId"
-            placeholder="Seleccionar un grupo"
-            :options="groupItems"
-            :virtual-scroll="false"
-            clearable
-            filterable
-          />
+          <div class="wrapper-list-groups">
+            <n-list hoverable clickable>
+              <template #header>
+                Grupos aperturados ({{ groupItems.length }})
+              </template>
+              <n-list-item
+                v-for="item in groupItems"
+                :key="item.id"
+                :class="{ 'item-selected': form.groupId == item.id }"
+                :extra="item.price"
+              >
+                <n-thing
+                  :title="`${item.group} - S/. ${item.price}`"
+                  @click="onSelectedGroup(item)"
+                >
+                  <template v-if="form.groupId == item.id" #header-extra>
+                    <n-button
+                      circle
+                      type="warning"
+                      :render-icon="renderIcon('verify')"
+                    ></n-button>
+                  </template>
+                  <template #description>
+                    <n-space size="small" style="margin-top: 4px">
+                      <n-tag :bordered="false" type="info" size="small">
+                        {{ item.modality }}
+                      </n-tag>
+                    </n-space>
+                  </template>
+
+                  Docente: <b> {{ item.teacher }} </b>
+                  <br />
+                  Laboratorio: <b> {{ item.laboratory }} </b>
+                  <br />
+                  <n-tag
+                    v-for="(j, index) in item.schedules"
+                    :key="index"
+                    :bordered="false"
+                    type="info"
+                    size="small"
+                  >
+                    {{ j.day }} - {{ j.startHour }} - {{ j.endHour }}
+                  </n-tag>
+                </n-thing>
+              </n-list-item>
+            </n-list>
+          </div>
         </n-col>
         <n-col span="24" v-if="form.payment.length == 0">
           <n-card title="Información de pago" size="small">
@@ -74,7 +113,7 @@
         </n-col>
         <n-col span="24">
           <n-statistic
-            style="background-color: #15ffaa66; padding: 0.5rem"
+            style="background-color: #afc9d5c2; padding: 0.5rem"
             v-for="item in form.payment"
             :key="item.sequenceNumber"
             :label="`${item.sequenceNumber} | ${
@@ -90,9 +129,8 @@
             @click="handleSubmit"
             block
             :loading="loading"
-            :render-icon="renderIcon('check')"
           >
-            Guardar
+            Realizar Matricula
           </n-button>
         </n-col>
       </n-row>
@@ -141,6 +179,22 @@ const form = ref<any>({
   groupId: null,
   payment: [],
 });
+
+const onSelectedGroup = (item: any) => {
+  if (form.value.groupId && form.value.groupId != item.id) {
+    form.value.payment = [];
+    form.value.groupId = item.id;
+    paymentRequest.value.amount = item.price;
+  }
+  if (form.value.groupId == item.id) {
+    form.value.groupId = null;
+    paymentRequest.value.amount = null;
+    form.value.payment = [];
+  } else {
+    form.value.groupId = item.id;
+    paymentRequest.value.amount = item.price;
+  }
+};
 
 const handleValidatePayment = async () => {
   paymentRequest.value.studentId = props.studentId;
@@ -199,3 +253,14 @@ watch(showModal, (value) => {
   }
 });
 </script>
+
+<style>
+.wrapper-list-groups {
+  width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.item-selected {
+  background-color: #afc9d5c2;
+}
+</style>
