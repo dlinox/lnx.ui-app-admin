@@ -37,7 +37,7 @@
       name="extra"
       :reLoadDataTable="reLoadDataTable"
       :studentTypesItems="studentTypesItems"
-      :modulesByCurriculumItems="modulesByCurriculumItems"
+      :coursesByCurriculumItems="coursesByCurriculumItems"
     >
     </slot>
   </div>
@@ -46,7 +46,7 @@
     :item="editItem"
     @success="reLoadDataTable"
     :studentTypesItems="studentTypesItems"
-    :modulesByCurriculumItems="modulesByCurriculumItems"
+    :coursesByCurriculumItems="coursesByCurriculumItems"
     :curriculumId="props.curriculumId"
   />
 </template>
@@ -83,6 +83,7 @@ import type { SelectOption } from "naive-ui";
 import {
   __getStudentTypesForSelect,
   __searchModulesByCurriculum,
+  __searchCoursesByCurriculum,
 } from "@/app/shared/services/selectables.services";
 
 const props = defineProps<CoursePriceDataTablePropsDTO>();
@@ -156,10 +157,14 @@ const onPageSizeChange = async (pageSize: number) => {
 
 const studentTypesItems = ref<SelectOption[]>([]);
 const modulesByCurriculumItems = ref<SelectOption[]>([]);
+const coursesByCurriculumItems = ref<SelectOption[]>([]);
 
 const init = async () => {
   studentTypesItems.value = await __getStudentTypesForSelect();
   modulesByCurriculumItems.value = await __searchModulesByCurriculum(
+    props.curriculumId
+  );
+  coursesByCurriculumItems.value = await __searchCoursesByCurriculum(
     props.curriculumId
   );
   await loadDataTable();

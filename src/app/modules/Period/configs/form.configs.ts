@@ -2,11 +2,9 @@ import type { PeriodFormDTO } from "@/app/modules/Period/types/Period.types";
 
 export const _getPeriodInitValues = (): PeriodFormDTO => {
   return {
-    id: null,
-    //current year 
+    id: null, 
     year: new Date().getFullYear(),
     month: null,
-    isEnabled: false,
   };
 };
 

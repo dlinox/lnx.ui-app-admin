@@ -27,7 +27,7 @@ export const _storeItem = async (
   request: ModulePriceFormDTO
 ): Promise<ResponseServiceDTO<ModulePriceDTO | ModulePriceFormErrorsDTO>> => {
   try {
-    let reponse = await http().post("/price", request);
+    let reponse = await http().post("/module-price", request);
     return {
       status: true,
       data: reponse.data.data as ModulePriceFormDTO,
@@ -50,7 +50,7 @@ export const _updateItem = async (
   request: ModulePriceFormDTO
 ): Promise<ResponseServiceDTO<ModulePriceDTO | ModulePriceFormErrorsDTO>> => {
   try {
-    let reponse = await http().put("/price", request);
+    let reponse = await http().put("/module-price", request);
     return {
       status: true,
       data: reponse.data.data as ModulePriceFormDTO,
@@ -71,7 +71,7 @@ export const _updateItem = async (
 
 export const _deleteItem = async (request: ModulePriceDataTableItemDTO): Promise<boolean> => {
   try {
-    await http().delete("/price", { data: { id: request.id } });
+    await http().delete("/module-price", { data: { id: request.id } });
     return true;
   } catch (error) {
     return false;

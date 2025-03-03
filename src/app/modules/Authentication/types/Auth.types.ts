@@ -1,5 +1,5 @@
 
-export interface AuthRequestDTO {
+export interface AuthFormDTO {
   username: string;
   password: string;
 }

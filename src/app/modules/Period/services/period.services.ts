@@ -96,3 +96,31 @@ export const __current = async (): Promise<ItemSelectDTO | null> => {
     return null;
   }
 };
+
+//__enrollments
+export const __enrollment = async (): Promise<ItemSelectDTO[] | null> => {
+  try {
+    let response = await http().get("/period/enrollment-period");
+    return response.data.data as ItemSelectDTO[];
+  } catch (error) {
+    return null;
+  }
+};
+
+export const _enableCurrent = async (id: number): Promise<boolean> => {
+  try {
+    await http().put("/period/enable/current/" + id);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const _enableEnrollmentPeriod = async (id: number): Promise<boolean> => {
+  try {
+    await http().put("/period/enable/enrollment-period/" + id);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};

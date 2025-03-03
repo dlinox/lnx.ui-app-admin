@@ -35,14 +35,14 @@
     :curriculumId="formSearch.curriculumId"
   >
     <template
-      #extra="{ reLoadDataTable, studentTypesItems, modulesByCurriculumItems }"
+      #extra="{ reLoadDataTable, studentTypesItems, coursesByCurriculumItems }"
     >
       <CoursePriceForm
         v-model="showModal"
         :item="null"
         @success="reLoadDataTable"
         :studentTypesItems="studentTypesItems"
-        :modulesByCurriculumItems="modulesByCurriculumItems"
+        :coursesByCurriculumItems="coursesByCurriculumItems"
         :curriculumId="formSearch.curriculumId"
       />
     </template>

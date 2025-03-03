@@ -1,7 +1,7 @@
 <template>
   <n-modal v-model:show="showModal">
     <n-card
-      style="width: 500px"
+      style="width: 600px"
       title="MATRICULA EN MODULO"
       :segmented="{
         content: true,

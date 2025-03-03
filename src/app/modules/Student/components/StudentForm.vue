@@ -248,7 +248,6 @@ const formErrors = ref<StudentFormErrorsDTO | null>(null);
 const formRules = ref<any>({ ..._getStudentFormRules() });
 
 const handleSubmit = async () => {
-  console.log("formRef", form.value);
 
   if (formRef.value) {
     const valid = await formRef.value.validate();

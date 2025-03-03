@@ -22,7 +22,18 @@
           :collapsed-icon-size="22"
           :options="menuOptions"
           :default-value="currentKey"
+          class="mb-26"
         />
+        <div
+          class="absolute bottom-0 start-0 end-0 border-t border-gray-300 backdrop-blur-sm z-10 border-solid"
+        >
+          <n-menu
+            :inverted="inverted"
+            :collapsed-width="64"
+            :collapsed-icon-size="22"
+            :options="menuFooterOptions"
+          />
+        </div>
       </n-layout-sider>
 
       <n-drawer
@@ -71,28 +82,28 @@
       style="
         height: 48px;
         display: flex;
-        justify-content: end;
+        justify-content: space-between;
         align-items: center;
         padding: 0 16px;
       "
     >
-      v1.0
+      <span> v1.0 </span>
     </n-layout-footer>
   </n-layout>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { h, ref } from "vue";
 import { renderIcon } from "@/core/utils/icon.utils";
 import { menuItem } from "@/core/utils/menu.utils";
-import type { MenuOption } from "naive-ui";
+import { type MenuOption } from "naive-ui";
 import useBreakpoints from "@/core/composable/useBreakpoints";
-import LnxIcon from "@/core/components/LnxIcon.vue";
-
 import { useRoute } from "vue-router";
+import { usePeriodStore } from "../store/period.stores";
+
 const route = useRoute();
 const { screenSize } = useBreakpoints();
-
+const periodStore = usePeriodStore();
 const active = ref<boolean>(true);
 const collapsed = ref<boolean>(false);
 const inverted = ref(false);
@@ -330,16 +341,18 @@ const menuOptions: MenuOption[] = [
         label: "Administradores",
         key: "security-admins",
         children: [
-          {
+          menuItem({
             label: "Usuarios Administradores",
-            key: "security-admins-users",
-            icon: renderIcon("security-user"),
-          },
-          {
+            key: "UserAdmin",
+            route: "UserAdmin",
+            iconName: "security-user",
+          }),
+          menuItem({
             label: "Roles Administradores",
-            key: "security-admins-roles",
-            icon: renderIcon("key-square"),
-          },
+            key: "RoleAdmin",
+            route: "RoleAdmin",
+            iconName: "key-square",
+          }),
         ],
       },
       {
@@ -347,36 +360,84 @@ const menuOptions: MenuOption[] = [
         label: "Docentes",
         key: "security-teachers",
         children: [
-          {
+          menuItem({
             label: "Usuarios Docentes",
-            key: "security-teachers-users",
-            icon: renderIcon("security-user"),
-          },
-          {
-            label: "Roles Docentes",
-            key: "security-teachers-roles",
-            icon: renderIcon("key-square"),
-          },
+            key: "UserTeacher",
+            route: "UserTeacher",
+            iconName: "security-user",
+          }),
         ],
       },
       {
         type: "group",
-        label: "Usuarios",
+        label: "Estudiantes",
         key: "security-students",
         children: [
-          {
+          menuItem({
             label: "Usuarios Estudiantes",
-            key: "security-students-users",
-            icon: renderIcon("security-user"),
-          },
-          {
-            label: "Roles Estudiantes",
-            key: "security-students-roles",
-            icon: renderIcon("key-square"),
-          },
+            key: "UserStudent",
+            route: "UserStudent",
+            iconName: "security-user",
+          }),
         ],
       },
     ],
   },
 ];
+
+const menuFooterOptions = [
+  {
+    label: () =>
+      h(
+        "span",
+        {
+          class: "text-gray-500",
+        },
+        [
+          "Per. Actual: ",
+          h(
+            "strong",
+            {
+              class: periodStore.current?.name
+                ? "text-blue-500"
+                : "text-red-500",
+            },
+            periodStore.current?.name ?? "No definido"
+          ),
+        ]
+      ),
+    icon: renderIcon("calendar"),
+    key: "hear-the-wind-sing",
+  },
+  {
+    label: () =>
+      h(
+        "span",
+        {
+          class: "text-gray-500",
+        },
+        [
+          "Per. Matricula: ",
+          h(
+            "strong",
+            {
+              class: periodStore.enrollment?.name
+                ? "text-blue-500"
+                : "text-red-500",
+            },
+            periodStore.enrollment?.name ?? "No definido"
+          ),
+        ]
+      ),
+    key: "groups",
+    icon: renderIcon("people"),
+  },
+];
+
+const initLayout = async () => {
+  await periodStore.getCurrent();
+  await periodStore.getEnrollment();
+};
+
+initLayout();
 </script>

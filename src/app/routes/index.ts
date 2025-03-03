@@ -21,6 +21,8 @@ import ModulePriceRoutes from "@/app/modules/ModulePrice/routes";
 import CoursePriceRoutes from "@/app/modules/CoursePrice/routes";
 import EnrollmentRoutes from "@/app/modules/Enrollment/routes/index";
 import AuthenticationRoutes from "@/app/modules/Authentication/routes";
+import RoleRoutes from "@/app/modules/Role/routes";
+import UserRoutes from "@/app/modules/User/routes";
 
 import { authMiddleware } from "@/app/middleware/auth.middleware";
 
@@ -52,6 +54,8 @@ const routes: RouteRecordRaw[] = [
       ...CoursePriceRoutes,
       ...PriceRoutes,
       ...EnrollmentRoutes,
+      ...RoleRoutes,
+      ...UserRoutes,
     ],
   },
   ...AuthenticationRoutes,

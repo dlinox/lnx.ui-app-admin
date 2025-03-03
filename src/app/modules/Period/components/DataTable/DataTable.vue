@@ -1,4 +1,5 @@
 <template>
+  <slot name="extra" :reLoadDataTable="reLoadDataTable"> </slot>
   <div style="border-bottom: 1px solid #e9e9e9">
     <n-row :gutter="12" style="padding: 12px 16px">
       <n-col :span="12"> </n-col>
@@ -32,14 +33,8 @@
         />
       </n-col>
     </n-row>
-
-    <slot name="extra" :reLoadDataTable="reLoadDataTable"> </slot>
   </div>
-  <PeriodForm
-    v-model="showModal"
-    :item="editItem"
-    @success="reLoadDataTable"
-  />
+  <PeriodForm v-model="showModal" :item="editItem" @success="reLoadDataTable" />
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";

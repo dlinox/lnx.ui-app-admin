@@ -134,6 +134,7 @@ const init = () => {
 
 watch(showModal, (value) => {
   if (value) {
+    formErrors.value = null;
     init();
   }
 });

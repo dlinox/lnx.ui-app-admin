@@ -1,11 +1,28 @@
 <template>
-  <div class="login-container">
-    <n-card class="login-card" title="Iniciar sesión">
-      <p class="subtitle">Ingrese sus datos para iniciar sesión</p>
-
-      <n-form ref="formRef" :model="form" :rules="rules">
+  <div
+    class="w-screen h-screen flex  justify-center items-center bg-gray-100"
+  >
+    <div class="w-96 bg-white rounded border border-gray-200 px-4 py-6">
+      <div >
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">Iniciar sesión</h2>
+        <p class="text-slate-500 mb-4">
+          Inicia sesión con tu usuario y contraseña o con tu cuenta de Google
+          asociada
+        </p>
+      </div>
+      <n-form
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        @keydown.enter="submitForm"
+      >
         <n-form-item path="username" label="Usuario">
-          <n-input v-model:value="form.username" placeholder="Usuario" />
+          <n-input
+            v-model:value="form.username"
+            placeholder="Usuario"
+            name="username"
+            id="username"
+          />
         </n-form-item>
 
         <n-form-item path="password" label="Contraseña">
@@ -17,15 +34,82 @@
           />
         </n-form-item>
 
+        <router-link
+          to="/auth/forgot-password"
+          class="text-slate-500 hover:text-blue-400 hover:underline text-sm text-end block"
+        >
+          ¿Olvidaste tu contraseña?
+        </router-link>
+
         <n-form-item>
-          <n-button type="primary" block @click="submitForm">
+          <n-button type="primary" block :loading="loading" @click="submitForm">
             Iniciar sesión
           </n-button>
         </n-form-item>
-      </n-form>
-    </n-card>
 
-    <p class="version">v0.1</p>
+        <n-button block>
+          <n-icon class="ms-2">
+            <svg
+              viewBox="-0.5 0 48 48"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              fill="#000000"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <title>Google-color</title>
+                <desc>Created with Sketch.</desc>
+                <defs></defs>
+                <g
+                  id="Icons"
+                  stroke="none"
+                  stroke-width="1"
+                  fill="none"
+                  fill-rule="evenodd"
+                >
+                  <g
+                    id="Color-"
+                    transform="translate(-401.000000, -860.000000)"
+                  >
+                    <g
+                      id="Google"
+                      transform="translate(401.000000, 860.000000)"
+                    >
+                      <path
+                        d="M9.82727273,24 C9.82727273,22.4757333 10.0804318,21.0144 10.5322727,19.6437333 L2.62345455,13.6042667 C1.08206818,16.7338667 0.213636364,20.2602667 0.213636364,24 C0.213636364,27.7365333 1.081,31.2608 2.62025,34.3882667 L10.5247955,28.3370667 C10.0772273,26.9728 9.82727273,25.5168 9.82727273,24"
+                        id="Fill-1"
+                        fill="#FBBC05"
+                      ></path>
+                      <path
+                        d="M23.7136364,10.1333333 C27.025,10.1333333 30.0159091,11.3066667 32.3659091,13.2266667 L39.2022727,6.4 C35.0363636,2.77333333 29.6954545,0.533333333 23.7136364,0.533333333 C14.4268636,0.533333333 6.44540909,5.84426667 2.62345455,13.6042667 L10.5322727,19.6437333 C12.3545909,14.112 17.5491591,10.1333333 23.7136364,10.1333333"
+                        id="Fill-2"
+                        fill="#EB4335"
+                      ></path>
+                      <path
+                        d="M23.7136364,37.8666667 C17.5491591,37.8666667 12.3545909,33.888 10.5322727,28.3562667 L2.62345455,34.3946667 C6.44540909,42.1557333 14.4268636,47.4666667 23.7136364,47.4666667 C29.4455,47.4666667 34.9177955,45.4314667 39.0249545,41.6181333 L31.5177727,35.8144 C29.3995682,37.1488 26.7323182,37.8666667 23.7136364,37.8666667"
+                        id="Fill-3"
+                        fill="#34A853"
+                      ></path>
+                      <path
+                        d="M46.1454545,24 C46.1454545,22.6133333 45.9318182,21.12 45.6113636,19.7333333 L23.7136364,19.7333333 L23.7136364,28.8 L36.3181818,28.8 C35.6879545,31.8912 33.9724545,34.2677333 31.5177727,35.8144 L39.0249545,41.6181333 C43.3393409,37.6138667 46.1454545,31.6490667 46.1454545,24"
+                        id="Fill-4"
+                        fill="#4285F4"
+                      ></path>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </n-icon>
+        </n-button>
+      </n-form>
+    </div>
   </div>
 </template>
 
@@ -33,39 +117,27 @@
 import { ref } from "vue";
 import { useMessage } from "naive-ui";
 
-
-import { type AuthRequestDTO } from "../types/Auth.types";
+import { type AuthFormDTO } from "../types/Auth.types";
 import { _signIn, _clearSession } from "../services/auth.services";
+import { _getValidationForm, _initStateForm } from "../config/index.config";
 
-const formRef = ref(null);
+const formRef = ref<HTMLFormElement | null>(null);
 const message = useMessage();
+const loading = ref<boolean>(false);
 
-const form = ref<AuthRequestDTO>({
-  username: "",
-  password: "",
-});
+const form = ref<AuthFormDTO>({ ..._initStateForm() });
 
-const rules = {
-  username: [
-    { required: true, message: "El usuario es obligatorio", trigger: "blur" },
-  ],
-  password: [
-    {
-      required: true,
-      message: "La contraseña es obligatoria",
-      trigger: "blur",
-    },
-  ],
-};
+const rules = { ..._getValidationForm() };
 
 const submitForm = async () => {
-  if (!form.value.username || !form.value.password) {
-    message.error("Por favor, complete todos los campos");
-    return;
-  }
-  const response = await _signIn(form.value);
-  if (response) {
-    message.success("Inicio de sesión exitoso");
+  if (formRef.value) {
+    const valid = await formRef.value.validate();
+    if (valid) {
+      loading.value = true;
+      const response = await _signIn(form.value);
+      loading.value = false;
+      if (response) message.success("Inicio de sesión exitoso");
+    }
   }
 };
 
@@ -75,41 +147,3 @@ const initView = () => {
 
 initView();
 </script>
-
-<style scoped>
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background: #f8f9fa;
-}
-
-.login-card {
-  width: 350px;
-}
-
-.subtitle {
-  color: #6c757d;
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-
-.register-link {
-  text-align: center;
-  margin-top: 15px;
-}
-
-.register-link a {
-  color: #6c757d;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.version {
-  margin-top: 20px;
-  font-size: 12px;
-  color: #6c757d;
-}
-</style>

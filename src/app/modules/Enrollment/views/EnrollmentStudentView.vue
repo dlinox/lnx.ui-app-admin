@@ -54,8 +54,22 @@
     <n-col span="18" style="border: 1px solid #efefef; padding: 0rem 0">
       <n-card title="Matricula" :bordered="false">
         <template #header-extra>
-          <n-tag type="info">
-            Periodo: <strong> {{ periodCurrent?.label }} </strong>
+          <n-tag type="info" :bordered="false" style="margin-right: 0.5rem">
+            Periodo: <strong> {{ periodCurrent?.name }} </strong>
+          </n-tag>
+
+          <n-tag
+            :bordered="false"
+            :type="periodCurrent?.enrollmentEnabled ? 'success' : 'error'"
+          >
+            Matriculas:
+            <strong>
+              {{
+                periodCurrent?.enrollmentEnabled
+                  ? "Habilitada"
+                  : "Deshabilitada"
+              }}
+            </strong>
           </n-tag>
         </template>
       </n-card>
@@ -194,7 +208,7 @@ const handleAddModule = () => {
 
 const getDataEnrollment = async () => {
   const id = route.params.id;
-  const periodId = periodCurrent.value?.value;
+  const periodId = periodCurrent.value?.id;
   const response = await _getStudentEnrollment(
     id,
     curriculumId.value!,

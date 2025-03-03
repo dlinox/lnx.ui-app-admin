@@ -9,8 +9,4 @@ export const MODALITIES: ItemSelectDTO[] = [
     label: "VIRTUAL",
     value: "VIRTUAL",
   },
-  {
-    label: "MIXTO",
-    value: "MIXTO",
-  },
 ] as const;

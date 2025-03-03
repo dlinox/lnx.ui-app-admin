@@ -40,7 +40,7 @@
               />
             </n-form-item>
           </n-col>
-          <n-col span="24">
+          <!-- <n-col span="24">
             <n-space justify="end">
               <n-form-item
                 label-placement="left"
@@ -51,7 +51,7 @@
                 <n-switch v-model:value="form.isEnabled" />
               </n-form-item>
             </n-space>
-          </n-col>
+          </n-col> -->
         </n-row>
       </n-form>
       <template #footer>

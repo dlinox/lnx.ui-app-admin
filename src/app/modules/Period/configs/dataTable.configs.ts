@@ -10,7 +10,6 @@ import {
 
 import { MONTHS } from "@/core/constants/months.constants";
 
-
 export const _createColumns = (
   openModal: (item: PeriodDTO) => void,
   deleteItem: (item: PeriodDTO) => void
@@ -53,8 +52,27 @@ export const _createColumns = (
       return h(`span`, month?.label);
     },
   },
+  // enrollmentEnabled
   {
-    title: "Habilitado",
+    title: "Matrícula",
+    key: "enrollmentEnabled",
+    width: "150px",
+    render: (row) => {
+      return h(
+        NTag,
+        {
+          type: row.enrollmentEnabled ? "success" : "error",
+          tertiary: true,
+          bordered: false,
+          strong: true,
+        },
+        { default: () => (row.enrollmentEnabled ? "	Habilitada" : "-") }
+      );
+    },
+  },
+
+  {
+    title: "Activo",
     key: "isEnabled",
     width: "150px",
     render: (row) => {
@@ -66,7 +84,7 @@ export const _createColumns = (
           bordered: false,
           strong: true,
         },
-        { default: () => (row.isEnabled ? "	Habilitado" : "Deshabilitado") }
+        { default: () => (row.isEnabled ? "	Activo" : "Deshabilitado") }
       );
     },
   },
