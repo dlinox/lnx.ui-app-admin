@@ -37,7 +37,6 @@ declare module 'vue' {
     NModal: typeof import('naive-ui')['NModal']
     NRow: typeof import('naive-ui')['NRow']
     NSelect: typeof import('naive-ui')['NSelect']
-    NSelectOption: typeof import('naive-ui')['NSelectOption']
     NSpace: typeof import('naive-ui')['NSpace']
     NStatistic: typeof import('naive-ui')['NStatistic']
     NSwitch: typeof import('naive-ui')['NSwitch']
@@ -46,7 +45,6 @@ declare module 'vue' {
     NTag: typeof import('naive-ui')['NTag']
     NThing: typeof import('naive-ui')['NThing']
     NTimePicker: typeof import('naive-ui')['NTimePicker']
-    NTooltip: typeof import('naive-ui')['NTooltip']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

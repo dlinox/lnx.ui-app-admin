@@ -1,0 +1,1 @@
+import{f as n,g as o}from"./period.services-BAslYbEo.js";import{ap as a,r as t}from"./index-DvYzMf2M.js";const m=a("period",()=>{const e=t(null),r=t(null);return{current:e,getCurrent:async()=>{e.value=await n()},enrollment:r,getEnrollment:async()=>{r.value=await o()}}});export{m as u};

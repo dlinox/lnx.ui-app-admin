@@ -8,9 +8,9 @@ import {
 
 import { useAuthStore } from "@/app/store/auth.stores";
 
-import { type AuthRequestDTO } from "../types/Auth.types";
+import { type AuthFormDTO } from "../types/Auth.types";
 
-export const _signIn = async (form: AuthRequestDTO): Promise<boolean> => {
+export const _signIn = async (form: AuthFormDTO): Promise<boolean> => {
   removeSessionToken();
   const authStore = useAuthStore();
   try {
@@ -24,7 +24,7 @@ export const _signIn = async (form: AuthRequestDTO): Promise<boolean> => {
   }
 };
 
-export const signOut = async () => {
+export const _signOut = async () => {
   const authStore = useAuthStore();
   try {
     await http().post(`/auth/sign-out`, null);

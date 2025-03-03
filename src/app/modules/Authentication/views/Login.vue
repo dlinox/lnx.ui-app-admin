@@ -1,9 +1,7 @@
 <template>
-  <div
-    class="w-screen h-screen flex  justify-center items-center bg-gray-100"
-  >
+  <div class="w-screen h-screen flex justify-center items-center bg-gray-100">
     <div class="w-96 bg-white rounded border border-gray-200 px-4 py-6">
-      <div >
+      <div>
         <h2 class="text-2xl font-bold text-slate-800 mb-2">Iniciar sesión</h2>
         <p class="text-slate-500 mb-4">
           Inicia sesión con tu usuario y contraseña o con tu cuenta de Google
@@ -35,7 +33,7 @@
         </n-form-item>
 
         <router-link
-          to="/auth/forgot-password"
+          to="/login"
           class="text-slate-500 hover:text-blue-400 hover:underline text-sm text-end block"
         >
           ¿Olvidaste tu contraseña?
@@ -47,7 +45,7 @@
           </n-button>
         </n-form-item>
 
-        <n-button block>
+        <n-button block v-if="!true">
           <n-icon class="ms-2">
             <svg
               viewBox="-0.5 0 48 48"

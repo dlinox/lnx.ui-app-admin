@@ -70,6 +70,11 @@
           <n-button v-else quaternary @click="collapsed = !collapsed">
             <LnxIcon size="24" :icon-name="collapsed ? 'grid-9' : 'grid-4'" />
           </n-button>
+
+          <n-button secondary type="error" @click="signOut" :loading="loading">
+            Salir
+            <LnxIcon class="ms-2" size="24" icon-name="logout" />
+          </n-button>
         </n-layout-header>
         <n-layout-content>
           <router-view />
@@ -98,15 +103,19 @@ import { renderIcon } from "@/core/utils/icon.utils";
 import { menuItem } from "@/core/utils/menu.utils";
 import { type MenuOption } from "naive-ui";
 import useBreakpoints from "@/core/composable/useBreakpoints";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { usePeriodStore } from "../store/period.stores";
+import { _signOut } from "@/app/modules/Authentication/services/auth.services";
 
 const route = useRoute();
+const router = useRouter();
 const { screenSize } = useBreakpoints();
 const periodStore = usePeriodStore();
 const active = ref<boolean>(true);
 const collapsed = ref<boolean>(false);
 const inverted = ref(false);
+
+const loading = ref<boolean>(false);
 
 const currentKey = ref<string | null>(route.name as string | null);
 
@@ -433,6 +442,16 @@ const menuFooterOptions = [
     icon: renderIcon("people"),
   },
 ];
+
+const signOut = async () => {
+  loading.value = true;
+  const response = await _signOut();
+
+  if (response) {
+    router.push({ name: "Login" });
+  }
+  loading.value = false;
+};
 
 const initLayout = async () => {
   await periodStore.getCurrent();
