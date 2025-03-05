@@ -20,9 +20,6 @@
   </n-card>
   <DataTable>
     <template #extra="{ reLoadDataTable }">
-      <div class="px-4 pt-4 pb-1 w-full bg-gray-100">
-        <UpdateCurrentAndEnrollmentPeriod @updated="reLoadDataTable" />
-      </div>
       <PeriodForm v-model="showModal" :item="null" @success="reLoadDataTable" />
     </template>
   </DataTable>
@@ -34,6 +31,5 @@ import { _createColumns } from "@/app/modules/Period/configs/dataTable.configs";
 import PeriodForm from "@/app/modules/Period/components/PeriodForm.vue";
 import DataTable from "@/app/modules/Period/components/DataTable/DataTable.vue";
 import { __searchPeriods } from "@/app/shared/services/selectables.services";
-import UpdateCurrentAndEnrollmentPeriod from "../components/UpdateCurrentAndEnrollmentPeriod.vue";
 const showModal = ref<boolean>(false);
 </script>

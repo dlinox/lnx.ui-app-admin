@@ -2,9 +2,10 @@ import type { PeriodFormDTO } from "@/app/modules/Period/types/Period.types";
 
 export const _getPeriodInitValues = (): PeriodFormDTO => {
   return {
-    id: null, 
+    id: null,
     year: new Date().getFullYear(),
-    month: null,
+    month: new Date().getMonth() + 1,
+    status: null,
   };
 };
 
@@ -23,6 +24,13 @@ export const _getPeriodRules = () => {
         type: "number",
         required: true,
         trigger: ["blur", "input"],
+        message: "Obligatorio",
+      },
+    ],
+    status: [
+      {
+        required: true,
+        trigger: ["blur", "change"],
         message: "Obligatorio",
       },
     ],

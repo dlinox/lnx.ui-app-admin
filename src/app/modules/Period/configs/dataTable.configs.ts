@@ -54,37 +54,28 @@ export const _createColumns = (
   },
   // enrollmentEnabled
   {
-    title: "Matrícula",
-    key: "enrollmentEnabled",
+    title: "Estado",
+    key: "status",
     width: "150px",
     render: (row) => {
       return h(
         NTag,
         {
-          type: row.enrollmentEnabled ? "success" : "error",
+          type:
+            row.status == "FINALIZADO"
+              ? "default"
+              : row.status == "CANCELADO"
+              ? "error"
+              : row.status == "EN CURSO"
+              ? "success"
+              : row.status == "MATRICULA"
+              ? "info"
+              : "warning",
           tertiary: true,
           bordered: false,
           strong: true,
         },
-        { default: () => (row.enrollmentEnabled ? "	Habilitada" : "-") }
-      );
-    },
-  },
-
-  {
-    title: "Activo",
-    key: "isEnabled",
-    width: "150px",
-    render: (row) => {
-      return h(
-        NTag,
-        {
-          type: row.isEnabled ? "success" : "error",
-          tertiary: true,
-          bordered: false,
-          strong: true,
-        },
-        { default: () => (row.isEnabled ? "	Activo" : "Deshabilitado") }
+        { default: () => row.status }
       );
     },
   },

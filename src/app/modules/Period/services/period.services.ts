@@ -106,21 +106,3 @@ export const __enrollment = async (): Promise<ItemSelectDTO[] | null> => {
     return null;
   }
 };
-
-export const _enableCurrent = async (id: number): Promise<boolean> => {
-  try {
-    await http().put("/period/enable/current/" + id);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-export const _enableEnrollmentPeriod = async (id: number): Promise<boolean> => {
-  try {
-    await http().put("/period/enable/enrollment-period/" + id);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
