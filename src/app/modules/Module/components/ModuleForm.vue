@@ -15,6 +15,21 @@
         <n-row>
           <n-col span="24">
             <n-form-item
+              path="code"
+              label="Código"
+              :feedback="formErrors?.code"
+            >
+              <n-input
+                :status="formErrors?.code != undefined ? 'error' : ''"
+                v-model:value="form.code"
+                @input="
+                  formErrors != null ? (formErrors.code = null) : () => {}
+                "
+              />
+            </n-form-item>
+          </n-col>
+          <n-col span="24">
+            <n-form-item
               path="name"
               label="Nombre"
               :feedback="formErrors?.name"
@@ -27,6 +42,40 @@
                 "
               />
             </n-form-item>
+          </n-col>
+          <n-col span="24">
+            <n-form-item
+              path="curriculumId"
+              label="Plan de estudios"
+              :feedback="formErrors?.curriculumId"
+            >
+              <n-select
+                clearable
+                placeholder="Seleccione un plan de estudios"
+                v-model:value="form.curriculumId"
+                :options="curriculumOptions"
+                :virtual-scroll="false"
+                :status="formErrors?.curriculumId != undefined ? 'error' : ''"
+                @input="
+                  formErrors != null
+                    ? (formErrors.curriculumId = null)
+                    : () => {}
+                "
+              />
+            </n-form-item>
+          </n-col>
+
+          <n-col span="24">
+            <n-space justify="end">
+              <n-form-item
+                label-placement="left"
+                label="¿Extracurricular?"
+                path="isExtracurricular"
+                :show-feedback="false"
+              >
+                <n-switch v-model:value="form.isExtracurricular" />
+              </n-form-item>
+            </n-space>
           </n-col>
           <n-col span="24">
             <n-space justify="end">
@@ -66,7 +115,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormInst, FormRules } from "naive-ui";
+import type { FormInst, SelectOption } from "naive-ui";
 import { ref, computed, watch } from "vue";
 import {
   type ModuleDTO,
@@ -89,6 +138,7 @@ const emit = defineEmits(["update:modelValue", "success"]);
 const props = defineProps<{
   item: ModuleDTO | null;
   modelValue: boolean;
+  curriculumOptions: SelectOption[];
 }>();
 
 const showModal = computed({
@@ -100,7 +150,7 @@ const loading = ref<boolean>(false);
 const formRef = ref<FormInst | null>(null);
 const form = ref<ModuleFormDTO>(_getModuleInitValues());
 const formErrors = ref<ModuleFormErrorsDTO | null>(null);
-const formRules = ref<FormRules>({ ..._getModuleRules() });
+const formRules = ref<any>({ ..._getModuleRules() });
 
 const handleSubmit = async () => {
   if (formRef.value) {

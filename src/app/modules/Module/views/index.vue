@@ -15,13 +15,9 @@
       </n-button>
     </template>
   </n-card>
-  <DataTable>
+  <DataTable :curriculumOptions="curriculumOptions">
     <template #extra="{ reLoadDataTable }">
-      <ModuleForm
-        v-model="showModal"
-        :item="null"
-        @success="reLoadDataTable"
-      />
+      <ModuleForm :curriculumOptions="curriculumOptions" v-model="showModal" :item="null" @success="reLoadDataTable" />
     </template>
   </DataTable>
 </template>
@@ -32,6 +28,16 @@ import { _createColumns } from "@/app/modules/Module/configs/dataTable.configs";
 
 import ModuleForm from "@/app/modules/Module/components/ModuleForm.vue";
 import DataTable from "@/app/modules/Module/components/DataTable/DataTable.vue";
+import type { SelectOption } from "naive-ui";
+const curriculumOptions = ref<SelectOption[]>([]);
+
+import { __searchCurriculums } from "@/app/shared/services/selectables.services";
 
 const showModal = ref<boolean>(false);
+
+const initValues = async () => {
+  curriculumOptions.value = await __searchCurriculums("");
+};
+
+initValues();
 </script>

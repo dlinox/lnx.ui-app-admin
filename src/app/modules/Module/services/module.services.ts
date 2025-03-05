@@ -79,9 +79,13 @@ export const _deleteItem = async (request: ModuleFormDTO): Promise<boolean> => {
   }
 };
 
-export const __getModulesForSelect = async (): Promise<ItemSelectDTO[]> => {
+export const __getModulesForSelect = async (
+  query: any
+): Promise<ItemSelectDTO[]> => {
   try {
-    let response = await http().get("/module/items/for-select");
+    let response = await http().get("/module/items/for-select", {
+      params: query,
+    });
     return response.data.data as ItemSelectDTO[];
   } catch (error) {
     return [];

@@ -39,11 +39,12 @@
     v-model="showModal"
     :item="editItem"
     @success="reLoadDataTable"
+    :curriculumOptions="curriculumOptions"
   />
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-
+import { useRoute } from "vue-router";
 import type { CourseDTO } from "@/app/modules/Course/types/Course.types";
 
 import {
@@ -65,12 +66,19 @@ import {
 import CourseForm from "@/app/modules/Course/components/CourseForm.vue";
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
+import type { SelectOption } from "naive-ui";
+defineProps<{
+  curriculumOptions: SelectOption[];
+}>();
 
+const route = useRoute();
 const loadingTable = ref(false);
 const items = ref<CourseDTO[]>([]);
 const showModal = ref<boolean>(false);
 const editItem = ref<CourseDTO | null>(null);
 const pagination = reactive({ ...initValuesDataTablePagination() });
+const ciurriculumId = ref<any>("");
+
 const request = ref<DataTableRequestDTO>({
   search: null,
   page: pagination.page,
@@ -99,6 +107,7 @@ const reLoadDataTable = async () => {
 
 const loadDataTable = async () => {
   loadingTable.value = true;
+  request.value.filters = { curriculumId: ciurriculumId.value };
   response.value = await _loadDataTable(request.value);
   items.value = response.value.data;
   pagination.total = response.value.total;
@@ -124,6 +133,7 @@ const onPageSizeChange = async (pageSize: number) => {
 };
 
 const init = async () => {
+  ciurriculumId.value = route.params.id ?? "";
   await loadDataTable();
 };
 

@@ -5,17 +5,18 @@ export const CURRICULUM_STATUS_CONST = [
 ] as const;
 
 export const PERIOD_STATUS_CONST = [
-  { value: "PENDIENTE", label: "PENDIENTE" },
-  { value: "MATRICULA", label: "MATRICULA" },
-  { value: "EN CURSO", label: "EN CURSO" },
-  { value: "FINALIZADO", label: "FINALIZADO" },
-  { value: "CANCELADO", label: "CANCELADO" },
+  { value: "PENDIENTE", label: "PENDIENTE" }, //periodo en proceso de creacion
+  { value: "MATRICULA", label: "MATRICULA" }, //periodo con matricula completa
+  { value: "EN CURSO", label: "EN CURSO" }, //periodo en curso
+  { value: "FINALIZADO", label: "FINALIZADO" }, //periodo finalizado
+  { value: "CANCELADO", label: "CANCELADO" }, //periodo cancelado
 ] as const;
 
 export const GROUP_STATUS_CONST = [
-  { value: "ABIERTO", label: "ABIERTO" },
-  { value: "CERRADO", label: "CERRADO" },
-  { value: "CANCELADO", label: "CANCELADO" },
+  { value: "ABIERTO", label: "ABIERTO" }, //curso en proceso de matricula
+  { value: "CERRADO", label: "CERRADO" }, //curso con matricula completa
+  { value: "CANCELADO", label: "CANCELADO" }, //curso cancelado
+  { value: "FINALIZADO", label: "FINALIZADO" }, //curso finalizado //cuando se emite la nota final del curso
 ] as const;
 
 export const COURSE_MODALITIES_CONST = [

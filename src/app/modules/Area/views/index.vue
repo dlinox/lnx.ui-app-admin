@@ -15,10 +15,11 @@
       </n-button>
     </template>
   </n-card>
-  <DataTable>
+  <DataTable :curriculumOptions="curriculumOptions">
     <template #extra="{ reLoadDataTable }">
       <AreaForm
         v-model="showModal"
+        :curriculumOptions="curriculumOptions"
         :item="null"
         @success="reLoadDataTable"
       />
@@ -32,6 +33,14 @@ import { _createColumns } from "@/app/modules/Area/configs/dataTable.configs";
 
 import AreaForm from "@/app/modules/Area/components/AreaForm.vue";
 import DataTable from "@/app/modules/Area/components/DataTable/DataTable.vue";
-
+import type { SelectOption } from "naive-ui";
+import { __searchCurriculums } from "@/app/shared/services/selectables.services";
+const curriculumOptions = ref<SelectOption[]>([]);
 const showModal = ref<boolean>(false);
+
+const initValues = async () => {
+  curriculumOptions.value = await __searchCurriculums("");
+};
+
+initValues();
 </script>

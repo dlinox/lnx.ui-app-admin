@@ -42,6 +42,35 @@ export const _createColumns = (
     minWidth: "300px",
   },
   {
+    title: "Código",
+    key: "code",
+    minWidth: "150px",
+  },
+  {
+    title: "Plan de estudio",
+    key: "curriculum",
+    minWidth: "150px",
+  },
+  {
+    title: "Extracurricular",
+    key: "isExtracurricular",
+    width: "150px",
+    render: (row) => {
+      return h(
+        NTag,
+        {
+          type: row.isExtracurricular ? "default" : "info",
+          tertiary: true,
+          bordered: false,
+          strong: true,
+        },
+        {
+          default: () => (row.isExtracurricular ? "SI" : "NO"),
+        }
+      );
+    },
+  },
+  {
     title: "Habilitado",
     key: "isEnabled",
     width: "150px",

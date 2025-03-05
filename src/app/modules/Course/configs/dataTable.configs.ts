@@ -36,10 +36,70 @@ export const _createColumns = (
       );
     },
   },
+  /*
+  id: number | null;
+  name: string | null;
+  code: string | null;
+  hoursPractice: number | null;
+  hoursTheory: number | null;
+  credits: number | null;
+  area: string | null;
+  module: string | null;
+  curriculum: string | null;
+  preRequisite: string | null;
+  description: string | null;
+  isEnabled: boolean;
+  */
   {
     title: "Nombre",
     key: "name",
     minWidth: "300px",
+  },
+
+  {
+    title: "Código",
+    key: "code",
+    minWidth: "80px",
+  },
+  {
+    title: "Horas de práctica",
+    key: "hoursPractice",
+    minWidth: "80px",
+  },
+  {
+    title: "Horas de teoría",
+    key: "hoursTheory",
+    minWidth: "80px",
+  },
+  {
+    title: "Créditos",
+    key: "credits",
+    minWidth: "80px",
+  },
+  {
+    title: "Área",
+    key: "area",
+    minWidth: "150px",
+  },
+  {
+    title: "Módulo",
+    key: "module",
+    minWidth: "150px",
+  },
+  {
+    title: "Currículo",
+    key: "curriculum",
+    minWidth: "150px",
+  },
+  {
+    title: "Prerrequisito",
+    key: "preRequisite",
+    minWidth: "150px",
+  },
+  {
+    title: "Descripción",
+    key: "description",
+    minWidth: "350px",
   },
   {
     title: "Habilitado",

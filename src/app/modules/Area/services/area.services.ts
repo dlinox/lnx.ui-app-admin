@@ -17,10 +17,7 @@ export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<AreaDTO>> => {
   try {
-    const response = await http().post(
-      "/area/load-data-table",
-      request
-    );
+    const response = await http().post("/area/load-data-table", request);
     return response.data.data as DataTableResponseDTO<AreaDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -73,9 +70,7 @@ export const _updateItem = async (
   }
 };
 
-export const _deleteItem = async (
-  request: AreaFormDTO
-): Promise<boolean> => {
+export const _deleteItem = async (request: AreaFormDTO): Promise<boolean> => {
   try {
     await http().delete("/area", { data: { id: request.id } });
     return true;
@@ -84,11 +79,13 @@ export const _deleteItem = async (
   }
 };
 
-export const __getAreasForSelect = async (): Promise<
-  ItemSelectDTO[]
-> => {
+export const __getAreasForSelect = async (
+  query: any
+): Promise<ItemSelectDTO[]> => {
   try {
-    let response = await http().get("/area/items/for-select");
+    let response = await http().get("/area/items/for-select", {
+      params: query,
+    });
     return response.data.data as ItemSelectDTO[];
   } catch (error) {
     return [];

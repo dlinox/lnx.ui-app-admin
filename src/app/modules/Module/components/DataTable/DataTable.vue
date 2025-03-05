@@ -38,6 +38,7 @@
   <ModuleForm
     v-model="showModal"
     :item="editItem"
+    :curriculumOptions="curriculumOptions"
     @success="reLoadDataTable"
   />
 </template>
@@ -45,7 +46,7 @@
 import { reactive, ref } from "vue";
 
 import type { ModuleDTO } from "@/app/modules/Module/types/Module.types";
-
+import { useRoute } from "vue-router";
 import {
   type DataTableRequestDTO,
   type DataTableResponseDTO,
@@ -66,11 +67,17 @@ import ModuleForm from "@/app/modules/Module/components/ModuleForm.vue";
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 
+defineProps<{
+  curriculumOptions: any;
+}>();
+
+const route = useRoute();
 const loadingTable = ref(false);
 const items = ref<ModuleDTO[]>([]);
 const showModal = ref<boolean>(false);
 const editItem = ref<ModuleDTO | null>(null);
 const pagination = reactive({ ...initValuesDataTablePagination() });
+const ciurriculumId = ref<any>("");
 const request = ref<DataTableRequestDTO>({
   search: null,
   page: pagination.page,
@@ -99,6 +106,7 @@ const reLoadDataTable = async () => {
 
 const loadDataTable = async () => {
   loadingTable.value = true;
+  request.value.filters = { curriculumId: ciurriculumId.value };
   response.value = await _loadDataTable(request.value);
   items.value = response.value.data;
   pagination.total = response.value.total;
@@ -124,6 +132,7 @@ const onPageSizeChange = async (pageSize: number) => {
 };
 
 const init = async () => {
+  ciurriculumId.value = route.params.id ?? "";
   await loadDataTable();
 };
 

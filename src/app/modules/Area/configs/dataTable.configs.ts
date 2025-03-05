@@ -39,7 +39,13 @@ export const _createColumns = (
   {
     title: "Nombre",
     key: "name",
-    minWidth: "300px",
+    minWidth: "200px",
+  },
+  //curriculum
+  {
+    title: "Currículo",
+    key: "curriculum",
+    minWidth: "200px",
   },
   {
     title: "Habilitado",

@@ -6,8 +6,8 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Gestión de Tipos de Documentos</h6>
-      Tipos de Documentos
+      <h6 style="color: #999; margin: 0">Gestión Curricular</h6>
+      Curriculo
     </template>
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">

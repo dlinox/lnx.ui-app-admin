@@ -42,7 +42,7 @@
             >
               <n-select
                 v-model:value="form.moduleId"
-                :options="modulesByCurriculumItems"
+                :options="modulesItems"
                 :status="formErrors?.moduleId != undefined ? 'error' : ''"
                 filterable
                 :virtual-scroll="false"
@@ -132,7 +132,7 @@ const props = defineProps<{
   item: ModulePriceDataTableItemDTO | null;
   modelValue: boolean;
   studentTypesItems: SelectOption[];
-  modulesByCurriculumItems: SelectOption[];
+  modulesItems: SelectOption[];
   curriculumId?: number;
 }>();
 

@@ -29,6 +29,27 @@
             </n-form-item>
           </n-col>
           <n-col span="24">
+            <n-form-item
+              path="curriculumId"
+              label="Plan de estudios"
+              :feedback="formErrors?.curriculumId"
+            >
+              <n-select
+                clearable
+                placeholder="Seleccione un plan de estudios"
+                v-model:value="form.curriculumId"
+                :options="curriculumOptions"
+                :virtual-scroll="false"
+                :status="formErrors?.curriculumId != undefined ? 'error' : ''"
+                @input="
+                  formErrors != null
+                    ? (formErrors.curriculumId = null)
+                    : () => {}
+                "
+              />
+            </n-form-item>
+          </n-col>
+          <n-col span="24">
             <n-space justify="end">
               <n-form-item
                 label-placement="left"
@@ -66,7 +87,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormInst, FormRules } from "naive-ui";
+import type { SelectOption, FormInst } from "naive-ui";
 import { ref, computed, watch } from "vue";
 import {
   type AreaDTO,
@@ -89,6 +110,7 @@ const emit = defineEmits(["update:modelValue", "success"]);
 const props = defineProps<{
   item: AreaDTO | null;
   modelValue: boolean;
+  curriculumOptions: SelectOption[];
 }>();
 
 const showModal = computed({
@@ -100,7 +122,7 @@ const loading = ref<boolean>(false);
 const formRef = ref<FormInst | null>(null);
 const form = ref<AreaFormDTO>(_getAreaInitValues());
 const formErrors = ref<AreaFormErrorsDTO | null>(null);
-const formRules = ref<FormRules>({ ..._getAreaRules() });
+const formRules = ref<any>({ ..._getAreaRules() });
 
 const handleSubmit = async () => {
   if (formRef.value) {

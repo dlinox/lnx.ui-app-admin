@@ -57,8 +57,9 @@ export const _createColumns = (
   {
     title: "Nombre",
     key: "name",
-    minWidth: "300px",
+    minWidth: "150px",
   },
+
   {
     title: "Habilitado",
     key: "isEnabled",

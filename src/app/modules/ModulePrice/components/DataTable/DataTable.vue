@@ -1,4 +1,11 @@
 <template>
+  <slot
+    name="extra"
+    :reLoadDataTable="reLoadDataTable"
+    :studentTypesItems="studentTypesItems"
+    :modulesItems="modulesItems"
+  >
+  </slot>
   <div style="border-bottom: 1px solid #e9e9e9">
     <n-row :gutter="12" style="padding: 12px 16px">
       <n-col :span="12"> </n-col>
@@ -32,21 +39,13 @@
         />
       </n-col>
     </n-row>
-
-    <slot
-      name="extra"
-      :reLoadDataTable="reLoadDataTable"
-      :studentTypesItems="studentTypesItems"
-      :modulesByCurriculumItems="modulesByCurriculumItems"
-    >
-    </slot>
   </div>
   <ModulePriceForm
     v-model="showModal"
     :item="editItem"
     @success="reLoadDataTable"
     :studentTypesItems="studentTypesItems"
-    :modulesByCurriculumItems="modulesByCurriculumItems"
+    :modulesItems="modulesItems"
     :curriculumId="props.curriculumId"
   />
 </template>
@@ -80,11 +79,10 @@ import LnxIcon from "@/core/components/LnxIcon.vue";
 
 import type { ModulePriceDataTablePropsDTO } from "../../types/ModulePrice.types";
 import type { SelectOption } from "naive-ui";
-import {
-  __getStudentTypesForSelect,
-  __searchModulesByCurriculum,
-} from "@/app/shared/services/selectables.services";
+import { __getStudentTypesForSelect } from "@/app/shared/services/selectables.services";
 
+import { __getModulesForSelect } from "@/app/modules/Module/services/module.services";
+import type { ItemSelectDTO } from "@/core/types/Select.types";
 const props = defineProps<ModulePriceDataTablePropsDTO>();
 
 const propsComputed = computed(() => {
@@ -155,24 +153,29 @@ const onPageSizeChange = async (pageSize: number) => {
 };
 
 const studentTypesItems = ref<SelectOption[]>([]);
-const modulesByCurriculumItems = ref<SelectOption[]>([]);
+const modulesItems = ref<ItemSelectDTO[]>([]);
 
-const init = async () => {
+const initDataTable = async () => {
   studentTypesItems.value = await __getStudentTypesForSelect();
-  modulesByCurriculumItems.value = await __searchModulesByCurriculum(
-    props.curriculumId
-  );
+  modulesItems.value = await __getModulesForSelect({
+    curriculumId: props.curriculumId,
+  });
+
   await loadDataTable();
 };
 
 watch(
   propsComputed,
   async (newFilters, _oldFilters) => {
+    console.log("Filtros alterados", newFilters);
     request.value.filters = newFilters;
+    modulesItems.value = await __getModulesForSelect({
+      curriculumId: request.value.filters.curriculumId,
+    });
     await reLoadDataTable();
   },
   { deep: true }
 );
 
-init();
+initDataTable();
 </script>

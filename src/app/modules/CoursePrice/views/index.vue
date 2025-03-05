@@ -22,7 +22,7 @@
             v-model:value="formSearch.curriculumId"
             placeholder="Seleccionar Plan de estudio"
             filterable
-            :options="optionscurriculumId"
+            :options="curriculumOptions"
             clearable
             :virtual-scroll="false"
           />
@@ -35,14 +35,14 @@
     :curriculumId="formSearch.curriculumId"
   >
     <template
-      #extra="{ reLoadDataTable, studentTypesItems, coursesByCurriculumItems }"
+      #extra="{ reLoadDataTable, studentTypesItems, coursesItems }"
     >
       <CoursePriceForm
         v-model="showModal"
         :item="null"
         @success="reLoadDataTable"
         :studentTypesItems="studentTypesItems"
-        :coursesByCurriculumItems="coursesByCurriculumItems"
+        :coursesItems="coursesItems"
         :curriculumId="formSearch.curriculumId"
       />
     </template>
@@ -55,7 +55,7 @@ import { renderIcon } from "@/core/utils/icon.utils";
 import { __searchCurriculums } from "@/app/shared/services/selectables.services";
 import DataTable from "@/app/modules/CoursePrice/components/DataTable/DataTable.vue";
 import CoursePriceForm from "@/app/modules/CoursePrice/components/CoursePriceForm.vue";
-const optionscurriculumId = ref<SelectOption[]>([]);
+const curriculumOptions = ref<SelectOption[]>([]);
 
 const showModal = ref<boolean>(false);
 
@@ -66,7 +66,7 @@ const formSearch = ref<{
 });
 
 const initView = async () => {
-  optionscurriculumId.value = await __searchCurriculums("");
+  curriculumOptions.value = await __searchCurriculums("");
 };
 
 initView();

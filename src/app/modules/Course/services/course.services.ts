@@ -12,6 +12,7 @@ import type {
 
 import { type ResponseServiceDTO } from "@/core/types/Response.types";
 import type { ItemSelectDTO } from "@/core/types/Select.types";
+import { _getCourseInitValues } from "../configs/form.configs";
 
 export const _loadDataTable = async (
   request: any
@@ -31,7 +32,7 @@ export const _storeItem = async (
     let reponse = await http().post("/course", request);
     return {
       status: true,
-      data: reponse.data.data as CourseFormDTO,
+      data: reponse.data.data as CourseDTO,
     };
   } catch (error: any) {
     if (error.response.status === 422) {
@@ -49,7 +50,7 @@ export const _storeItem = async (
 
 export const _updateItem = async (
   request: CourseFormDTO
-): Promise<ResponseServiceDTO<CourseDTO | CourseFormErrorsDTO>> => {
+): Promise<ResponseServiceDTO<CourseFormDTO | CourseFormErrorsDTO>> => {
   try {
     let reponse = await http().put("/course", request);
     return {
@@ -70,7 +71,7 @@ export const _updateItem = async (
   }
 };
 
-export const _deleteItem = async (request: CourseFormDTO): Promise<boolean> => {
+export const _deleteItem = async (request: CourseDTO): Promise<boolean> => {
   try {
     await http().delete("/course", { data: { id: request.id } });
     return true;
@@ -79,9 +80,22 @@ export const _deleteItem = async (request: CourseFormDTO): Promise<boolean> => {
   }
 };
 
-export const __getCoursesForSelect = async (): Promise<ItemSelectDTO[]> => {
+export const _getItemById = async (id: number): Promise<CourseFormDTO> => {
   try {
-    let response = await http().get("/course/items/for-select");
+    const response = await http().get(`course/get-item-by-id/${id}`);
+    return response.data.data as CourseFormDTO;
+  } catch (error) {
+    return _getCourseInitValues();
+  }
+};
+
+export const __getCoursesForSelect = async (
+  query: any
+): Promise<ItemSelectDTO[]> => {
+  try {
+    let response = await http().get("/course/items/for-select", {
+      params: query,
+    });
     return response.data.data as ItemSelectDTO[];
   } catch (error) {
     return [];
