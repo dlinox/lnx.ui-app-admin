@@ -12,130 +12,166 @@
         footer: true,
       }"
     >
-      <n-dynamic-input v-model:value="form" :on-create="_getGroupInitValues">
-        <template #create-button-default> Nuevo grupo </template>
-        <template #default="{ value }">
-          <n-row
-            gutter="16"
-            style="border-bottom: 1px dashed #f0f0f0; padding: 1rem 0"
-          >
-            <n-col :span="screenSize === 'lg' ? 3 : 4">
-              <n-form-item label="Grupo" path="name">
-                <n-input v-model:value="value.name" />
-              </n-form-item>
-            </n-col>
-            <n-col :span="screenSize === 'lg' ? 7 : 10">
-              <n-form-item label="Docente" path="teacher">
-                <n-select
-                  v-model:value="value.teacherId"
-                  :options="teacherOptions"
-                  filterable
-                  clearable
-                  remote
-                  :virtual-scroll="false"
-                  @search="searchTeachersDebounce"
-                />
-              </n-form-item>
-            </n-col>
-            <n-col :span="screenSize == 'lg' ? 7 : 10">
-              <n-form-item label="Laboratorio" path="laboratory">
-                <n-select
-                  v-model:value="value.laboratoryId"
-                  :options="props.laboratoryOptions"
-                  filterable
-                  clearable
-                  :virtual-scroll="false"
-                />
-              </n-form-item>
-            </n-col>
-
-            <n-col :span="screenSize == 'lg' ? 4 : 12">
-              <n-form-item label="Modalidad" path="modality">
-                <n-select
-                  v-model:value="value.modality"
-                  :options="MODALITIES"
-                  filterable
-                  clearable
-                  :virtual-scroll="false"
-                />
-              </n-form-item>
-            </n-col>
-
-            <n-col
-              :span="screenSize == 'lg' ? 3 : 12"
-              style="display: flex; justify-content: end"
-            >
-              <n-form-item label="Hablitado" path="isEnabled">
-                <n-switch v-model:value="value.isEnabled" />
-              </n-form-item>
-            </n-col>
-          </n-row>
+      <n-alert title="¡Importante!" type="default" closable class="mb-4">
+        <template #icon>
+          <LnxIcon iconName="information" />
         </template>
-
-        <template #action="{ value, index, create, remove }">
-          <div
-            style="
-              width: 120px;
-              margin-left: 1rem;
-              display: flex;
-              justify-content: space-evenly;
-              flex-direction: column;
-              border-bottom: 1px dashed #f0f0f0;
-            "
-          >
-            <n-button
-              secondary
-              type="primary"
-              :renderIcon="renderIcon('calendar-add')"
-              @click="openModalSchedule(value)"
+        Antes de crear un grupo, asegúrese de que el curso tenga los precios
+        asignados para la modalidad y tipo de estudiante correspondientes.
+      </n-alert>
+      <n-spin :show="loadingInitForm" description="Cargando formulario">
+        <n-dynamic-input v-model:value="form" :on-create="initGroupValues">
+          <template #create-button-default> Nuevo grupo </template>
+          <template #default="{ value }">
+            <div
+              class="border-b border-t border-l border-dashed border-gray-300 py-4 ps-4"
             >
-              Horarios
-            </n-button>
+              <n-row gutter="16">
+                <n-col
+                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 24"
+                >
+                  <n-form-item label="Grupo" path="name" default-value="Grupo">
+                    <n-input v-model:value="value.name" />
+                  </n-form-item>
+                </n-col>
 
-            <n-button-group style="margin-left: 1rem">
-              <n-button
-                :render-icon="renderIcon('element-plus')"
-                @click="() => create(index)"
-              >
-              </n-button>
-              <n-button
-                type="error"
-                :render-icon="renderIcon('trash')"
-                @click="
-                  () => {
-                    dialog.warning({
-                      title: 'Confirmar',
-                      content: '¿Está seguro que desea eliminar este registro?',
-                      positiveText: value.id ? 'Eliminar' : 'Quitar',
-                      negativeText: 'Cancelar',
-                      closable: false,
-                      showIcon: false,
+                <n-col
+                  :span="
+                    screenSize === 'lg' ? 8 : screenSize === 'md' ? 10 : 24
+                  "
+                >
+                  <n-form-item label="Docente" path="teacher">
+                    <n-select
+                      v-model:value="value.teacherId"
+                      :options="teacherOptions"
+                      filterable
+                      clearable
+                      remote
+                      :virtual-scroll="false"
+                      @search="searchTeachersDebounce"
+                    />
+                  </n-form-item>
+                </n-col>
+                <n-col
+                  :span="screenSize == 'lg' ? 8 : screenSize === 'md' ? 10 : 24"
+                >
+                  <n-form-item label="Laboratorio" path="laboratory">
+                    <n-select
+                      v-model:value="value.laboratoryId"
+                      :options="props.laboratoryOptions"
+                      filterable
+                      clearable
+                      :virtual-scroll="false"
+                    />
+                  </n-form-item>
+                </n-col>
 
-                      negativeButtonProps: {
-                        type: 'tertiary',
-                        size: 'large',
-                      },
-                      positiveButtonProps: {
-                        size: 'large',
-                        type: 'error',
-                      },
-                      onPositiveClick: async () => {
-                        if (value.id) {
-                          const deleted = await _deleteItem(value);
-                          if (deleted) remove(index);
-                        } else {
-                          remove(index);
-                        }
-                      },
-                    });
-                  }
-                "
+                <n-col
+                  :span="screenSize == 'lg' ? 4 : screenSize === 'md' ? 8 : 24"
+                >
+                  <n-form-item label="Modalidad" path="modality">
+                    <n-select
+                      v-model:value="value.modality"
+                      :options="MODALITIES"
+                      filterable
+                      clearable
+                      :virtual-scroll="false"
+                    />
+                  </n-form-item>
+                </n-col>
+                <n-col
+                  :span="screenSize === 'lg' ? 6 : screenSize === 'md' ? 6 : 12"
+                >
+                  <n-form-item label="Cupos máximos" path="maxStudents">
+                    <n-input-number
+                      v-model:value="value.maxStudents"
+                      class="w-full"
+                    />
+                  </n-form-item>
+                </n-col>
+                <n-col
+                  :span="screenSize === 'lg' ? 6 : screenSize === 'md' ? 6 : 12"
+                >
+                  <n-form-item label="Cupos mínimos" path="minStudents">
+                    <n-input-number
+                      v-model:value="value.minStudents"
+                      class="w-full"
+                    />
+                  </n-form-item>
+                </n-col>
+              </n-row>
+            </div>
+          </template>
+
+          <template #action="{ value, index, create, remove }">
+            <div
+              style="
+                width: 140px;
+                display: flex;
+                justify-content: space-evenly;
+                flex-direction: column;
+              "
+              class="border-b border-t border-r border-dashed border-gray-300 p-4"
+            >
+              <n-button
+                secondary
+                type="primary"
+                :renderIcon="renderIcon('calendar-add')"
+                @click="openModalSchedule(value)"
               >
+                Horarios
               </n-button>
-            </n-button-group>
-          </div>
-        </template>
-      </n-dynamic-input>
+
+              <n-button-group>
+                <n-button
+                  :render-icon="renderIcon('element-plus')"
+                  @click="
+                    () => {
+                      create(index);
+                    }
+                  "
+                >
+                </n-button>
+                <n-button
+                  type="error"
+                  :render-icon="renderIcon('trash')"
+                  @click="
+                    () => {
+                      dialog.warning({
+                        title: 'Confirmar',
+                        content:
+                          '¿Está seguro que desea eliminar este registro?',
+                        positiveText: value.id ? 'Eliminar' : 'Quitar',
+                        negativeText: 'Cancelar',
+                        closable: false,
+                        showIcon: false,
+
+                        negativeButtonProps: {
+                          type: 'tertiary',
+                          size: 'large',
+                        },
+                        positiveButtonProps: {
+                          size: 'large',
+                          type: 'error',
+                        },
+                        onPositiveClick: async () => {
+                          if (value.id) {
+                            const deleted = await _deleteItem(value);
+                            if (deleted) remove(index);
+                          } else {
+                            remove(index);
+                          }
+                        },
+                      });
+                    }
+                  "
+                >
+                </n-button>
+              </n-button-group>
+            </div>
+          </template>
+        </n-dynamic-input>
+      </n-spin>
       <template #footer>
         <n-flex justify="end">
           <n-button @click="() => (showModal = false)">Cancelar</n-button>
@@ -177,6 +213,7 @@ import { MODALITIES } from "@/core/constants/modalities.constants";
 import ScheduleForm from "./ScheduleForm.vue";
 import type { ScheduleDTO } from "@/app/modules/Group/types/Group.types";
 import { useDialog } from "naive-ui";
+import LnxIcon from "@/core/components/LnxIcon.vue";
 const dialog = useDialog();
 const emit = defineEmits(["update:modelValue", "success"]);
 
@@ -194,13 +231,21 @@ const showModal = computed({
   set: (value) => emit("update:modelValue", value),
 });
 
+const loadingInitForm = ref<boolean>(false);
 const loading = ref<boolean>(false);
 const groupSelect = ref<GroupFormDTO | null>(null);
 const showModalSchedule = ref<boolean>(false);
-
 const teacherOptions = ref<SelectOption[]>([]);
-
 const form = ref<GroupFormDTO[]>([]);
+
+const initGroupValues = () =>
+  Object.assign(
+    {},
+    {
+      ..._getGroupInitValues(),
+      name: (props.item!.code + (form.value.length + 1)) as string,
+    }
+  );
 
 const openModalSchedule = (item: GroupFormDTO) => {
   groupSelect.value = Object.assign({}, { ...item });
@@ -208,7 +253,6 @@ const openModalSchedule = (item: GroupFormDTO) => {
 };
 
 const updateScheduleForm = (value: ScheduleDTO[], id: number) => {
-  console.log("Actualizando horarios", value, id);
   form.value = form.value.map((item) => {
     if (item.id === id) {
       item.schedules = value;
@@ -248,7 +292,6 @@ const initForm = async () => {
       id: props.item.id,
       periodId: props.periodId,
     });
-    console.log(formValues);
 
     if (formValues) {
       const teacherIdsString = formValues
@@ -259,19 +302,20 @@ const initForm = async () => {
       await searchTeachers({ id: teacherIdsString });
       form.value = formValues;
     } else {
-      form.value = [{ ..._getGroupInitValues() }];
+      form.value = [{ ..._getGroupInitValues(), name: props.item.code }];
       searchTeachers({ search: "" });
     }
-
-    // form.value = [];
-  } else {
-    form.value = [{ ..._getGroupInitValues() }];
   }
+  // else {
+  // form.value = [{ ..._getGroupInitValues(props.item?.code) }];
+  // }
 };
 
-watch(showModal, (value) => {
+watch(showModal, async (value) => {
   if (value) {
-    initForm();
+    loadingInitForm.value = true;
+    await initForm();
+    loadingInitForm.value = false;
   }
 });
 </script>

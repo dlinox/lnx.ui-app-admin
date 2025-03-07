@@ -62,10 +62,9 @@ export const _getStudentEnrollment = async (
   id: any,
   curriculumId: number,
   periodId: number
-): Promise<ResponseServiceDTO<any>> => {
+): Promise<any> => {
   try {
     let reponse = await http().post(
-      // `/enrollment/${id}/student-enrollment/${curriculumId}/curriculum`
       `/enrollment/student-enrollment-avaliable`,
       {
         studentId: id,
@@ -73,15 +72,10 @@ export const _getStudentEnrollment = async (
         periodId: periodId,
       }
     );
-    return {
-      status: true,
-      data: reponse.data.data as any,
-    };
+
+    return reponse.data.data;
   } catch (error: any) {
-    return {
-      status: false,
-      data: null,
-    };
+    return null;
   }
 };
 
@@ -105,21 +99,21 @@ export const _getModulesEnrollment = async (
   }
 };
 
-export const _validatePaymentEnrollment = async (
-  request: any
-): Promise<ResponseServiceDTO<any>> => {
+// Route::post('download-enrollment-pdfF', [EnrollmentController::class, 'downloadEnrollmentPDF']);
+export const _downloadEnrollmentPDF = async (request: any): Promise<any> => {
   try {
-    let reponse = await http().post(`/enrollment/validate-payment`, {
-      ...request,
-    });
-    return {
-      status: true,
-      data: reponse.data.data as any,
-    };
+    let reponse = await http().post(
+      `/enrollment/download-enrollment-pdf`,
+      {
+        ...request,
+      },
+      {
+        responseType: "blob",
+      }
+    );
+
+    return reponse.data;
   } catch (error: any) {
-    return {
-      status: false,
-      data: null,
-    };
+    return null;
   }
 };

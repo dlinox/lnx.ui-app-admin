@@ -3,6 +3,7 @@ import type { PersonDTO } from "@/app/modules/Person/types/Person.types";
 export interface StudentDTO extends PersonDTO {
   id: number | null;
   personId: number | null;
+
   studentTypeId: number | null;
   isEnabled: boolean;
 }
@@ -47,11 +48,21 @@ export interface StudentListItemDTO {
   isEnabled: boolean;
 }
 
-
 export interface StudentSearchListRequestDTO {
   code: string | null;
   documentNumber: string;
   name: string;
   lastNameFather: string;
   lastNameMother: string;
+}
+
+export interface StudentInfoDTO {
+  id: number;
+  studentType: string;
+  isEnabled: boolean;
+  fullName: string;
+  code: string;
+  documentNumber: string;
+  email: string;
+  phone: string;
 }

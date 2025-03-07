@@ -14,6 +14,7 @@ import type {
   StudentFormErrorsDTO,
   StudentListItemDTO,
   StudentSearchListRequestDTO,
+  StudentInfoDTO,
 } from "@/app/modules/Student/types/Student.types";
 import { _getStudentFormInitValues } from "../configs/form.configs";
 
@@ -28,9 +29,9 @@ export const _loadDataTable = async (
   }
 };
 
-export const _getItemById = async (id: number): Promise<StudentFormDTO> => {
+export const _loadForm = async (id: number): Promise<StudentFormDTO> => {
   try {
-    const response = await http().get(`/student/item/by-id/${id}`);
+    const response = await http().get(`/student/item/load-form/${id}`);
     return response.data.data as StudentFormDTO;
   } catch (error) {
     return _getStudentFormInitValues();
@@ -102,5 +103,16 @@ export const __searchListStudent = async (
     return response.data.data as StudentListItemDTO[];
   } catch (error) {
     return [];
+  }
+};
+
+export const __getInfoById = async (
+  id: any
+): Promise<StudentInfoDTO | null> => {
+  try {
+    const response = await http().get(`/student/info/${id}`);
+    return response.data.data as StudentInfoDTO;
+  } catch (error) {
+    return null;
   }
 };

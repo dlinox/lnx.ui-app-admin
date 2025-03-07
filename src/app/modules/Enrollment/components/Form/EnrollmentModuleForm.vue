@@ -1,8 +1,8 @@
 <template>
   <n-modal v-model:show="showModal">
     <n-card
-      style="width: 500px"
-      title="MATRICULA EN GRUPO"
+      style="width: 600px"
+      title="MATRICULA EN MODULO"
       :segmented="{
         content: true,
         footer: true,
@@ -11,58 +11,23 @@
       role="dialog"
       aria-modal="true"
     >
-      <n-row :gutter="[16, 16]">
-        <n-col span="24">
-          <div class="wrapper-list-groups">
-            <n-list hoverable clickable>
-              <template #header>
-                Grupos aperturados ({{ groupItems.length }})
-              </template>
-              <n-list-item
-                v-for="item in groupItems"
-                :key="item.id"
-                :class="{ 'item-selected': form.groupId == item.id }"
-                :extra="item.price"
-              >
-                <n-thing
-                  :title="`${item.group} - S/. ${item.price}`"
-                  @click="onSelectedGroup(item)"
-                >
-                  <template v-if="form.groupId == item.id" #header-extra>
-                    <n-button
-                      circle
-                      type="warning"
-                      :render-icon="renderIcon('verify')"
-                    ></n-button>
-                  </template>
-                  <template #description>
-                    <n-space size="small" style="margin-top: 4px">
-                      <n-tag :bordered="false" type="info" size="small">
-                        {{ item.modality }}
-                      </n-tag>
-                    </n-space>
-                  </template>
+      <n-form ref="formRef" :model="form" :rules="formRules" size="large">
+        <n-row :gutter="[16, 16]">
+          <n-col span="24">
+            <n-form-item path="moduleId" label="Modulo">
+              <n-select
+                v-model:value="form.moduleId"
+                placeholder="Seleccionar modulo"
+                :options="moduleItems"
+                :virtual-scroll="false"
+                clearable
+                filterable
+                @update:value="onSelectedModule"
+              />
+            </n-form-item>
+          </n-col>
 
-                  Docente: <b> {{ item.teacher }} </b>
-                  <br />
-                  Laboratorio: <b> {{ item.laboratory }} </b>
-                  <br />
-                  <n-tag
-                    v-for="(j, index) in item.schedules"
-                    :key="index"
-                    :bordered="false"
-                    type="info"
-                    size="small"
-                  >
-                    {{ j.day }} - {{ j.startHour }} - {{ j.endHour }}
-                  </n-tag>
-                </n-thing>
-              </n-list-item>
-            </n-list>
-          </div>
-        </n-col>
-
-        <n-col span="24">
+          <n-col span="24">
             <span
               role="button"
               @click="showPaymentModal = true"
@@ -119,18 +84,19 @@
             </div>
           </n-col>
 
-        <n-col span="24">
-          <n-button
-            size="large"
-            type="primary"
-            @click="handleSubmit"
-            block
-            :loading="loading"
-          >
-            Realizar Matricula
-          </n-button>
-        </n-col>
-      </n-row>
+          <n-col span="24">
+            <n-button
+              size="large"
+              type="primary"
+              @click="handleSubmit"
+              block
+              :loading="loading"
+            >
+              Realizar matricula
+            </n-button>
+          </n-col>
+        </n-row>
+      </n-form>
     </n-card>
   </n-modal>
   <PaymentForm
@@ -143,15 +109,18 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue";
 import {
-  _enrollmentGroupStore,
-  _getEnabledGroupEnrollment,
+  _getModulesEnrollment,
+  _enrollmentModuleStore,
 } from "@/app/modules/Enrollment/services/enrollment.services";
 import { renderIcon } from "@/core/utils/icon.utils";
-import type { PaymentDTO } from "@/app/modules/Payment/types/Payment.types";
-import type { EnrollmentGroupFormDTO } from "../../types/EnrollmentGroup.types";
-import { _getFormInitValues } from "../../configs/formGroup.config";
 import PaymentForm from "@/app/modules/Payment/components/PaymentForm.vue";
-
+import type { PaymentDTO } from "@/app/modules/Payment/types/Payment.types";
+import type { EnrollmentModuleFormDTO } from "../../types/Enrollment.types";
+import {
+  _getFormInitValues,
+  _getFormRules,
+} from "../../configs/formModule.config";
+import type { FormInst } from "naive-ui";
 
 const emit = defineEmits(["update:modelValue", "success"]);
 
@@ -159,24 +128,24 @@ const props = defineProps<{
   modelValue: boolean;
   studentId: any;
   curriculumId: any;
-  courseId: any;
 }>();
-
-const loading = ref<boolean>(false);
 
 const showModal = computed({
   get: () => props.modelValue,
   set: (value) => emit("update:modelValue", value),
 });
 
+const loading = ref<boolean>(false);
 const showPaymentModal = ref<boolean>(false);
+const moduleItems = ref<any>([]);
 
-const groupItems = ref<any>([]);
+const formRef = ref<FormInst | null>(null);
+const formRules = computed(() => _getFormRules());
+
+const form = ref<EnrollmentModuleFormDTO>(_getFormInitValues());
 
 const payments = ref<PaymentDTO[]>([]);
 const amount = ref<number>(0);
-
-const form = ref<EnrollmentGroupFormDTO>(Object.assign({}, {..._getFormInitValues()}));
 
 const onSuccessPaymentValidation = (value: any) => {
   console.log("Pago validado", value);
@@ -186,30 +155,6 @@ const onSuccessPaymentValidation = (value: any) => {
     amount: value.payment.amount,
     sequenceNumber: value.payment.sequenceNumber,
   });
-};
-
-const onSelectedGroup = (item: any) => {
-  if (form.value.groupId && form.value.groupId != item.id) {
-    form.value.groupId = item.id;
-    amount.value = item.price;
-  }
-  if (form.value.groupId == item.id) {
-    form.value.groupId = null;
-    amount.value = 0;
-  } else {
-    form.value.groupId = item.id;
-    amount.value = item.price;
-  }
-};
-
-const getEnabledGroupEnrollment = async () => {
-  const response = await _getEnabledGroupEnrollment({
-    studentId: props.studentId,
-    curriculumId: props.curriculumId,
-    courseId: props.courseId,
-  });
-
-  groupItems.value = response.data;
 };
 
 const removePayment = (index: number) => {
@@ -222,8 +167,27 @@ const removePayment = (index: number) => {
   form.value.payments.splice(indexPayment, 1);
 };
 
+const onSelectedModule = (value: any) => {
+  console.log("Seleccionando modulo", value);
+
+  form.value.payments = [];
+  moduleItems.value.forEach((item: any) => {
+    if (item.value == value) {
+      amount.value = item.price;
+    }
+  });
+};
+
+const getModulesEnrollmentItems = async () => {
+  const response = await _getModulesEnrollment(
+    props.studentId,
+    props.curriculumId
+  );
+  moduleItems.value = response.data;
+};
+
 const validatePayments = () => {
-  
+
   let total = payments.value.reduce(
     (acc, item: any) => acc + parseInt(item.amount),
     0
@@ -233,8 +197,9 @@ const validatePayments = () => {
 
 const handleSubmit = async () => {
   form.value.studentId = props.studentId;
+  form.value.curriculumId = props.curriculumId;
   loading.value = true;
-  const response = await _enrollmentGroupStore(form.value);
+  const response = await _enrollmentModuleStore(form.value);
   if (response.status) {
     emit("success");
     showModal.value = false;
@@ -244,25 +209,16 @@ const handleSubmit = async () => {
   console.log("Guardando matricula", form.value);
 };
 
-const init = async () => {
-  await getEnabledGroupEnrollment();
+const init = () => {
+  getModulesEnrollmentItems();
   console.log("Inicializando formulario");
 };
 
 watch(showModal, (value) => {
   if (value) {
+    form.value = Object.assign({}, { ..._getFormInitValues() });
+    payments.value = [];
     init();
   }
 });
 </script>
-
-<style>
-.wrapper-list-groups {
-  width: 100%;
-  max-height: 220px;
-  overflow-y: auto;
-}
-.item-selected {
-  background-color: #afc9d5c2;
-}
-</style>

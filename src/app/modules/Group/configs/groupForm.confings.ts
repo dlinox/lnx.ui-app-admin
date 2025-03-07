@@ -4,11 +4,13 @@ export const _getGroupInitValues = (): GroupFormDTO => {
   return {
     id: null,
     name: null,
-    curriculumCourseId: null,
+    courseId: null,
     teacherId: null,
     laboratoryId: null,
     schedules: [],
+    maxStudents: 0,
+    minStudents: 0,
     modality: null,
-    isEnabled: true,
+    status: "ABIERTO",
   };
 };

@@ -18,217 +18,285 @@
         :options="curriculumItems"
         :virtual-scroll="false"
         :default-value="1"
-        @update:value="getDataEnrollment"
+        @update:value="getStudentEnrollment"
       />
     </template>
     <template #action> </template>
   </n-card>
 
-  <n-row :gutter="16" style="padding: 1rem">
-    <n-col span="6">
-      <n-card>
-        <n-space vertical>
-          <n-statistic class="small" label="Tipo de estudiante">
-            {{ student?.studentType }}
-          </n-statistic>
-
-          <n-statistic class="small" label="Documento">
-            {{ student?.documentType }} {{ student?.documentNumber }}
-          </n-statistic>
-
-          <n-statistic class="small" label="Nombres">
-            {{ student?.name }} {{ student?.lastNameFather }}
-            {{ student?.lastNameMother }}
-          </n-statistic>
-
-          <n-statistic class="small" label="Correo electronico">
-            {{ student?.email ? student?.email : "No registrado" }}
-          </n-statistic>
-
-          <n-statistic class="small" label="Telefono">
-            {{ student?.phone ? student?.phone : "No registrado" }}
-          </n-statistic>
-        </n-space>
-      </n-card>
-    </n-col>
-    <n-col span="18" style="border: 1px solid #efefef; padding: 0rem 0">
-      <n-card title="Matricula" :bordered="false">
-        <template #header-extra>
-          <n-tag type="info" :bordered="false" style="margin-right: 0.5rem">
-            Periodo: <strong> {{ periodCurrent?.name }} </strong>
-          </n-tag>
-
-          <n-tag
-            :bordered="false"
-            :type="periodCurrent?.enrollmentEnabled ? 'success' : 'error'"
-          >
-            Matriculas:
-            <strong>
-              {{
-                periodCurrent?.enrollmentEnabled
-                  ? "Habilitada"
-                  : "Deshabilitada"
-              }}
-            </strong>
-          </n-tag>
-        </template>
-      </n-card>
-
-      <n-tabs
-        v-if="student?.enrollments"
-        animated
-        addable
-        @add="handleAddModule"
-        type="card"
-        :default-value="
-          student?.enrollments.length > 0 ? student?.enrollments[0].id : ''
-        "
-      >
-        <template #prefix>
-          <span style="font-weight: 600; margin-left: 1rem"> Modulos </span>
-        </template>
-        <n-tab-pane
-          v-for="module in student?.enrollments"
-          :name="module.id"
-          :tab="module.moduleName"
+  <div class="p-4">
+    <n-row :gutter="16">
+      <n-col :span="screenSize == 'lg' ?  6 : 24">
+        <n-card
+          :segmented="{
+            header: true,
+            content: true,
+          }"
+          title="Información Personal"
+          subtitle="Datos del estudiante"
         >
-          <n-card
-            v-for="course in module.courses"
-            size="small"
-            :key="course.id"
-            :title="course.courseName"
-            style="margin-bottom: 1rem; padding: 0rem"
-          >
-            <n-list
-              hoverable
-              clickable
-              v-if="course.enrollmentCourse.length > 0"
-            >
-              <n-list-item
-                v-for="item in course.enrollmentCourse"
-                :key="item.id"
-              >
-                <n-thing :title="`${item.groupName} - S/. ${item.price}`">
-                  <template #header-extra>
-                    <n-button :render-icon="renderIcon('printer')"></n-button>
-                    <n-button
-                      style="margin-left: 0.5rem"
-                      :render-icon="renderIcon('setting-5')"
-                    ></n-button>
-                  </template>
-                  <template #description>
-                    <n-space size="small" style="margin-top: 4px">
-                      <n-tag :bordered="false" type="info" size="small">
-                        {{ item.modality }}
-                      </n-tag>
-                    </n-space>
-                  </template>
+          <n-spin :show="loadingStudentInfo">
+            <n-space vertical>
+              <n-statistic class="small" label="Tipo de estudiante">
+                {{ student?.studentType }}
+              </n-statistic>
+              <n-statistic class="small" label="Documento">
+                {{
+                  student?.documentNumber
+                    ? student?.documentNumber
+                    : "No registrado"
+                }}
+              </n-statistic>
 
-                  Docente: <b> {{ item.teacher }} </b>
-                  <br />
-                  Laboratorio: <b> {{ item.laboratory }} </b>
-                  <br />
-                  <n-tag
-                    v-for="(j, index) in item.schedules"
-                    :key="index"
-                    :bordered="false"
-                    type="info"
-                    size="small"
-                  >
-                    {{ j.day }} - {{ j.startHour }} - {{ j.endHour }}
-                  </n-tag>
-                </n-thing>
-              </n-list-item>
-            </n-list>
+              <n-statistic class="small" label="Nombres">
+                {{ student?.fullName }}
+              </n-statistic>
 
-            <n-space v-else>
-              <n-space>
-                <n-button
-                  type="primary"
-                  size="small"
-                  @click="openEnrollmentGroupModal(course.id)"
-                >
-                  Matricular
-                </n-button>
-              </n-space>
+              <n-statistic class="small" label="Correo electronico">
+                {{ student?.email ? student?.email : "No registrado" }}
+              </n-statistic>
+
+              <n-statistic class="small" label="Telefono">
+                {{ student?.phone ? student?.phone : "No registrado" }}
+              </n-statistic>
             </n-space>
-          </n-card>
-        </n-tab-pane>
-      </n-tabs>
-    </n-col>
-  </n-row>
-  <AddModuleForm
+          </n-spin>
+        </n-card>
+      </n-col>
+      <n-col :span="screenSize == 'lg' ? 18 : 24">
+        <n-card
+          :segmented="{
+            header: true,
+            content: true,
+          }"
+          title="Matricula"
+        >
+          <template #header-extra>
+            <n-tag
+              :bordered="false"
+              :type="periodStore.enrollment ? 'info' : 'error'"
+            >
+              <strong>
+                {{
+                  periodStore.enrollment
+                    ? periodStore.enrollment?.name
+                    : "No habilitado"
+                }}
+              </strong>
+            </n-tag>
+          </template>
+          <div class="flex justify-end bg-gray-100 p-4 -mx-6 -mt-6 mb-4">
+            <n-button
+              type="primary"
+              @click="showAddModuleForm = true"
+              :disabled="!periodStore.enrollment"
+            >
+              Agregar Modulo
+            </n-button>
+          </div>
+          <n-collapse>
+            <n-collapse-item
+              v-for="item in studentEnrollment?.enrollments"
+              :key="item.moduleId"
+              :name="item.moduleId"
+            >
+              <template #header>
+                <h2 class="text-lg font-semibold w-full text-blue-800 p-2">
+                  {{ item.moduleName }}
+                </h2>
+              </template>
+              <n-list hoverable clickable>
+                <n-list-item v-for="course in item.courses" :key="course.id">
+                  <n-thing :title="`${course.code} - ${course.name}`">
+                    <template #header-extra>
+                      <n-button
+                        v-if="
+                    course.enrollmentGroups.length == 0 
+                    || (Math.max(...course.enrollmentGroups.map((obj:any) => obj.grade)) < 11
+                    && course.enrollmentGroups.filter((obj:any) => obj.groupStatus == 'ABIERTO').length == 0)
+                    "
+                        type="primary"
+                        @click="openEnrollmentGroupModal(course.id)"
+                      >
+                        Matricular
+                      </n-button>
+                    </template>
+
+                    <template #description>
+                      <n-space size="small">
+                        <n-tag :bordered="false" size="small">
+                          Area: {{ course.area }}
+                        </n-tag>
+                      </n-space>
+                    </template>
+
+                    <n-table
+                      v-if="course.enrollmentGroups.length > 0"
+                      :single-line="false"
+                    >
+                      <thead>
+                        <tr>
+                          <th>Periodo</th>
+                          <th>Grupo</th>
+                          <th>Modalidad</th>
+                          <th>Estado</th>
+                          <th>Nota</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="enrollmentGroup in course.enrollmentGroups">
+                          <td>
+                            <n-tag
+                              v-if="
+                                periodStore.enrollment?.name ==
+                                enrollmentGroup.period
+                              "
+                              type="info"
+                            >
+                              {{ enrollmentGroup.period }}
+                            </n-tag>
+
+                            <span v-else>
+                              {{ enrollmentGroup.period }}
+                            </span>
+                          </td>
+                          <td>
+                            {{ enrollmentGroup.groupName }}
+                          </td>
+                          <td>
+                            {{ enrollmentGroup.groupModality }}
+                          </td>
+                          <td>
+                            {{ enrollmentGroup.groupStatus }}
+                          </td>
+                          <td>
+                            {{ enrollmentGroup.grade }}
+                          </td>
+                          <td>
+                            <n-button
+                              v-if="
+                                enrollmentGroup.groupStatus === 'ABIERTO' ||
+                                enrollmentGroup.groupStatus === 'CERRADO'
+                              "
+                              :render-icon="renderIcon('printer')"
+                              @click="downloadEnrollmentPDF(enrollmentGroup.id)"
+                            >
+                              Imprimir ficha
+                            </n-button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </n-table>
+                  </n-thing>
+                </n-list-item>
+              </n-list>
+            </n-collapse-item>
+          </n-collapse>
+        </n-card>
+      </n-col>
+    </n-row>
+  </div>
+  <iframe id="printFrame" style="display: none"></iframe>
+  <EnrollmentModuleForm
     v-if="student"
     v-model="showAddModuleForm"
     :studentId="student.id"
     :curriculumId="curriculumId"
-    @success="getDataEnrollment"
+    @success="getStudentEnrollment"
   />
   <EnrollmentGroupForm
     v-model="showModal"
     :studentId="student.id"
     :curriculumId="curriculumId"
-    :curriculumCourseId="curriculumCourseId"
-    @success="getDataEnrollment"
+    :courseId="courseId"
+    @success="getStudentEnrollment"
   />
 </template>
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import { _createColumns } from "@/app/modules/Course/configs/dataTable.configs";
 import { useRoute } from "vue-router";
 
-import AddModuleForm from "../components/Form/AddModuleForm.vue";
+import { renderIcon } from "@/core/utils/icon.utils";
 
-import { _getStudentEnrollment } from "@/app/modules/Enrollment/services/enrollment.services";
+import useBreakpoints from "@/core/composable/useBreakpoints";
+import { _createColumns } from "@/app/modules/Course/configs/dataTable.configs";
+import {
+  _getStudentEnrollment,
+  _downloadEnrollmentPDF,
+} from "@/app/modules/Enrollment/services/enrollment.services";
 import { __current } from "@/app/modules/Period/services/period.services";
-
 import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
+import { __getInfoById } from "@/app/modules/Student/services/student.services";
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
 import { __searchCurriculums } from "@/app/shared/services/selectables.services";
 import EnrollmentGroupForm from "../components/Form/EnrollmentGroupForm.vue";
-import { renderIcon } from "@/core/utils/icon.utils";
+
+import { usePeriodStore } from "@/app/store/period.stores";
+
+import EnrollmentModuleForm from "../components/Form/EnrollmentModuleForm.vue";
+
+const { screenSize } = useBreakpoints();
 const route = useRoute();
+const periodStore = usePeriodStore();
 
 const showAddModuleForm = ref<boolean>(false);
 const showModal = ref<boolean>(false);
 
+// const loadingView = ref<boolean>(true);
 const curriculumId = ref<number | null>(null);
 const periodCurrent = ref<any | null>(null);
-
 const curriculumItems = ref<any>([]);
-const loadingView = ref<boolean>(true);
+
+const loadingStudentInfo = ref<boolean>(true);
 const student = ref<any>({});
+const loadingStudentEnrollment = ref<boolean>(true);
+const studentEnrollment = ref<any | null>(null);
+const courseId = ref<number | null>(null);
 
-const curriculumCourseId = ref<number | null>(null);
+const downloadEnrollmentPDF = async (enrollmentGroupId: number) => {
+  let response = await _downloadEnrollmentPDF({ id: enrollmentGroupId });
 
-const handleAddModule = () => {
-  showAddModuleForm.value = true;
-  console.log("Add module");
+  let blob = new Blob([response], { type: "application/pdf" });
+  let url = window.URL.createObjectURL(blob);
+
+  let iframe = document.getElementById("printFrame") as HTMLIFrameElement;
+
+  iframe.src = url;
+  iframe.onload = function () {
+    iframe.contentWindow?.print();
+  };
 };
 
-const getDataEnrollment = async () => {
+const getStudentInfo = async () => {
+  const id = route.params.id;
+  loadingStudentInfo.value = true;
+  student.value = await __getInfoById(id);
+  loadingStudentInfo.value = false;
+};
+
+const getStudentEnrollment = async () => {
   const id = route.params.id;
   const periodId = periodCurrent.value?.id;
-  const response = await _getStudentEnrollment(
+  loadingStudentEnrollment.value = true;
+  studentEnrollment.value = await _getStudentEnrollment(
     id,
     curriculumId.value!,
     periodId
   );
-  student.value = response.data;
+  loadingStudentEnrollment.value = false;
 };
 
-const openEnrollmentGroupModal = (courseId: number) => {
-  curriculumCourseId.value = courseId;
+const openEnrollmentGroupModal = (id: number) => {
+  courseId.value = id;
   showModal.value = true;
 };
 
 const initView = async () => {
   curriculumItems.value = await __searchCurriculums("");
-  periodCurrent.value = await __current();
   curriculumId.value = curriculumItems.value[0].value;
-  loadingView.value = true;
-  await getDataEnrollment();
-  loadingView.value = false;
+  getStudentInfo();
+  getStudentEnrollment();
 };
 
 onMounted(() => {

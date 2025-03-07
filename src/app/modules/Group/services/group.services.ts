@@ -37,13 +37,13 @@ export const _loadForm = async (
 export const _saveItems = async (
   request: GroupFormDTO[],
   periodId: number,
-  curriculumCourseId: number
+  courseId: number
 ): Promise<ResponseServiceDTO<GroupFormDTO | GroupFormErrorsDTO>> => {
   try {
     const response = await http().post("/group/save", {
       groups: request,
       periodId,
-      curriculumCourseId,
+      courseId,
     });
     return {
       status: true,

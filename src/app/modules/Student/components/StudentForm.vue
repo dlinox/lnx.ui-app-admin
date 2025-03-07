@@ -222,7 +222,7 @@ import {
 import {
   _storeItem,
   _updateItem,
-  _getItemById,
+  _loadForm,
 } from "@/app/modules/Student/services/student.services";
 
 const emit = defineEmits(["update:modelValue", "success"]);
@@ -248,7 +248,6 @@ const formErrors = ref<StudentFormErrorsDTO | null>(null);
 const formRules = ref<any>({ ..._getStudentFormRules() });
 
 const handleSubmit = async () => {
-
   if (formRef.value) {
     const valid = await formRef.value.validate();
 
@@ -275,7 +274,7 @@ const handleSubmit = async () => {
 
 const getItemForm = async () => {
   if (props.item?.id) {
-    form.value = await _getItemById(props.item.id);
+    form.value = await _loadForm(props.item.id);
   } else {
     form.value = _getStudentFormInitValues();
   }

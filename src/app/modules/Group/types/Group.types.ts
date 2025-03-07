@@ -13,6 +13,7 @@ export interface GroupDTO {
 
 export interface GroupDataTableItemDTO {
   id: number;
+  code: string;
   name: string;
   course: string;
   countGroups: number;
@@ -29,20 +30,24 @@ export interface GroupDataTablePropsDTO {
 export interface GroupFormDTO {
   id: number | null;
   name: string | null;
-  curriculumCourseId: number | null;
+  courseId: number | null;
   teacherId: number | null;
   laboratoryId: number | null;
   schedules: ScheduleDTO[] | [];
   modality: string | null;
-  isEnabled: boolean;
+  maxStudents: number;
+  minStudents: number;
+  status: string | null;
 }
 
 export interface GroupFormErrorsDTO {
   name: string[];
-  curriculumCourseId: string[];
+  courseId: string[];
   teacherId: string[];
   laboratoryId: string[];
   schedules: string[];
+  maxStudents: number;
+  minStudents: number;
   modality: string[];
 }
 
