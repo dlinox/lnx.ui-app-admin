@@ -1,1 +1,0 @@
-import{r as s,aJ as o,aK as t}from"./index-B-obX2sB.js";function a(){const e=s(""),n=()=>{const i=window.innerWidth;i<768?e.value="sm":i<1024?e.value="md":i>=1024&&(e.value="lg")};return o(()=>{window.addEventListener("resize",n),n()}),t(()=>{window.removeEventListener("resize",n)}),{screenSize:e}}export{a as u};

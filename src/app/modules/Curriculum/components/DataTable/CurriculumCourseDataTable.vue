@@ -153,9 +153,9 @@ const onPageSizeChange = async (pageSize: number) => {
 const init = async () => {
   await loadDataTable();
   const id = route.params?.id;
-  selectables.value.areaItems = await __getAreasForSelect();
+  selectables.value.areaItems = await __getAreasForSelect(id);
   selectables.value.moduleItems = await __getModulesForCurriculumForSelect(id);
-  selectables.value.courseItems = await __getCoursesForSelect();
+  selectables.value.courseItems = await __getCoursesForSelect(id);
   selectables.value.preRequisiteItems =
     await __getPreRequisiteByCurriculumItemsForSelect(id);
 };
