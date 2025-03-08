@@ -273,11 +273,13 @@ const menuOptions: MenuOption[] = [
         iconName: "folder-add",
       }),
 
-      {
+      //EnrollmentVirtual
+      menuItem({
         label: "Matriculas virtuales",
-        key: "virtual-enrollments",
-        icon: renderIcon("folder-cloud"),
-      },
+        key: "virtual-enrollment",
+        route: "EnrollmentVirtual",
+        iconName: "folder-cloud",
+      }),
       {
         label: "Convalidaciones",
         key: "validations",

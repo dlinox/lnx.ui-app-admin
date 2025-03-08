@@ -1,6 +1,18 @@
 import { http } from "@/core/http";
+import { initValuesDataTableResponse, type DataTableResponseDTO } from "@/core/types/DataTable.types";
 import type { ResponseServiceDTO } from "@/core/types/Response.types";
 
+
+export const _loadDataTable = async (
+  request: any
+): Promise<DataTableResponseDTO<any>> => {
+  try {
+    const response = await http().post("/enrollment/load-data-table", request);
+    return response.data.data as DataTableResponseDTO<any>;
+  } catch (error) {
+    return initValuesDataTableResponse();
+  }
+};
 // Route::post('module-store', [EnrollmentController::class, 'enrollmentModuleStore']);
 export const _enrollmentModuleStore = async (
   request: any

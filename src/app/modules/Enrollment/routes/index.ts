@@ -13,6 +13,12 @@ const routes: RouteRecordRaw[] = [
     component: () =>
       import("@/app/modules/Enrollment/views/EnrollmentStudentView.vue"),
   },
+  {
+    path: "enrollment/virtual",
+    name: "EnrollmentVirtual",
+    component: () =>
+      import("@/app/modules/Enrollment/views/EnrollmentVirtualView.vue"),
+  },
 ];
 
 export default routes;
