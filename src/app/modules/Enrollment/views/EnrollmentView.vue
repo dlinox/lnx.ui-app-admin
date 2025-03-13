@@ -1,21 +1,15 @@
 <template>
-  <n-card
-    :segmented="{
-      header: true,
-      footer: true,
-      content: true,
-    }"
-  >
+  <n-card :segmented="{
+    header: true,
+    footer: true,
+    content: true,
+  }">
     <template #header>
       <h6 style="color: #999; margin: 0">Matriculas</h6>
       Matricular estudiantes
     </template>
     <template #header-extra>
-      <n-button
-        :render-icon="renderIcon('additem')"
-        type="primary"
-        @click="showModal = true"
-      >
+      <n-button :render-icon="renderIcon('additem')" type="primary" @click="showModal = true">
         Estudiante
       </n-button>
     </template>
@@ -25,32 +19,16 @@
       </n-divider>
       <n-row gutter="16">
         <n-col span="5">
-          <n-input
-            type="text"
-            v-model:value="search.documentNumber"
-            placeholder="N° de Documento"
-          />
+          <n-input type="text" v-model:value="search.documentNumber" placeholder="N° de Documento" />
         </n-col>
         <n-col span="7">
-          <n-input
-            type="text"
-            v-model:value="search.name"
-            placeholder="Nombre"
-          />
+          <n-input type="text" v-model:value="search.name" placeholder="Nombre" />
         </n-col>
         <n-col span="6">
-          <n-input
-            type="text"
-            v-model:value="search.lastNameFather"
-            placeholder="Apellido Paterno"
-          />
+          <n-input type="text" v-model:value="search.lastNameFather" placeholder="Apellido Paterno" />
         </n-col>
         <n-col span="6">
-          <n-input
-            type="text"
-            v-model:value="search.lastNameMother"
-            placeholder="Apellido Materno"
-          />
+          <n-input type="text" v-model:value="search.lastNameMother" placeholder="Apellido Materno" />
         </n-col>
       </n-row>
     </template>
@@ -65,42 +43,34 @@
         </i>
       </div>
     </template>
-    <n-list-item
-      style="margin: 0 1rem"
-      v-for="student in listStudent"
-      :key="student.id"
-    >
+    <n-list-item style="margin: 0 1rem" v-for="student in listStudent" :key="student.id">
       <template #suffix>
-        <n-button
-          @click="
-            router.push({
-              name: 'EnrollmentStudent',
-              params: { id: student.id },
-            })
-          "
-        >
-          Seleccionar
+        <n-button class="m-2" @click="
+          router.push({
+            name: 'EnrollmentStudent',
+            params: { id: student.id },
+          })
+          ">
+          Matricular
+        </n-button>
+        <n-button @click="
+          router.push({
+            name: 'EnrollmentSpecialStudent',
+            params: { id: student.id },
+          })
+          ">
+          Matriculas Especiales
         </n-button>
       </template>
-      <n-thing
-        :title="`${student.name} ${student.lastName}`"
-        :description="`${
-          student.documentType ? student.documentType : '-'
-        }    ${student.documentNumber ? student.documentNumber : '-'}`"
-      >
+      <n-thing :title="`${student.name} ${student.lastName}`" :description="`${student.documentType ? student.documentType : '-'
+        }    ${student.documentNumber ? student.documentNumber : '-'}`">
         <n-tag :bordered="false">
           {{ student.studentType }}
         </n-tag>
       </n-thing>
     </n-list-item>
   </n-list>
-  <StudentForm
-    v-if="!loadingView"
-    v-model="showModal"
-    :item="null"
-    :selectables="selectables"
-    @success="onRegister"
-  />
+  <StudentForm v-if="!loadingView" v-model="showModal" :item="null" :selectables="selectables" @success="onRegister" />
 </template>
 <script lang="ts" setup>
 import { ref, watch } from "vue";

@@ -7,7 +7,11 @@ export const _getGroupInitValues = (): GroupFormDTO => {
     courseId: null,
     teacherId: null,
     laboratoryId: null,
-    schedules: [],
+    schedule: {
+      days: [],
+      startHour: null,
+      endHour: null,
+    },
     maxStudents: 0,
     minStudents: 0,
     modality: null,

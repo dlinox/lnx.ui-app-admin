@@ -4,6 +4,7 @@ export const _getPaymentTypeInitValues = (): PaymentTypeFormDTO => {
   return {
     id: null,
     name: null,
+    commission: null,
     isEnabled: true,
   };
 };

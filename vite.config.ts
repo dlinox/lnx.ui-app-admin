@@ -18,7 +18,6 @@ export default defineConfig({
             "useDialog",
             "useMessage",
             "useNotification",
-            "useLoadingBar",
           ],
         },
       ],
@@ -31,5 +30,8 @@ export default defineConfig({
     alias: {
       "@": "/src",
     },
+  },
+  server: {
+    port: 2025,
   },
 });

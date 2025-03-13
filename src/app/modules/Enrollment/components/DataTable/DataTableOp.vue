@@ -1,64 +1,37 @@
 <template>
-  <n-dropdown :options="options" placement="bottom-start">
-    <n-button>
-      <LnxIcon icon-name="setting-5" size="20" />
-    </n-button>
-  </n-dropdown>
+  <EditEnrollmentGroup v-if="periodStore.enrollment?.name == item.period" :item="item"
+    @resetEnrollment="($event) => emit('openForm', $event)" @changeGroup="($event) => emit('openForm', $event)"
+    @reserveEnrollment="emit('success')" @cancelEnrollment="emit('success')" />
+
 </template>
+<script lang="ts" setup>
+import { onMounted } from "vue";
+import { _createColumns } from "@/app/modules/Course/configs/dataTable.configs";
+import {
+  _getStudentEnrollment,
+  _downloadEnrollmentPDF,
+} from "@/app/modules/Enrollment/services/enrollment.services";
+import { __current } from "@/app/modules/Period/services/period.services";
+import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
+import { __getInfoById } from "@/app/modules/Student/services/student.services";
+import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
+import { __searchCurriculums } from "@/app/shared/services/selectables.services";
+import { usePeriodStore } from "@/app/store/period.stores";
 
-<script setup lang="ts">
-import LnxIcon from "@/core/components/LnxIcon.vue";
-import { renderIcon } from "@/core/utils/icon.utils";
-import { useDialog } from "naive-ui";
-const dialog = useDialog();
+import EditEnrollmentGroup from "@/app/modules/Enrollment/components/EditEnrollmentGroup/EditEnrollmentGroup.vue";
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits(["openForm", "success"]);
 
 defineProps<{
   item: any;
 }>();
 
-const options = [
-  {
-    label: "Editar",
-    key: "edit",
-    icon: renderIcon("edit-2"),
-    props: {
-      onClick: () => emit("edit"),
-    },
-  },
-  {
-    label: "Eliminar",
-    key: "delete",
-    icon: renderIcon("trash", "red"),
-    props: {
-      style: {
-        color: "red",
-      },
-      onClick: () => {
-        dialog.warning({
-          title: "Confirmar",
-          content: "¿Está seguro que desea eliminar este registro?",
-          positiveText: "Eliminar",
-          negativeText: "Cancelar",
-          closable: false,
-          showIcon: false,
-          negativeButtonProps: {
-            secondary: true,
-            type: "tertiary",
-            size: "large",
-          },
-          positiveButtonProps: {
-            size: "large",
-            type: "error",
-          },
-          onPositiveClick: () => {
-            emit("delete");
-          },
-        });
-      },
-    },
-  },
-];
-</script>
+const periodStore = usePeriodStore();
 
+const initView = async () => {
+};
+
+onMounted(() => {
+  initView();
+});
+</script>

@@ -196,6 +196,7 @@ import useBreakpoints from "@/core/composable/useBreakpoints";
 import {
   type GroupDataTableItemDTO,
   type GroupFormDTO,
+  type ScheduleFormDTO
 } from "@/app/modules/Group/types/Group.types";
 
 import { _getGroupInitValues } from "@/app/modules/Group/configs/groupForm.confings";
@@ -211,7 +212,6 @@ import {
 } from "@/app/modules/Group/services/group.services";
 import { MODALITIES } from "@/core/constants/modalities.constants";
 import ScheduleForm from "./ScheduleForm.vue";
-import type { ScheduleDTO } from "@/app/modules/Group/types/Group.types";
 import { useDialog } from "naive-ui";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 const dialog = useDialog();
@@ -252,10 +252,10 @@ const openModalSchedule = (item: GroupFormDTO) => {
   showModalSchedule.value = true;
 };
 
-const updateScheduleForm = (value: ScheduleDTO[], id: number) => {
+const updateScheduleForm = (value: ScheduleFormDTO, id: number) => {
   form.value = form.value.map((item) => {
     if (item.id === id) {
-      item.schedules = value;
+      item.schedule = value;
     }
     return item;
   });

@@ -7,3 +7,12 @@
 .v-toast {
   z-index: 2090 !important;
 }
+.n-data-table-th--fixed-right {
+  border-left: 1px solid #EAEAEA;
+}
+
+.n-data-table .n-data-table-td.n-data-table-td--fixed-right {
+  border-left: 1px solid #EAEAEA;
+  border-top: 1px solid #EAEAEA;
+
+}

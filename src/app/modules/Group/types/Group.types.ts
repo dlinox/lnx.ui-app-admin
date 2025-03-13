@@ -1,5 +1,5 @@
-export interface ScheduleDTO {
-  day: string;
+export interface ScheduleFormDTO {
+  days: string[];
   startHour: number | null;
   endHour: number | null;
 }
@@ -33,7 +33,7 @@ export interface GroupFormDTO {
   courseId: number | null;
   teacherId: number | null;
   laboratoryId: number | null;
-  schedules: ScheduleDTO[] | [];
+  schedule: ScheduleFormDTO | null;
   modality: string | null;
   maxStudents: number;
   minStudents: number;
@@ -45,7 +45,7 @@ export interface GroupFormErrorsDTO {
   courseId: string[];
   teacherId: string[];
   laboratoryId: string[];
-  schedules: string[];
+  schedule: string[];
   maxStudents: number;
   minStudents: number;
   modality: string[];

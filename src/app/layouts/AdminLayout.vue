@@ -1,69 +1,30 @@
 <template>
-  <n-layout
-    position="absolute"
-    style="min-height: 100vh; position: relative; overflow: hidden"
-  >
+  <n-layout position="absolute" style="min-height: 100vh; position: relative; overflow: hidden">
     <n-layout has-sider position="absolute" style="top: 0px; bottom: 48px">
-      <n-layout-sider
-        v-if="screenSize !== 'sm'"
-        bordered
-        style="height: 100%; background-color: #f0f2f5"
-        collapse-mode="width"
-        v-model:collapsed="collapsed"
-        :width="280"
-        :native-scrollbar="false"
-        :inverted="inverted"
-        :position="screenSize === 'sm' ? 'absolute' : 'static'"
-        :collapsed-width="screenSize === 'sm' ? 0 : 64"
-      >
-        <n-menu
-          :inverted="inverted"
-          :collapsed-width="64"
-          :collapsed-icon-size="22"
-          :options="menuOptions"
-          :default-value="currentKey"
-          class="mb-26"
-        />
-        <div
-          class="absolute bottom-0 start-0 end-0 border-t border-gray-300 backdrop-blur-sm z-10 border-solid"
-        >
-          <n-menu
-            :inverted="inverted"
-            :collapsed-width="64"
-            :collapsed-icon-size="22"
-            :options="menuFooterOptions"
-          />
+      <n-layout-sider v-if="screenSize !== 'sm'" bordered style="height: 100%; background-color: #f0f2f5"
+        collapse-mode="width" v-model:collapsed="collapsed" :width="280" :native-scrollbar="false" :inverted="inverted"
+        :position="screenSize === 'sm' ? 'absolute' : 'static'" :collapsed-width="screenSize === 'sm' ? 0 : 64">
+        <n-menu :inverted="inverted" :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
+          :default-value="currentKey" class="mb-26" />
+        <div class="absolute bottom-0 start-0 end-0 border-t border-gray-300 backdrop-blur-sm z-10 border-solid">
+          <n-menu :inverted="inverted" :collapsed-width="64" :collapsed-icon-size="22" :options="menuFooterOptions" />
         </div>
       </n-layout-sider>
 
-      <n-drawer
-        v-if="screenSize === 'sm'"
-        v-model:show="active"
-        :width="280"
-        position="absolute"
-        style="top: 0px; bottom: 0px"
-        placement="left"
-      >
-        <n-menu
-          :inverted="inverted"
-          :collapsed-width="64"
-          :collapsed-icon-size="22"
-          :options="menuOptions"
-          v-model="currentKey"
-        />
+      <n-drawer v-if="screenSize === 'sm'" v-model:show="active" :width="280" position="absolute"
+        style="top: 0px; bottom: 0px" placement="left">
+        <n-menu :inverted="inverted" :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
+          v-model="currentKey" />
       </n-drawer>
 
       <n-layout>
-        <n-layout-header
-          bordered
-          style="
+        <n-layout-header bordered style="
             height: 48px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 8px;
-          "
-        >
+          ">
           <n-button v-if="screenSize === 'sm'" @click="active = !active">
             <LnxIcon icon size="24" icon-name="grid-4" />
           </n-button>
@@ -81,17 +42,13 @@
         </n-layout-content>
       </n-layout>
     </n-layout>
-    <n-layout-footer
-      bordered
-      position="absolute"
-      style="
+    <n-layout-footer bordered position="absolute" style="
         height: 48px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0 16px;
-      "
-    >
+      ">
       <span> v1.0 </span>
     </n-layout-footer>
   </n-layout>
@@ -267,15 +224,13 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon("folder"),
     children: [
       menuItem({
-        label: "Matriculas",
+        label: "Matricular",
         key: "enrollment",
         route: "Enrollment",
         iconName: "folder-add",
       }),
-
-      //EnrollmentVirtual
       menuItem({
-        label: "Matriculas virtuales",
+        label: "Matriculas",
         key: "virtual-enrollment",
         route: "EnrollmentVirtual",
         iconName: "folder-cloud",
@@ -317,6 +272,12 @@ const menuOptions: MenuOption[] = [
         route: "Group",
         iconName: "calendar-add",
       }),
+      menuItem({
+        label: "Gestion de Grupos",
+        key: "GroupManager",
+        route: "GroupManager",
+        iconName: "data",
+      })
     ],
   },
   {
@@ -397,6 +358,7 @@ const menuOptions: MenuOption[] = [
 ];
 
 const menuFooterOptions = [
+
   {
     label: () =>
       h(
@@ -405,30 +367,7 @@ const menuFooterOptions = [
           class: "text-gray-500",
         },
         [
-          "Per. Actual: ",
-          h(
-            "strong",
-            {
-              class: periodStore.current?.name
-                ? "text-blue-500"
-                : "text-red-500",
-            },
-            periodStore.current?.name ?? "No definido"
-          ),
-        ]
-      ),
-    icon: renderIcon("calendar"),
-    key: "hear-the-wind-sing",
-  },
-  {
-    label: () =>
-      h(
-        "span",
-        {
-          class: "text-gray-500",
-        },
-        [
-          "Per. Matricula: ",
+          "Matriculas:  ",
           h(
             "strong",
             {
@@ -456,7 +395,6 @@ const signOut = async () => {
 };
 
 const initLayout = async () => {
-  await periodStore.getCurrent();
   await periodStore.getEnrollment();
 };
 

@@ -1,14 +1,12 @@
 <template>
-  <n-config-provider
-    :locale="esAR"
-    :date-locale="dateEsAR"
-    :theme-overrides="themeOverrides"
-  >
-    <n-message-provider>
-      <n-dialog-provider>
-        <RouterView />
-      </n-dialog-provider>
-    </n-message-provider>
+  <n-config-provider :locale="esAR" :date-locale="dateEsAR" :theme-overrides="themeOverrides">
+    <n-notification-provider>
+      <n-message-provider>
+        <n-dialog-provider>
+          <RouterView />
+        </n-dialog-provider>
+      </n-message-provider>
+    </n-notification-provider>
   </n-config-provider>
 </template>
 

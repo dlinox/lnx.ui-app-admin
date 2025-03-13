@@ -3,13 +3,7 @@
     <n-row :gutter="12" style="padding: 12px 16px">
       <n-col :span="12"> </n-col>
       <n-col :span="12">
-        <n-input
-          size="large"
-          placeholder="Buscar"
-          v-model:value="request.search"
-          @input="debouncedReload"
-          clearable
-        >
+        <n-input size="large" placeholder="Buscar" v-model:value="request.search" @input="debouncedReload" clearable>
           <template #suffix>
             <LnxIcon icon-name="search-normal-1" size="20" />
           </template>
@@ -18,26 +12,22 @@
     </n-row>
     <n-row>
       <n-col :span="24">
-        <n-data-table
-          key="id"
-          remote
-          :single-line="false"
-          :columns="columns"
-          :data="items"
-          :pagination="_createPagination(pagination)"
-          :pagination-show-size-picker="true"
-          :loading="loadingTable"
-          @update:page="onPageChange"
-          @update:page-size="onPageSizeChange"
-        />
+        <n-data-table key="id" remote :single-line="false" :columns="columns" :data="items"
+          :pagination="_createPagination(pagination)" :pagination-show-size-picker="true" :loading="loadingTable"
+          @update:page="onPageChange" @update:page-size="onPageSizeChange" />
       </n-col>
     </n-row>
 
     <slot name="extra" :reLoadDataTable="reLoadDataTable"> </slot>
   </div>
+
+  <EnrollmentGroupForm v-model="showModal" :studentId="studentId" :curriculumId="curriculumId" :courseId="courseId"
+    :enrollmetGroup="enrollmetGroup" @success="reLoadDataTable" />
+
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
+import EnrollmentGroupForm from "@/app/modules/Enrollment/components/Form/EnrollmentGroupForm.vue";
 
 import {
   type DataTableRequestDTO,
@@ -48,12 +38,14 @@ import {
 import {
   _createColumns,
   _createPagination,
-} from "@/app/modules/Enrollment/configs/dataTable.configs";
+} from "@/app/modules/Enrollment/components/DataTable/config";
 
 import { _loadDataTable } from "@/app/modules/Enrollment/services/enrollment.services";
 
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
+
+const showModal = ref<boolean>(false);
 
 const loadingTable = ref(false);
 const items = ref<any[]>([]);
@@ -69,12 +61,25 @@ const response = ref<DataTableResponseDTO<any>>(
   {} as DataTableResponseDTO<any>
 );
 
-const columns = _createColumns();
+const courseId = ref<number | null>(null);
+const enrollmetGroup = ref<any | null>(null);
+const studentId = ref<number | null>(null);
+const curriculumId = ref<number | null>(null);
+
+const openEnrollmentGroupModal = (item: any) => {
+  courseId.value = item.courseId;
+  studentId.value = item.studentId;
+  curriculumId.value = item.curriculumId;
+  enrollmetGroup.value = item;
+  showModal.value = true;
+};
 
 const reLoadDataTable = async () => {
   request.value.page = 1;
   await loadDataTable();
 };
+
+const columns = _createColumns(openEnrollmentGroupModal, reLoadDataTable);
 
 const loadDataTable = async () => {
   loadingTable.value = true;

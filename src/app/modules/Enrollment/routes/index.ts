@@ -13,6 +13,12 @@ const routes: RouteRecordRaw[] = [
     component: () =>
       import("@/app/modules/Enrollment/views/EnrollmentStudentView.vue"),
   },
+  //EnrollmentSpecialStudent
+  {
+    path: "enrollment-special/:id/student",
+    name: "EnrollmentSpecialStudent",
+    component: () => import("@/app/modules/Enrollment/views/EnrollmentSpecialStudentView.vue"),
+  },
   {
     path: "enrollment/virtual",
     name: "EnrollmentVirtual",

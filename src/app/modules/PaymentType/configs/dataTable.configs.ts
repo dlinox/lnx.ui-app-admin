@@ -12,53 +12,59 @@ export const _createColumns = (
   openModal: (item: PaymentTypeDTO) => void,
   deleteItem: (item: PaymentTypeDTO) => void
 ): DataTableColumns => [
-  {
-    title: "Ops.",
-    key: "ops",
-    width: "80px",
-    fixed: "left",
-    render(rowData: any) {
-      const rowItem = rowData as PaymentTypeDTO;
-      return h(
-        DataTableOp,
-        {
-          onEdit: () => {
-            openModal(rowItem);
+    {
+      title: "Ops.",
+      key: "ops",
+      width: "80px",
+      fixed: "left",
+      render(rowData: any) {
+        const rowItem = rowData as PaymentTypeDTO;
+        return h(
+          DataTableOp,
+          {
+            onEdit: () => {
+              openModal(rowItem);
+            },
+            onDelete: () => {
+              deleteItem(rowItem);
+            },
+            item: rowItem,
           },
-          onDelete: () => {
-            deleteItem(rowItem);
+          {
+            default: () => "Editar",
+          }
+        );
+      },
+    },
+    {
+      title: "Nombre",
+      key: "name",
+      minWidth: "300px",
+    },
+    {
+      title: "Comisión (S/.)",
+      key: "commission",
+      width: "120px",
+      align: "right",
+    },
+    {
+      title: "Habilitado",
+      key: "isEnabled",
+      width: "150px",
+      render: (row) => {
+        return h(
+          NTag,
+          {
+            type: row.isEnabled ? "success" : "error",
+            tertiary: true,
+            bordered: false,
+            strong: true,
           },
-          item: rowItem,
-        },
-        {
-          default: () => "Editar",
-        }
-      );
+          { default: () => (row.isEnabled ? "	Habilitado" : "Deshabilitado") }
+        );
+      },
     },
-  },
-  {
-    title: "Nombre",
-    key: "name",
-    minWidth: "300px",
-  },
-  {
-    title: "Habilitado",
-    key: "isEnabled",
-    width: "150px",
-    render: (row) => {
-      return h(
-        NTag,
-        {
-          type: row.isEnabled ? "success" : "error",
-          tertiary: true,
-          bordered: false,
-          strong: true,
-        },
-        { default: () => (row.isEnabled ? "	Habilitado" : "Deshabilitado") }
-      );
-    },
-  },
-];
+  ];
 
 export const _createPagination = (
   data: DataTablePaginationDTO = initValuesDataTablePagination()

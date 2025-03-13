@@ -36,20 +36,7 @@ export const _createColumns = (
       );
     },
   },
-  /*
-  id: number | null;
-  name: string | null;
-  code: string | null;
-  hoursPractice: number | null;
-  hoursTheory: number | null;
-  credits: number | null;
-  area: string | null;
-  module: string | null;
-  curriculum: string | null;
-  preRequisite: string | null;
-  description: string | null;
-  isEnabled: boolean;
-  */
+
   {
     title: "Nombre",
     key: "name",

@@ -1,6 +1,7 @@
 import { http } from "@/core/http";
 import { initValuesDataTableResponse, type DataTableResponseDTO } from "@/core/types/DataTable.types";
 import type { ResponseServiceDTO } from "@/core/types/Response.types";
+import type { PaymentDTO } from "../../Payment/types/Payment.types";
 
 
 export const _loadDataTable = async (
@@ -39,6 +40,65 @@ export const _enrollmentGroupStore = async (
 ): Promise<ResponseServiceDTO<any>> => {
   try {
     let reponse = await http().post(`/enrollment/group-store`, {
+      ...request,
+    });
+    return {
+      status: true,
+      data: reponse.data.data as any,
+    };
+  } catch (error: any) {
+    return {
+      status: false,
+      data: null,
+    };
+  }
+};
+// group-update
+// Route::post('group-update', [EnrollmentController::class, 'enrollmentGroupUpdate']);
+export const _enrollmentGroupUpdate = async (
+  request: any
+): Promise<ResponseServiceDTO<any>> => {
+  try {
+    let reponse = await http().post(`/enrollment/group-update`, {
+      ...request,
+    });
+    return {
+      status: true,
+      data: reponse.data.data as any,
+    };
+  } catch (error: any) {
+    return {
+      status: false,
+      data: null,
+    };
+  }
+};
+
+// Route::post('group-reserved', [EnrollmentController::class, 'enrollmentGroupReserved']);
+export const _enrollmentGroupReserved = async (
+  request: any
+): Promise<ResponseServiceDTO<any>> => {
+  try {
+    let reponse = await http().post(`/enrollment/group-reserved`, {
+      ...request,
+    });
+    return {
+      status: true,
+      data: reponse.data.data as any,
+    };
+  } catch (error: any) {
+    return {
+      status: false,
+      data: null,
+    };
+  }
+};
+// Route::post('group-cancel', [EnrollmentController::class, 'enrollmentGroupCancel']);
+export const _enrollmentGroupCancel = async (
+  request: any
+): Promise<ResponseServiceDTO<any>> => {
+  try {
+    let reponse = await http().post(`/enrollment/group-cancel`, {
       ...request,
     });
     return {
@@ -129,3 +189,37 @@ export const _downloadEnrollmentPDF = async (request: any): Promise<any> => {
     return null;
   }
 };
+
+// Route::post('get-enrollment-group-payments', [EnrollmentController::class, 'getEnrollmentGroupPayments']);
+export const _getEnrollmentGroupPayments = async (request: any): Promise<PaymentDTO[]> => {
+  try {
+    let reponse = await http().post(`/enrollment/get-enrollment-group-payments`, {
+      ...request,
+    });
+    return reponse.data.data;
+  } catch (error: any) {
+    return [];
+  }
+};
+
+
+export const _getStudentEnrollmentSpecial = async (
+  id: any,
+  curriculumId: number,
+  periodId: number
+): Promise<any> => {
+  try {
+    let reponse = await http().post(
+      `/enrollment/student-enrollment-avaliable-special`,
+      {
+        studentId: id,
+        curriculumId: curriculumId,
+        periodId: periodId,
+      }
+    );
+
+    return reponse.data.data;
+  } catch (error: any) {
+    return null;
+  }
+}
