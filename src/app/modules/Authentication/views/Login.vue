@@ -33,7 +33,7 @@
         </n-form-item>
 
         <router-link
-          to="/login"
+          to="/reset-password"
           class="text-slate-500 hover:text-blue-400 hover:underline text-sm text-end block"
         >
           ¿Olvidaste tu contraseña?
