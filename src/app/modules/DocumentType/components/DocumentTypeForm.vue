@@ -2,7 +2,7 @@
   <n-modal v-model:show="showModal">
     <n-card
       style="width: 500px"
-      :title="item ? 'EDITAR TIPO DE DOCUMENTO' : 'NUEVO TIPO DE DOCUMENTO'"
+      :title="item ? 'Editar registro' : 'Nuevo registro'"
       :segmented="{
         content: true,
         footer: true,
@@ -79,10 +79,7 @@ import {
   _getDocumentTypeRules,
 } from "@/app/modules/DocumentType/configs/form.configs";
 
-import {
-  _storeItem,
-  _updateItem,
-} from "@/app/modules/DocumentType/services/documentType.services";
+import { _saveItem } from "@/app/modules/DocumentType/services/documentType.services";
 
 const emit = defineEmits(["update:modelValue", "success"]);
 
@@ -105,30 +102,22 @@ const formRules = ref<FormRules>({ ..._getDocumentTypeRules() });
 const handleSubmit = async () => {
   if (formRef.value) {
     const valid = await formRef.value.validate();
-
     let response = null;
     if (valid) {
       loading.value = true;
-      if (form.value.id) {
-        response = await _updateItem(form.value);
-      } else {
-        response = await _storeItem(form.value);
-      }
+      response = await _saveItem(form.value);
       if (!response.status) {
         formErrors.value = response.data as DocumentTypeFormErrorsDTO;
       } else {
         emit("success");
         showModal.value = false;
       }
-    } else {
-      console.log("Formulario inválido");
     }
   }
   loading.value = false;
 };
 
 const init = () => {
-  console.log("Inicializando formulario");
   form.value = props.item ? { ...props.item } : _getDocumentTypeInitValues();
 };
 

@@ -11,7 +11,6 @@ import {
   _getStudentEnrollment,
   _downloadEnrollmentPDF,
 } from "@/app/modules/Enrollment/services/enrollment.services";
-import { __current } from "@/app/modules/Period/services/period.services";
 import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
 import { __getInfoById } from "@/app/modules/Student/services/student.services";
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";

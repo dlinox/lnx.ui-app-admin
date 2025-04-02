@@ -19,7 +19,7 @@
         @submit="handleSubmit"
       >
         <n-row :gutter="16">
-          <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <n-col :span="screenSize === 'sm' ? 12 : 8">
             <n-form-item path="studentTypeId" label="Tipo de Estudiante">
               <n-select
                 v-model:value="form.studentTypeId"
@@ -31,7 +31,7 @@
             </n-form-item>
           </n-col>
 
-          <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <!-- <n-col :span="screenSize === 'sm' ? 12 : 6">
             <n-form-item
               path="code"
               label="Código"
@@ -45,9 +45,9 @@
                 "
               />
             </n-form-item>
-          </n-col>
+          </n-col> -->
 
-          <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <n-col :span="screenSize === 'sm' ? 12 : 8">
             <n-form-item path="documentTypeId" label="Tipo de Documento">
               <n-select
                 v-model:value="form.documentTypeId"
@@ -59,7 +59,7 @@
             </n-form-item>
           </n-col>
 
-          <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <n-col :span="screenSize === 'sm' ? 12 : 8">
             <n-form-item
               path="documentNumber"
               label="Número de Documento"
@@ -152,8 +152,18 @@
           </n-col>
 
           <n-col :span="screenSize === 'sm' ? 12 : 6">
-            <n-form-item path="email" label="Correo Electrónico">
-              <n-input v-model:value="form.email" />
+            <n-form-item
+              path="email"
+              :feedback="formErrors?.email"
+              label="Correo Electrónico"
+            >
+              <n-input
+                :status="formErrors?.email != undefined ? 'error' : ''"
+                @input="
+                  formErrors != null ? (formErrors.email = null) : () => {}
+                "
+                v-model:value="form.email"
+              />
             </n-form-item>
           </n-col>
 

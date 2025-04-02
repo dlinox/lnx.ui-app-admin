@@ -1,16 +1,25 @@
 <template>
-  <n-card :segmented="{
-    header: true,
-    footer: true,
-    content: true,
-  }">
+  <n-card
+    :segmented="{
+      header: true,
+      footer: true,
+      content: true,
+    }"
+  >
     <template #header>
       <h6 style="color: #999; margin: 0">Matricular estudiante</h6>
       Nombre del estudiante
     </template>
     <template #header-extra>
-      <n-select v-model:value="curriculumId" placeholder="Seleccionar Plan de estudio" filterable
-        :options="curriculumItems" :virtual-scroll="false" :default-value="1" @update:value="getStudentEnrollment" />
+      <n-select
+        v-model:value="curriculumId"
+        placeholder="Seleccionar Plan de estudio"
+        filterable
+        :options="curriculumItems"
+        :virtual-scroll="false"
+        :default-value="1"
+        @update:value="getStudentEnrollment"
+      />
     </template>
     <template #action> </template>
   </n-card>
@@ -18,10 +27,14 @@
   <div class="p-4">
     <n-row :gutter="16">
       <n-col :span="screenSize == 'lg' ? 6 : 24">
-        <n-card :segmented="{
-          header: true,
-          content: true,
-        }" title="Información Personal" subtitle="Datos del estudiante">
+        <n-card
+          :segmented="{
+            header: true,
+            content: true,
+          }"
+          title="Información Personal"
+          subtitle="Datos del estudiante"
+        >
           <n-spin :show="loadingStudentInfo">
             <n-space vertical>
               <n-statistic class="small" label="Tipo de estudiante">
@@ -51,42 +64,61 @@
         </n-card>
       </n-col>
       <n-col :span="screenSize == 'lg' ? 18 : 24">
-        <n-card :segmented="{
-          header: true,
-          content: true,
-        }" title="Matricula">
+        <n-card
+          :segmented="{
+            header: true,
+            content: true,
+          }"
+          title="Matricula"
+        >
           <template #header-extra>
-            <n-tag :bordered="false" :type="periodStore.enrollment ? 'info' : 'error'">
+            <n-tag
+              :bordered="false"
+              :type="periodStore.enrollment ? 'info' : 'error'"
+            >
               <strong>
                 {{
                   periodStore.enrollment
-                    ? periodStore.enrollment?.name
+                    ? periodStore.enrollment?.period
                     : "No habilitado"
                 }}
               </strong>
             </n-tag>
           </template>
           <div class="flex justify-end bg-gray-100 p-4 -mx-6 -mt-6 mb-4">
-            <n-button type="primary" @click="showAddModuleForm = true" :disabled="!periodStore.enrollment">
+            <n-button
+              type="primary"
+              @click="showAddModuleForm = true"
+              :disabled="!periodStore.enrollment"
+            >
               Agregar Modulo
             </n-button>
           </div>
           <n-collapse>
-            <n-collapse-item v-for="item in studentEnrollment?.enrollments" :key="item.moduleId" :name="item.moduleId">
+            <n-collapse-item
+              v-for="item in studentEnrollment?.enrollments"
+              :key="item.moduleId"
+              :name="item.moduleId"
+            >
               <template #header>
                 <h2 class="text-lg font-semibold w-full text-blue-800 p-2">
-                  {{ item.moduleName }} {{  item.isExtracurricular ? '(Extracurricular)' : '' }}
+                  {{ item.moduleName }}
+                  {{ item.isExtracurricular ? "(Extracurricular)" : "" }}
                 </h2>
               </template>
               <n-list hoverable clickable>
                 <n-list-item v-for="course in item.courses" :key="course.id">
                   <n-thing :title="`${course.code} - ${course.name}`">
                     <template #header-extra>
-                      <n-button v-if="
+                      <n-button
+                        v-if="
                         course.enrollmentGroups.length == 0
                         || (Math.max(...course.enrollmentGroups.map((obj: any) => obj.grade)) < 11
                           && course.enrollmentGroups.filter((obj: any) => obj.groupStatus == 'ABIERTO').length == 0)
-                      " type="primary" @click="openEnrollmentGroupModal(course.id)">
+                      "
+                        type="primary"
+                        @click="openEnrollmentGroupModal(course.id)"
+                      >
                         Matricular
                       </n-button>
                     </template>
@@ -99,7 +131,10 @@
                       </n-space>
                     </template>
 
-                    <n-table v-if="course.enrollmentGroups.length > 0" :single-line="false">
+                    <n-table
+                      v-if="course.enrollmentGroups.length > 0"
+                      :single-line="false"
+                    >
                       <thead>
                         <tr>
                           <th colspan="2">Matricula</th>
@@ -119,10 +154,13 @@
                       <tbody>
                         <tr v-for="enrollmentGroup in course.enrollmentGroups">
                           <td>
-                            <n-tag v-if="
-                              periodStore.enrollment?.name ==
-                              enrollmentGroup.period
-                            " type="info">
+                            <n-tag
+                              v-if="
+                                periodStore.enrollment?.period ==
+                                enrollmentGroup.period
+                              "
+                              type="info"
+                            >
                               {{ enrollmentGroup.period }}
                             </n-tag>
 
@@ -146,15 +184,32 @@
                             {{ enrollmentGroup.grade }}
                           </td>
                           <td>
-                            <EditEnrollmentGroup v-if="periodStore.enrollment?.name == enrollmentGroup.period"
+                            <EditEnrollmentGroup
+                              v-if="
+                                periodStore.enrollment?.period ==
+                                enrollmentGroup.period
+                              "
                               :item="enrollmentGroup"
-                              @resetEnrollment="($event) => openEnrollmentGroupModal(course.id, $event)"
-                              @changeGroup="($event) => openEnrollmentGroupModal(course.id, $event)"
-                              @reserveEnrollment="getStudentEnrollment" @cancelEnrollment="getStudentEnrollment" />
+                              @resetEnrollment="
+                                ($event) =>
+                                  openEnrollmentGroupModal(course.id, $event)
+                              "
+                              @changeGroup="
+                                ($event) =>
+                                  openEnrollmentGroupModal(course.id, $event)
+                              "
+                              @reserveEnrollment="getStudentEnrollment"
+                              @cancelEnrollment="getStudentEnrollment"
+                            />
 
-
-                            <n-button v-if="enrollmentGroup.enrollmentStatus === 'MATRICULADO'"
-                              :render-icon="renderIcon('printer')" @click="downloadEnrollmentPDF(enrollmentGroup.id)">
+                            <n-button
+                              v-if="
+                                enrollmentGroup.enrollmentStatus ===
+                                'MATRICULADO'
+                              "
+                              :render-icon="renderIcon('printer')"
+                              @click="downloadEnrollmentPDF(enrollmentGroup.id)"
+                            >
                               Ficha
                             </n-button>
                           </td>
@@ -171,10 +226,21 @@
     </n-row>
   </div>
   <iframe id="printFrame" style="display: none"></iframe>
-  <EnrollmentModuleForm v-if="student" v-model="showAddModuleForm" :studentId="student.id" :curriculumId="curriculumId"
-    @success="getStudentEnrollment" />
-  <EnrollmentGroupForm v-model="showModal" :studentId="student.id" :curriculumId="curriculumId" :courseId="courseId"
-    :enrollmetGroup="enrollmetGroup" @success="getStudentEnrollment" />
+  <EnrollmentModuleForm
+    v-if="student"
+    v-model="showAddModuleForm"
+    :studentId="student.id"
+    :curriculumId="curriculumId"
+    @success="getStudentEnrollment"
+  />
+  <EnrollmentGroupForm
+    v-model="showModal"
+    :studentId="student.id"
+    :curriculumId="curriculumId"
+    :courseId="courseId"
+    :enrollmetGroup="enrollmetGroup"
+    @success="getStudentEnrollment"
+  />
 </template>
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
@@ -188,7 +254,6 @@ import {
   _getStudentEnrollment,
   _downloadEnrollmentPDF,
 } from "@/app/modules/Enrollment/services/enrollment.services";
-import { __current } from "@/app/modules/Period/services/period.services";
 import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
 import { __getInfoById } from "@/app/modules/Student/services/student.services";
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
@@ -252,7 +317,10 @@ const getStudentEnrollment = async () => {
   loadingStudentEnrollment.value = false;
 };
 
-const openEnrollmentGroupModal = (_id: number, _enrollmetGroup: number | null = null) => {
+const openEnrollmentGroupModal = (
+  _id: number,
+  _enrollmetGroup: number | null = null
+) => {
   courseId.value = _id;
   enrollmetGroup.value = _enrollmetGroup;
   showModal.value = true;

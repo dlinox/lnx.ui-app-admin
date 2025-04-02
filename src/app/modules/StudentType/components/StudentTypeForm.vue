@@ -81,10 +81,7 @@ import {
   _getStudentTypeRules,
 } from "@/app/modules/StudentType/configs/form.configs";
 
-import {
-  _storeItem,
-  _updateItem,
-} from "@/app/modules/StudentType/services/studentType.services";
+import { _saveItem } from "@/app/modules/StudentType/services/studentType.services";
 
 const emit = defineEmits(["update:modelValue", "success"]);
 
@@ -107,15 +104,10 @@ const formRules = ref<FormRules>({ ..._getStudentTypeRules() });
 const handleSubmit = async () => {
   if (formRef.value) {
     const valid = await formRef.value.validate();
-
     let response = null;
     if (valid) {
       loading.value = true;
-      if (form.value.id) {
-        response = await _updateItem(form.value);
-      } else {
-        response = await _storeItem(form.value);
-      }
+      response = await _saveItem(form.value);
       if (!response.status) {
         formErrors.value = response.data as StudentTypeFormErrorsDTO;
       } else {

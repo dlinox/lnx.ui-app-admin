@@ -53,7 +53,18 @@ export const _getStudentFormRules = () => {
     lastNameFather: [],
     lastNameMother: [],
     gender: [],
-    email: [],
+    email: [
+      {
+        required: true,
+        trigger: ["blur", "input"],
+        message: "Obligatorio",
+      },
+      {
+        type: "email",
+        trigger: ["blur", "input"],
+        message: "Correo inválido",
+      }
+    ],
     phone: [],
     address: [],
     studentTypeId: [

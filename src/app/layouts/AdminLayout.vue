@@ -1,30 +1,69 @@
 <template>
-  <n-layout position="absolute" style="min-height: 100vh; position: relative; overflow: hidden">
+  <n-layout
+    position="absolute"
+    style="min-height: 100vh; position: relative; overflow: hidden"
+  >
     <n-layout has-sider position="absolute" style="top: 0px; bottom: 48px">
-      <n-layout-sider v-if="screenSize !== 'sm'" bordered style="height: 100%; background-color: #f0f2f5"
-        collapse-mode="width" v-model:collapsed="collapsed" :width="280" :native-scrollbar="false" :inverted="inverted"
-        :position="screenSize === 'sm' ? 'absolute' : 'static'" :collapsed-width="screenSize === 'sm' ? 0 : 64">
-        <n-menu :inverted="inverted" :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
-          :default-value="currentKey" class="mb-26" />
-        <div class="absolute bottom-0 start-0 end-0 border-t border-gray-300 backdrop-blur-sm z-10 border-solid">
-          <n-menu :inverted="inverted" :collapsed-width="64" :collapsed-icon-size="22" :options="menuFooterOptions" />
+      <n-layout-sider
+        v-if="screenSize !== 'sm'"
+        bordered
+        style="height: 100%; background-color: #f0f2f5"
+        collapse-mode="width"
+        v-model:collapsed="collapsed"
+        :width="280"
+        :native-scrollbar="false"
+        :inverted="inverted"
+        :position="screenSize === 'sm' ? 'absolute' : 'static'"
+        :collapsed-width="screenSize === 'sm' ? 0 : 64"
+      >
+        <n-menu
+          :inverted="inverted"
+          :collapsed-width="64"
+          :collapsed-icon-size="22"
+          :options="menuOptions"
+          :default-value="currentKey"
+          class="mb-26"
+        />
+        <div
+          class="absolute bottom-0 start-0 end-0 border-t border-gray-300 backdrop-blur-sm z-10 border-solid"
+        >
+          <n-menu
+            :inverted="inverted"
+            :collapsed-width="64"
+            :collapsed-icon-size="22"
+            :options="menuFooterOptions"
+          />
         </div>
       </n-layout-sider>
 
-      <n-drawer v-if="screenSize === 'sm'" v-model:show="active" :width="280" position="absolute"
-        style="top: 0px; bottom: 0px" placement="left">
-        <n-menu :inverted="inverted" :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
-          v-model="currentKey" />
+      <n-drawer
+        v-if="screenSize === 'sm'"
+        v-model:show="active"
+        :width="280"
+        position="absolute"
+        style="top: 0px; bottom: 0px"
+        placement="left"
+      >
+        <n-menu
+          :inverted="inverted"
+          :collapsed-width="64"
+          :collapsed-icon-size="22"
+          :options="menuOptions"
+          v-model="currentKey"
+        />
       </n-drawer>
 
       <n-layout>
-        <n-layout-header bordered style="
+        <n-layout-header
+          bordered
+          style="
             height: 48px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 8px;
-          ">
+          "
+        >
           <n-button v-if="screenSize === 'sm'" @click="active = !active">
             <LnxIcon icon size="24" icon-name="grid-4" />
           </n-button>
@@ -32,23 +71,28 @@
             <LnxIcon size="24" :icon-name="collapsed ? 'grid-9' : 'grid-4'" />
           </n-button>
 
-          <n-button secondary type="error" @click="signOut" :loading="loading">
-            Salir
-            <LnxIcon class="ms-2" size="24" icon-name="logout" />
-          </n-button>
+          <n-dropdown trigger="hover" :options="profileOptions">
+            <n-button>
+              <LnxIcon size="24" icon-name="profile" />
+            </n-button>
+          </n-dropdown>
         </n-layout-header>
         <n-layout-content>
           <router-view />
         </n-layout-content>
       </n-layout>
     </n-layout>
-    <n-layout-footer bordered position="absolute" style="
+    <n-layout-footer
+      bordered
+      position="absolute"
+      style="
         height: 48px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0 16px;
-      ">
+      "
+    >
       <span> v1.0 </span>
     </n-layout-footer>
   </n-layout>
@@ -78,45 +122,20 @@ const currentKey = ref<string | null>(route.name as string | null);
 
 const menuOptions: MenuOption[] = [
   menuItem({
-    label: "Dashboard",
+    label: "Inicio",
     key: "Dashboard",
     route: "Dashboard",
-    iconName: "element-equal",
+    iconName: "home",
   }),
+
   {
-    label: "Administración",
-    key: "administration",
-    icon: renderIcon("cpu-setting"),
+    label: "Gestión Académica",
+    key: "academic-management",
+    icon: renderIcon("book"),
     children: [
       {
         type: "group",
-        label: "General",
-        key: "people-general",
-        children: [
-          menuItem({
-            label: "Tipos de documentos",
-            key: "DocumentType",
-            route: "DocumentType",
-            iconName: "tag",
-          }),
-          menuItem({
-            label: "Tipos de estudiantes",
-            key: "StudentType",
-            route: "StudentType",
-            iconName: "tag",
-          }),
-          menuItem({
-            label: "Metodos de pago",
-            key: "PaymentType",
-            route: "PaymentType",
-            iconName: "tag",
-          }),
-        ],
-      },
-
-      {
-        type: "group",
-        label: "Personas",
+        label: "Estudiantes y Docentes",
         key: "people",
         children: [
           menuItem({
@@ -127,60 +146,118 @@ const menuOptions: MenuOption[] = [
           }),
           menuItem({
             label: "Docentes",
-            route: "Teacher",
             key: "Teacher",
+            route: "Teacher",
             iconName: "teacher",
           }),
         ],
       },
       {
         type: "group",
-        label: "Académico",
-        key: "academic",
+        label: "Planificación Académica",
+        key: "academic-planning",
         children: [
           menuItem({
-            label: "Periodos académicos",
+            label: "Periodos Académicos",
             key: "Period",
             route: "Period",
             iconName: "calendar-2",
           }),
           menuItem({
-            label: "Planes de estudio",
+            label: "Planes de Estudio",
             key: "Curriculum",
             route: "Curriculum",
             iconName: "book-1",
           }),
-
           menuItem({
-            label: "Areas",
-            route: "Area",
+            label: "Áreas",
             key: "Area",
+            route: "Area",
             iconName: "book-square",
           }),
-
           menuItem({
-            label: "Modulos",
+            label: "Módulos",
             key: "Module",
             route: "Module",
             iconName: "bookmark",
           }),
-
           menuItem({
             label: "Cursos",
             key: "Course",
             route: "Course",
             iconName: "book-saved",
           }),
-          // {
-          //   label: "Horarios",
-          //   key: "schedules",
-          //   icon: renderIcon("calendar"),
-          // },
-          // {
-          //   label: "Grupos",
-          //   key: "groups",
-          //   icon: renderIcon("people"),
-          // },
+        ],
+      },
+    ],
+  },
+
+  {
+    label: "Carga Académica",
+    key: "academic-workload",
+    icon: renderIcon("archive-book"),
+    children: [
+      menuItem({
+        label: "Apertura de Grupos",
+        key: "Group",
+        route: "Group",
+        iconName: "calendar-add",
+      }),
+      menuItem({
+        label: "Gestión de Grupos",
+        key: "GroupManager",
+        route: "GroupManager",
+        iconName: "data",
+      }),
+    ],
+  },
+
+  {
+    label: "Notas y Evaluaciones",
+    key: "grades",
+    icon: renderIcon("archive-book"),
+    children: [
+      {
+        label: "Ingreso de Notas",
+        key: "grades-entry",
+        iconName: "archive-add",
+      },
+      {
+        label: "Rectificación de Notas",
+        key: "grades-rectification",
+        iconName: "archive-slash",
+      },
+    ],
+  },
+
+  {
+    label: "Administración",
+    key: "administration",
+    icon: renderIcon("cpu-setting"),
+    children: [
+      {
+        type: "group",
+        label: "Configuraciones Generales",
+        key: "general-settings",
+        children: [
+          menuItem({
+            label: "Tipos de Documento",
+            key: "DocumentType",
+            route: "DocumentType",
+            iconName: "tag",
+          }),
+          menuItem({
+            label: "Tipos de Estudiante",
+            key: "StudentType",
+            route: "StudentType",
+            iconName: "tag",
+          }),
+          menuItem({
+            label: "Métodos de Pago",
+            key: "PaymentType",
+            route: "PaymentType",
+            iconName: "tag",
+          }),
         ],
       },
       {
@@ -190,28 +267,9 @@ const menuOptions: MenuOption[] = [
         children: [
           menuItem({
             label: "Laboratorios",
-            route: "Laboratory",
             key: "Laboratory",
+            route: "Laboratory",
             iconName: "devices",
-          }),
-        ],
-      },
-      {
-        type: "group",
-        label: "Financiero",
-        key: "financial",
-        children: [
-          menuItem({
-            label: "Costos de matricula(Modulos)",
-            key: "ModulePrice",
-            route: "ModulePrice",
-            iconName: "moneys",
-          }),
-          menuItem({
-            label: "Costos de mensualidad(Cursos)",
-            key: "CoursePrice",
-            route: "CoursePrice",
-            iconName: "moneys",
           }),
         ],
       },
@@ -219,90 +277,70 @@ const menuOptions: MenuOption[] = [
   },
 
   {
-    label: "Matriculas",
+    label: "Matrículas",
     key: "enrollments",
     icon: renderIcon("folder"),
     children: [
       menuItem({
-        label: "Matricular",
+        label: "Realizar Matrícula",
         key: "enrollment",
         route: "Enrollment",
         iconName: "folder-add",
       }),
       menuItem({
-        label: "Matriculas",
+        label: "Matrículas",
         key: "virtual-enrollment",
         route: "EnrollmentVirtual",
         iconName: "folder-cloud",
       }),
-      {
-        label: "Convalidaciones",
-        key: "validations",
-        icon: renderIcon("folder-connection"),
-      },
+      //EnrollmentPeriod - habilitar periodo de matricula
+      menuItem({
+        label: "Habilitaciones",
+        key: "EnrollmentDeadline",
+        route: "EnrollmentDeadline",
+        iconName: "calendar-2",
+      }),
     ],
   },
 
   {
-    label: "Notas",
-    key: "grades",
-    icon: renderIcon("archive-book"),
-    children: [
-      {
-        label: "Ingreso de notas",
-        key: "grades-entry",
-        icon: renderIcon("archive-add"),
-      },
-      {
-        label: "Rectificación de notas",
-        key: "grades-rectification",
-        icon: renderIcon("archive-slash"),
-      },
-    ],
-  },
-
-  {
-    label: "Carga de académica",
-    key: "academic-load",
-    icon: renderIcon("archive"),
+    label: "Finanzas",
+    key: "financial",
+    icon: renderIcon("money"),
     children: [
       menuItem({
-        label: "Apertura de grupos",
-        key: "Group",
-        route: "Group",
-        iconName: "calendar-add",
+        label: "Costo de Matrícula (Módulos)",
+        key: "ModulePrice",
+        route: "ModulePrice",
+        iconName: "moneys",
       }),
       menuItem({
-        label: "Gestion de Grupos",
-        key: "GroupManager",
-        route: "GroupManager",
-        iconName: "data",
-      })
+        label: "Costo de Mensualidad (Cursos)",
+        key: "CoursePrice",
+        route: "CoursePrice",
+        iconName: "moneys",
+      }),
     ],
   },
+
   {
     label: "Reportes",
     key: "reports",
-    icon: renderIcon("chart-21"),
+    icon: renderIcon("chart"),
     children: [
       {
-        label: "Reporte de matriculas",
+        label: "Reporte de Matrículas",
         key: "enrollments-report",
-        icon: renderIcon("chart-21"),
+        iconName: "chart-21",
       },
+      { label: "Reporte de Notas", key: "grades-report", iconName: "chart-21" },
       {
-        label: "Reporte de notas",
-        key: "grades-report",
-        icon: renderIcon("chart-21"),
-      },
-      {
-        label: "Reporte de carga académica",
+        label: "Reporte de Carga Académica",
         key: "academic-load-report",
-        icon: renderIcon("chart-21"),
+        iconName: "chart-21",
       },
     ],
   },
-
   {
     label: "Seguridad",
     key: "security",
@@ -357,8 +395,27 @@ const menuOptions: MenuOption[] = [
   },
 ];
 
-const menuFooterOptions = [
+const profileOptions = [
+  menuItem({
+    label: "Perfil",
+    key: "Profile",
+    route: "Profile",
+    iconName: "user",
+  }),
+  {
+    label: "Salir",
+    key: "sign-out",
+    icon: renderIcon("logout", "red"),
+    props: {
+      class: "text-red-500",
+      onClick: () => {
+        signOut();
+      },
+    },
+  },
+];
 
+const menuFooterOptions = [
   {
     label: () =>
       h(
@@ -371,11 +428,11 @@ const menuFooterOptions = [
           h(
             "strong",
             {
-              class: periodStore.enrollment?.name
+              class: periodStore.enrollment?.period
                 ? "text-blue-500"
                 : "text-red-500",
             },
-            periodStore.enrollment?.name ?? "No definido"
+            periodStore.enrollment?.period ?? "No definido"
           ),
         ]
       ),
@@ -385,6 +442,7 @@ const menuFooterOptions = [
 ];
 
 const signOut = async () => {
+  console.log("signOut");
   loading.value = true;
   const response = await _signOut();
 

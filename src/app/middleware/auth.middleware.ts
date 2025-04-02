@@ -1,6 +1,6 @@
 import {
   _clearSession,
-  user,
+  _user,
 } from "@/app/modules/Authentication/services/auth.services";
 
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
@@ -10,7 +10,7 @@ export const authMiddleware = async (
   _from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const auth = await user();
+  const auth = await _user();
   if (!auth) {
     console.log("Redirecting to login page...");
     await _clearSession();
@@ -25,7 +25,7 @@ export const noAuthMiddleware = async (
   _from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const auth = await user();
+  const auth = await _user();
   if (auth) {
     console.log("Redirecting to dashboard...");
     next(auth.user.redirectTo);

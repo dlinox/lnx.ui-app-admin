@@ -6,8 +6,10 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Gestión de Tipos de Estudiantes</h6>
-      Tipos de Estudiantes
+      <span class="text-sm text-slate-500">
+        Gestión de Tipos de Estudiante</span
+      >
+      <h5 class="text-lg font-bold text-slate-800">Tipos de Estudiante</h5>
     </template>
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">

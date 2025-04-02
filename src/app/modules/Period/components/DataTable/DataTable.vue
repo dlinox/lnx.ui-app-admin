@@ -59,8 +59,7 @@ import {
 
 import PeriodForm from "@/app/modules/Period/components/PeriodForm.vue";
 import debounce from "@/core/utils/debounce.utils";
-import { usePeriodStore } from "@/app/store/period.stores";
-const periodStore = usePeriodStore();
+
 const loadingTable = ref(false);
 const items = ref<PeriodDTO[]>([]);
 const showModal = ref<boolean>(false);
@@ -94,8 +93,6 @@ const reLoadDataTable = async () => {
 
 const loadDataTable = async () => {
   loadingTable.value = true;
-  await periodStore.getCurrent();
-  await periodStore.getEnrollment();
   response.value = await _loadDataTable(request.value);
   items.value = response.value.data;
   pagination.total = response.value.total;

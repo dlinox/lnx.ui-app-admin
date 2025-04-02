@@ -20,11 +20,15 @@
         asignados para la modalidad y tipo de estudiante correspondientes.
       </n-alert>
       <n-spin :show="loadingInitForm" description="Cargando formulario">
-        <n-dynamic-input v-model:value="form" :on-create="initGroupValues">
+        <n-dynamic-input
+          v-model:value="form"
+          :on-create="initGroupValues"
+          class="mb-4"
+        >
           <template #create-button-default> Nuevo grupo </template>
-          <template #default="{ value }">
+          <template #default="{ value, index }">
             <div
-              class="border-b border-t border-l border-dashed border-gray-300 py-4 ps-4"
+              class="border border-dashed border-gray-400 p-4 rounded relative hover:bg-gray-50"
             >
               <n-row gutter="16">
                 <n-col
@@ -80,7 +84,7 @@
                   </n-form-item>
                 </n-col>
                 <n-col
-                  :span="screenSize === 'lg' ? 6 : screenSize === 'md' ? 6 : 12"
+                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 6"
                 >
                   <n-form-item label="Cupos máximos" path="maxStudents">
                     <n-input-number
@@ -90,7 +94,7 @@
                   </n-form-item>
                 </n-col>
                 <n-col
-                  :span="screenSize === 'lg' ? 6 : screenSize === 'md' ? 6 : 12"
+                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 6"
                 >
                   <n-form-item label="Cupos mínimos" path="minStudents">
                     <n-input-number
@@ -99,40 +103,49 @@
                     />
                   </n-form-item>
                 </n-col>
-              </n-row>
-            </div>
-          </template>
 
-          <template #action="{ value, index, create, remove }">
-            <div
-              style="
-                width: 140px;
-                display: flex;
-                justify-content: space-evenly;
-                flex-direction: column;
-              "
-              class="border-b border-t border-r border-dashed border-gray-300 p-4"
-            >
-              <n-button
-                secondary
-                type="primary"
-                :renderIcon="renderIcon('calendar-add')"
-                @click="openModalSchedule(value)"
-              >
-                Horarios
-              </n-button>
-
-              <n-button-group>
-                <n-button
-                  :render-icon="renderIcon('element-plus')"
-                  @click="
-                    () => {
-                      create(index);
-                    }
-                  "
+                <n-col
+                  :span="screenSize === 'lg' ? 8 : screenSize === 'md' ? 8 : 12"
                 >
-                </n-button>
+                  <n-form-item label="Horario - Días" path="availableStudents">
+                    <n-select
+                      v-model:value="value.schedule.days"
+                      multiple
+                      :fallback-option="false"
+                      :options="DAYS"
+                    />
+                  </n-form-item>
+                </n-col>
+                <n-col
+                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 6"
+                >
+                  <n-form-item label="Hora de inicio">
+                    <n-input
+                      clearable
+                      type="time"
+                      v-model:value="value.schedule.startHour"
+                      placeholder=""
+                      style="width: 100%"
+                    />
+                  </n-form-item>
+                </n-col>
+                <n-col
+                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 6"
+                >
+                  <n-form-item label="Hora de fin">
+                    <n-input
+                      clearable
+                      type="time"
+                      v-model:value="value.schedule.endHour"
+                      placeholder=""
+                      style="width: 100%"
+                    />
+                  </n-form-item>
+                </n-col>
+              </n-row>
+              <div class="absolute top-0 right-0">
                 <n-button
+                  secondary
                   type="error"
                   :render-icon="renderIcon('trash')"
                   @click="
@@ -157,9 +170,9 @@
                         onPositiveClick: async () => {
                           if (value.id) {
                             const deleted = await _deleteItem(value);
-                            if (deleted) remove(index);
+                            if (deleted) removeItem(index);
                           } else {
-                            remove(index);
+                            removeItem(index);
                           }
                         },
                       });
@@ -167,10 +180,24 @@
                   "
                 >
                 </n-button>
-              </n-button-group>
+              </div>
             </div>
           </template>
+          <template #action="{}">
+            <div></div>
+          </template>
         </n-dynamic-input>
+
+        <n-button
+          block
+          secondary
+          type="primary"
+          class="mt-4"
+          v-if="form.length > 0"
+          @click="() => form.push(initGroupValues())"
+        >
+          Agregar grupo
+        </n-button>
       </n-spin>
       <template #footer>
         <n-flex justify="end">
@@ -178,11 +205,6 @@
           <n-button type="primary" @click="submit">Guardar</n-button>
         </n-flex>
       </template>
-      <ScheduleForm
-        v-model="showModalSchedule"
-        :groupSelect="groupSelect"
-        @submit="updateScheduleForm"
-      />
     </n-card>
   </n-modal>
 </template>
@@ -192,11 +214,10 @@ import { computed, ref, watch } from "vue";
 import debounce from "@/core/utils/debounce.utils";
 import { renderIcon } from "@/core/utils/icon.utils";
 import useBreakpoints from "@/core/composable/useBreakpoints";
-
+import { DAYS } from "@/core/constants/days.constants";
 import {
   type GroupDataTableItemDTO,
   type GroupFormDTO,
-  type ScheduleFormDTO
 } from "@/app/modules/Group/types/Group.types";
 
 import { _getGroupInitValues } from "@/app/modules/Group/configs/groupForm.confings";
@@ -211,7 +232,7 @@ import {
   _deleteItem,
 } from "@/app/modules/Group/services/group.services";
 import { MODALITIES } from "@/core/constants/modalities.constants";
-import ScheduleForm from "./ScheduleForm.vue";
+
 import { useDialog } from "naive-ui";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 const dialog = useDialog();
@@ -233,8 +254,6 @@ const showModal = computed({
 
 const loadingInitForm = ref<boolean>(false);
 const loading = ref<boolean>(false);
-const groupSelect = ref<GroupFormDTO | null>(null);
-const showModalSchedule = ref<boolean>(false);
 const teacherOptions = ref<SelectOption[]>([]);
 const form = ref<GroupFormDTO[]>([]);
 
@@ -247,18 +266,8 @@ const initGroupValues = () =>
     }
   );
 
-const openModalSchedule = (item: GroupFormDTO) => {
-  groupSelect.value = Object.assign({}, { ...item });
-  showModalSchedule.value = true;
-};
-
-const updateScheduleForm = (value: ScheduleFormDTO, id: number) => {
-  form.value = form.value.map((item) => {
-    if (item.id === id) {
-      item.schedule = value;
-    }
-    return item;
-  });
+const removeItem = (index: number) => {
+  form.value.splice(index, 1);
 };
 
 const submit = async () => {
@@ -306,9 +315,6 @@ const initForm = async () => {
       searchTeachers({ search: "" });
     }
   }
-  // else {
-  // form.value = [{ ..._getGroupInitValues(props.item?.code) }];
-  // }
 };
 
 watch(showModal, async (value) => {

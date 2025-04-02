@@ -1,4 +1,3 @@
-
 export interface AuthFormDTO {
   username: string;
   password: string;
@@ -17,3 +16,6 @@ export interface AuthDTO {
   permissions: string;
 }
 
+export interface ResetPasswordFormDTO {
+  email: string;
+}

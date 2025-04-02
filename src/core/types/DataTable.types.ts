@@ -2,7 +2,7 @@ interface DataTableRequestDTO {
   page: number;
   pageSize: number;
   search: string | null;
-  filters?: Record<string, any>;
+  filters: Record<string, any>;
   sortBy?: any[];
   groupBy?: string;
 }

@@ -40,20 +40,6 @@
               />
             </n-form-item>
           </n-col>
-          <n-col span="24">
-            <n-form-item path="status" label="Estado" :feedback="formErrors?.status">
-              <n-select
-                clearable
-                v-model:value="form.status"
-                :options="PERIOD_STATUS_CONST"
-                :virtual-scroll="false"
-                :status="formErrors?.status != undefined ? 'error' : ''"
-                @input="
-                  formErrors != null ? (formErrors.status = null) : () => {}
-                "
-              />
-            </n-form-item> 
-          </n-col>
         </n-row>
       </n-form>
       <template #footer>
@@ -81,7 +67,6 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue";
-import { PERIOD_STATUS_CONST } from "@/app/shared/constants/status.constants";
 import type { FormInst } from "naive-ui";
 
 import {

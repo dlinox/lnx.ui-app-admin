@@ -1,6 +1,6 @@
 import { h } from "vue";
 import { NIcon } from "naive-ui";
-import { type IconName } from "@/core/constans/icons.constants";
+import { type IconName } from "@/core/constants/icons.constants";
 
 export const renderIcon = (iconName: IconName, color: string = "inherit") => {
   return () =>

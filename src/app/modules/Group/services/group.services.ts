@@ -1,4 +1,6 @@
-import { http } from "@/core/http";
+// import { http } from "@/core/http";
+
+import { useHttp } from "@/core/composable/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
@@ -12,11 +14,12 @@ import type {
 } from "@/app/modules/Group/types/Group.types";
 import type { ResponseServiceDTO } from "@/core/types/Response.types";
 
+const http = useHttp();
 export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<GroupDataTableItemDTO>> => {
   try {
-    const response = await http().post("/group/load-data-table", request);
+    const response = await http.post("/group/load-data-table", request);
     return response.data.data as DataTableResponseDTO<GroupDataTableItemDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -27,7 +30,7 @@ export const _loadForm = async (
   request: GroupRequestLoadFormDTO
 ): Promise<GroupFormDTO[] | null> => {
   try {
-    const response = await http().post("/group/load-form", request);
+    const response = await http.post("/group/load-form", request);
     return response.data.data as GroupFormDTO[];
   } catch (error) {
     return null;
@@ -40,7 +43,7 @@ export const _saveItems = async (
   courseId: number
 ): Promise<ResponseServiceDTO<GroupFormDTO | GroupFormErrorsDTO>> => {
   try {
-    const response = await http().post("/group/save", {
+    const response = await http.post("/group/save", {
       groups: request,
       periodId,
       courseId,
@@ -67,10 +70,21 @@ export const _deleteItem = async (
   request: GroupFormDTO
 ): Promise<boolean> => {
   try {
-    await http().delete("/group", { data: { id: request.id } });
+    await http.delete("/group", { data: { id: request.id } });
     return true;
   } catch (error) {
     return false;
   }
 };
 
+
+export const _clone = async (
+  request: any
+): Promise<boolean> => {
+  try {
+    await http.post("/group/clone", request);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};

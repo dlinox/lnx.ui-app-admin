@@ -6,7 +6,6 @@ const routes: RouteRecordRaw[] = [
     name: "Group",
     component: () => import("@/app/modules/Group/views/index.vue"),
   },
-  // /GroupManagerView
   {
     path: "group-manager",
     name: "GroupManager",

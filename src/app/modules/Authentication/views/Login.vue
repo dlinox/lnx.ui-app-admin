@@ -116,7 +116,7 @@ import { ref } from "vue";
 import { useMessage } from "naive-ui";
 
 import { type AuthFormDTO } from "../types/Auth.types";
-import { _signIn, _clearSession } from "../services/auth.services";
+import { _signIn } from "../services/auth.services";
 import { _getValidationForm, _initStateForm } from "../config/index.config";
 
 const formRef = ref<HTMLFormElement | null>(null);

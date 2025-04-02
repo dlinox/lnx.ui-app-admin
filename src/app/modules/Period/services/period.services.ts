@@ -1,4 +1,5 @@
-import { http } from "@/core/http";
+// import { http } from "@/core/http";
+import { useHttp } from "@/core/composable/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
@@ -13,11 +14,12 @@ import type {
 import { type ResponseServiceDTO } from "@/core/types/Response.types";
 import type { ItemSelectDTO } from "@/core/types/Select.types";
 
+const http = useHttp();
 export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<PeriodDTO>> => {
   try {
-    const response = await http().post("/period/load-data-table", request);
+    const response = await http.post("/period/load-data-table", request);
     return response.data.data as DataTableResponseDTO<PeriodDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -28,7 +30,7 @@ export const _storeItem = async (
   request: PeriodFormDTO
 ): Promise<ResponseServiceDTO<PeriodDTO | PeriodFormErrorsDTO>> => {
   try {
-    let reponse = await http().post("/period", request);
+    let reponse = await http.post("/period", request);
     return {
       status: true,
       data: reponse.data.data as PeriodFormDTO,
@@ -51,7 +53,7 @@ export const _updateItem = async (
   request: PeriodFormDTO
 ): Promise<ResponseServiceDTO<PeriodDTO | PeriodFormErrorsDTO>> => {
   try {
-    let reponse = await http().put("/period", request);
+    let reponse = await http.put("/period", request);
     return {
       status: true,
       data: reponse.data.data as PeriodFormDTO,
@@ -72,7 +74,7 @@ export const _updateItem = async (
 
 export const _deleteItem = async (request: PeriodFormDTO): Promise<boolean> => {
   try {
-    await http().delete("/period", { data: { id: request.id } });
+    await http.delete("/period", { data: { id: request.id } });
     return true;
   } catch (error) {
     return false;
@@ -81,28 +83,9 @@ export const _deleteItem = async (request: PeriodFormDTO): Promise<boolean> => {
 
 export const __getPeriodsForSelect = async (): Promise<ItemSelectDTO[]> => {
   try {
-    let response = await http().get("/period/items/for-select");
+    let response = await http.get("/period/items/for-select");
     return response.data.data as ItemSelectDTO[];
   } catch (error) {
     return [];
-  }
-};
-
-export const __current = async (): Promise<ItemSelectDTO | null> => {
-  try {
-    let response = await http().get("/period/current");
-    return response.data.data as ItemSelectDTO;
-  } catch (error) {
-    return null;
-  }
-};
-
-//__enrollments
-export const __enrollment = async (): Promise<ItemSelectDTO[] | null> => {
-  try {
-    let response = await http().get("/period/enrollment-period");
-    return response.data.data as ItemSelectDTO[];
-  } catch (error) {
-    return null;
   }
 };

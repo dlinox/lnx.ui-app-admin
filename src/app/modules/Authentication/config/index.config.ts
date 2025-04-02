@@ -22,3 +22,20 @@ export const _getValidationForm = () => {
     },
   };
 };
+
+export const _getValidationFormResetPassword = () => {
+  return {
+    email: [
+      {
+        required: true,
+        trigger: ["blur", "input"],
+        message: "Obligatorio",
+      },
+      {
+        type: "email",
+        trigger: ["blur", "input"],
+        message: "Email no válido",
+      },
+    ],
+  };
+};

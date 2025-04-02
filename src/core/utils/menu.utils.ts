@@ -2,7 +2,7 @@ import { h } from "vue";
 import type { MenuOption } from "naive-ui";
 import { RouterLink } from "vue-router";
 import { renderIcon } from "@/core/utils/icon.utils";
-import type { IconName } from "../constans/icons.constants";
+import type { IconName } from "../constants/icons.constants";
 
 export interface MenuItemDTO {
   type?: "group" | "item";

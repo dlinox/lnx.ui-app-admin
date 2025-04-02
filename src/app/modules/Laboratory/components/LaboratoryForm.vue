@@ -34,7 +34,8 @@
               label="Cantidad de dispositivos"
               :feedback="formErrors?.deviceCount"
             >
-              <n-input
+              <n-input-number
+                class="w-full"
                 :status="formErrors?.deviceCount != undefined ? 'error' : ''"
                 v-model:value="form.deviceCount"
                 @input="
@@ -115,10 +116,7 @@ import {
   _getLaboratoryRules,
 } from "@/app/modules/Laboratory/configs/form.configs";
 
-import {
-  _storeItem,
-  _updateItem,
-} from "@/app/modules/Laboratory/services/laboratory.services";
+import { _saveItem } from "@/app/modules/Laboratory/services/laboratory.services";
 
 const emit = defineEmits(["update:modelValue", "success"]);
 
@@ -145,11 +143,7 @@ const handleSubmit = async () => {
     let response = null;
     if (valid) {
       loading.value = true;
-      if (form.value.id) {
-        response = await _updateItem(form.value);
-      } else {
-        response = await _storeItem(form.value);
-      }
+      response = await _saveItem(form.value);
       if (!response.status) {
         formErrors.value = response.data as LaboratoryFormErrorsDTO;
       } else {

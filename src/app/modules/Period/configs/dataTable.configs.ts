@@ -1,5 +1,5 @@
 import { h } from "vue";
-import { NTag, type DataTableColumns } from "naive-ui";
+import {  type DataTableColumns } from "naive-ui";
 
 import type { PeriodDTO } from "@/app/modules/Period/types/Period.types";
 import DataTableOp from "@/app/modules/Period/components/DataTable/DataTableOp.vue";
@@ -50,33 +50,6 @@ export const _createColumns = (
     render: (row) => {
       const month = MONTHS.find((m) => m.value === row.month);
       return h(`span`, month?.label);
-    },
-  },
-  // enrollmentEnabled
-  {
-    title: "Estado",
-    key: "status",
-    width: "150px",
-    render: (row) => {
-      return h(
-        NTag,
-        {
-          type:
-            row.status == "FINALIZADO"
-              ? "default"
-              : row.status == "CANCELADO"
-              ? "error"
-              : row.status == "EN CURSO"
-              ? "success"
-              : row.status == "MATRICULA"
-              ? "info"
-              : "warning",
-          tertiary: true,
-          bordered: false,
-          strong: true,
-        },
-        { default: () => row.status }
-      );
     },
   },
 ];

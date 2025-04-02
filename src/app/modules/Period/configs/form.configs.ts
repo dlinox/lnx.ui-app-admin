@@ -5,7 +5,6 @@ export const _getPeriodInitValues = (): PeriodFormDTO => {
     id: null,
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
-    status: null,
   };
 };
 
@@ -24,13 +23,6 @@ export const _getPeriodRules = () => {
         type: "number",
         required: true,
         trigger: ["blur", "input"],
-        message: "Obligatorio",
-      },
-    ],
-    status: [
-      {
-        required: true,
-        trigger: ["blur", "change"],
         message: "Obligatorio",
       },
     ],

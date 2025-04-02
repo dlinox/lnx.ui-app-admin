@@ -6,8 +6,8 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Gestión de Tipos de Documentos</h6>
-      Tipos de Documentos
+      <span class="text-sm text-slate-500"> Gestionar los tipos de pago </span>
+      <h5 class="text-lg font-bold text-slate-800">Tipos de pago</h5>
     </template>
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">

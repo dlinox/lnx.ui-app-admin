@@ -1,0 +1,1 @@
+const r=()=>({username:"",password:""}),e=()=>({username:{required:!0,trigger:["blur","input"],message:"Obligatorio"},password:{required:!0,trigger:["blur","input"],message:"Obligatorio"}}),t=()=>({email:[{required:!0,trigger:["blur","input"],message:"Obligatorio"},{type:"email",trigger:["blur","input"],message:"Email no válido"}]});export{e as _,r as a,t as b};
