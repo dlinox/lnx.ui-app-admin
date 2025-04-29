@@ -254,7 +254,7 @@ import {
   _getItemById,
 } from "@/app/modules/Curriculum/services/curriculumCourse.services";
 
-import useBreakpoints from "@/core/composable/useBreakpoints";
+import useBreakpoints from "@/core/composables/useBreakpoints";
 
 const { screenSize } = useBreakpoints();
 

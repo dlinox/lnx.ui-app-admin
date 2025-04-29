@@ -1,5 +1,4 @@
-// import { http } from "@/core/http";
-import { useHttp } from "@/core/composable/useHttp";
+import { useHttp } from "@/core/composables/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,

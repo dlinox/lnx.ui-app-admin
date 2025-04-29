@@ -25,6 +25,8 @@ import RoleRoutes from "@/app/modules/Role/routes";
 import UserRoutes from "@/app/modules/User/routes";
 import EnrollmentDeadlineRoutes from "@/app/modules/EnrollmentDeadline/routes";
 import ProfileRoutes from "@/app/modules/Profile/routes";
+import GradeDeadlineRoutes from "@/app/modules/GradeDeadline/routes";
+import AcademicSupervisionRoutes from "@/app/modules/AcademicSupervision/routes";
 
 import { authMiddleware } from "@/app/middleware/auth.middleware";
 
@@ -60,6 +62,8 @@ const routes: RouteRecordRaw[] = [
       ...UserRoutes,
       ...EnrollmentDeadlineRoutes,
       ...ProfileRoutes,
+      ...GradeDeadlineRoutes,
+      ...AcademicSupervisionRoutes,
     ],
   },
   ...AuthenticationRoutes,

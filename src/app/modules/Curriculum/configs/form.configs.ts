@@ -4,6 +4,7 @@ export const _getCurriculumInitValues = (): CurriculumFormDTO => {
   return {
     id: null,
     name: null,
+    gradingModel: 1,
     isEnabled: true,
   };
 };
@@ -17,6 +18,15 @@ export const _getCurriculumRules = () => {
         message: "Obligatorio",
       },
     ],
+    gradingModel: [
+      {
+        type: "number",
+        required: true,
+        trigger: ["blur", "input"],
+        message: "Obligatorio",
+      },
+    ],
+    isEnabled: [],
   };
 };
 

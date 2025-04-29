@@ -8,6 +8,7 @@ import {
   initValuesDataTablePagination,
 } from "@/core/types/DataTable.types";
 import CurriculumCourseDataTableOp from "@/app/modules/Curriculum/components/DataTable/CurriculumCourseDataTableOp.vue";
+import { GRADING_MODEL_CONST } from "@/app/shared/constants/gradingModel.constants";
 
 export const _createPagination = (
   data: DataTablePaginationDTO = initValuesDataTablePagination()
@@ -59,7 +60,22 @@ export const _createColumns = (
     key: "name",
     minWidth: "150px",
   },
-
+  {
+    title: "Modelo de Calificacion",
+    key: "gradingModel",
+    minWidth: "150px",
+    render(row) {
+      return h(
+        "span",
+        {},
+        {
+          default: () =>
+            GRADING_MODEL_CONST.find((item) => item.value == row.gradingModel)
+              ?.label,
+        }
+      );
+    },
+  },
   {
     title: "Habilitado",
     key: "isEnabled",

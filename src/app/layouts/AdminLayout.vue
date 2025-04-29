@@ -1,9 +1,9 @@
 <template>
   <n-layout
     position="absolute"
-    style="min-height: 100vh; position: relative; overflow: hidden"
+    style="min-height: 100dvh; position: relative; overflow: hidden"
   >
-    <n-layout has-sider position="absolute" style="top: 0px; bottom: 48px">
+    <n-layout has-sider position="absolute" style="top: 0px; bottom: 32.85px">
       <n-layout-sider
         v-if="screenSize !== 'sm'"
         bordered
@@ -85,15 +85,11 @@
     <n-layout-footer
       bordered
       position="absolute"
-      style="
-        height: 48px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 16px;
-      "
+      class="px-3 py-2 text-end text-xs"
     >
-      <span> v1.0 </span>
+      <span>
+        © {{ new Date().getFullYear() }} Instituto de Informática - UNAP. v1.0
+      </span>
     </n-layout-footer>
   </n-layout>
 </template>
@@ -103,7 +99,7 @@ import { h, ref } from "vue";
 import { renderIcon } from "@/core/utils/icon.utils";
 import { menuItem } from "@/core/utils/menu.utils";
 import { type MenuOption } from "naive-ui";
-import useBreakpoints from "@/core/composable/useBreakpoints";
+import useBreakpoints from "@/core/composables/useBreakpoints";
 import { useRoute, useRouter } from "vue-router";
 import { usePeriodStore } from "../store/period.stores";
 import { _signOut } from "@/app/modules/Authentication/services/auth.services";
@@ -211,22 +207,33 @@ const menuOptions: MenuOption[] = [
       }),
     ],
   },
-
+  menuItem({
+    label: "Supervisión Académica",
+    key: "academic-supervision",
+    route: "AcademicSupervision",
+    iconName: "archive-book",
+  }),
   {
-    label: "Notas y Evaluaciones",
+    label: "Notas",
     key: "grades",
     icon: renderIcon("archive-book"),
     children: [
-      {
-        label: "Ingreso de Notas",
-        key: "grades-entry",
-        iconName: "archive-add",
-      },
-      {
-        label: "Rectificación de Notas",
-        key: "grades-rectification",
-        iconName: "archive-slash",
-      },
+      // {
+      //   label: "Ingreso de Notas",
+      //   key: "grades-entry",
+      //   iconName: "archive-add",
+      // },
+      // {
+      //   label: "Rectificación de Notas",
+      //   key: "grades-rectification",
+      //   iconName: "archive-slash",
+      // },
+      menuItem({
+        label: "Habilitaciones",
+        key: "grade-deadline",
+        route: "GradeDeadline",
+        iconName: "calendar-2",
+      }),
     ],
   },
 

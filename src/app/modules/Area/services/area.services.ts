@@ -1,4 +1,4 @@
-import { http } from "@/core/http";
+import { useHttp } from "@/core/composables/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
@@ -13,11 +13,12 @@ import type {
 import { type ResponseServiceDTO } from "@/core/types/Response.types";
 import type { ItemSelectDTO } from "@/core/types/Select.types";
 
+const http = useHttp();
 export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<AreaDTO>> => {
   try {
-    const response = await http().post("/area/load-data-table", request);
+    const response = await http.post("/area/load-data-table", request);
     return response.data.data as DataTableResponseDTO<AreaDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -28,7 +29,7 @@ export const _storeItem = async (
   request: AreaFormDTO
 ): Promise<ResponseServiceDTO<AreaDTO | AreaFormErrorsDTO>> => {
   try {
-    let reponse = await http().post("/area", request);
+    let reponse = await http.post("/area", request);
     return {
       status: true,
       data: reponse.data.data as AreaFormDTO,
@@ -51,7 +52,7 @@ export const _updateItem = async (
   request: AreaFormDTO
 ): Promise<ResponseServiceDTO<AreaDTO | AreaFormErrorsDTO>> => {
   try {
-    let reponse = await http().put("/area", request);
+    let reponse = await http.put("/area", request);
     return {
       status: true,
       data: reponse.data.data as AreaFormDTO,
@@ -72,7 +73,7 @@ export const _updateItem = async (
 
 export const _deleteItem = async (request: AreaFormDTO): Promise<boolean> => {
   try {
-    await http().delete("/area", { data: { id: request.id } });
+    await http.delete("/area", { data: { id: request.id } });
     return true;
   } catch (error) {
     return false;
@@ -83,7 +84,7 @@ export const __getAreasForSelect = async (
   query: any
 ): Promise<ItemSelectDTO[]> => {
   try {
-    let response = await http().get("/area/items/for-select", {
+    let response = await http.get("/area/items/for-select", {
       params: query,
     });
     return response.data.data as ItemSelectDTO[];

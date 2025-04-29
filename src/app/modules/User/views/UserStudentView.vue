@@ -19,7 +19,7 @@
   </n-card>
   <DataTable level="student">
     <template #extra="{ reLoadDataTable, roleOptions }">
-      <UserForm
+      <AccountUserForm
         v-model="showModal"
         :item="null"
         :roleOptions="roleOptions"
@@ -33,8 +33,7 @@
 import { ref } from "vue";
 import { renderIcon } from "@/core/utils/icon.utils";
 import { _createColumns } from "@/app/modules/User/configs/dataTable.configs";
-
-import UserForm from "@/app/modules/User/components/UserForm.vue";
+import AccountUserForm from "@/app/modules/User/components/AccountUserForm.vue";
 import DataTable from "@/app/modules/User/components/DataTable/DataTable.vue";
 
 const showModal = ref<boolean>(false);

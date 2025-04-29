@@ -1,24 +1,16 @@
-import { useAuthStore } from "@/app/store/auth.stores";
+import { usePermission } from "@/core/composables/usePermission";
 import { type Directive } from "vue";
 
 const permission: Directive = {
   mounted(el: HTMLElement, binding: any) {
     const { value } = binding;
-    const authStore = useAuthStore();
-    const stringPermissions = authStore.authState.permissions;
-    const role = authStore.authState.user?.role;
-    const authPermissions: string[] = stringPermissions.split("|");
-    
-    if (role === "super") return;
-    
+    const { hasPermission } = usePermission();
+
     if (value && Array.isArray(value)) {
       if (value.length > 0) {
-        const permissionRoles = value;
-        const hasPermission = authPermissions.some((role) =>
-          permissionRoles.includes(role)
-        );
+        const hasAccess = hasPermission(value);
 
-        if (!hasPermission) {
+        if (!hasAccess) {
           el.parentNode && el.parentNode.removeChild(el);
         }
       }

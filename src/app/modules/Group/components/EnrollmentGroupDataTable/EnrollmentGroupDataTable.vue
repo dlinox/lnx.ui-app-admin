@@ -71,6 +71,7 @@ import type { SelectOption } from "naive-ui";
 const periodStore = usePeriodStore();
 const loadingSearchPeriod = ref<boolean>(false);
 const optionsPeirod = ref<SelectOption[]>([]);
+
 const loadingTable = ref(false);
 const items = ref<any[]>([]);
 const pagination = reactive({ ...initValuesDataTablePagination() });

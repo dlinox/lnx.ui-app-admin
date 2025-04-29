@@ -47,6 +47,16 @@ export const _createColumns = (
     minWidth: "150px",
   },
   {
+    title: "Descripción",
+    key: "description",
+    minWidth: "300px",
+  },
+  {
+    title: "Nivel",
+    key: "level",
+    minWidth: "50px",
+  },
+  {
     title: "Plan de estudio",
     key: "curriculum",
     minWidth: "150px",
@@ -59,7 +69,7 @@ export const _createColumns = (
       return h(
         NTag,
         {
-          type: row.isExtracurricular ? "default" : "info",
+          type: row.isExtracurricular ? "info" : "default",
           tertiary: true,
           bordered: false,
           strong: true,

@@ -69,12 +69,14 @@ import {
 import {
   _loadDataTable,
   _deleteItem,
+  _createUser,
 } from "@/app/modules/Student/services/student.services";
 
 import StudentForm from "@/app/modules/Student/components/StudentForm.vue";
 
 import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
+import type { TableColumns } from "naive-ui/es/data-table/src/interface";
 
 const loadingTable = ref(false);
 const items = ref<StudentDataTableItemDTO[]>([]);
@@ -92,20 +94,11 @@ const response = ref<DataTableResponseDTO<StudentDataTableItemDTO>>(
 
 const selectables = ref<any>({});
 
-const openFormModal = (item: StudentDataTableItemDTO | null) => {
-  editItem.value = item;
-  showModal.value = true;
-};
-
-const deleteItem = async (item: StudentDataTableItemDTO) => {
-  await _deleteItem(item);
-  await reLoadDataTable();
-};
-
-const columns = _createColumns(openFormModal, deleteItem);
+const columns = ref<TableColumns>([]);
 
 const reLoadDataTable = async () => {
   request.value.page = 1;
+  console.log("reloading data table");
   await loadDataTable();
 };
 
@@ -135,7 +128,25 @@ const onPageSizeChange = async (pageSize: number) => {
   await loadDataTable();
 };
 
+const openFormModal = (item: StudentDataTableItemDTO | null) => {
+  editItem.value = item;
+  showModal.value = true;
+};
+
+const deleteItem = async (item: StudentDataTableItemDTO) => {
+  await _deleteItem(item);
+  await reLoadDataTable();
+};
+
+const createUser = async (item: StudentDataTableItemDTO) => {
+  const response = await _createUser(item);
+  if (response) {
+    await reLoadDataTable();
+  }
+};
+
 const init = async () => {
+  columns.value = _createColumns(openFormModal, deleteItem, createUser);
   await loadDataTable();
   selectables.value.studentTypesItems = await __getStudentTypesForSelect();
   selectables.value.documentTypesItems = await __getDocumentTypesForSelect();

@@ -100,7 +100,7 @@
             </n-form-item>
           </n-col>
 
-          <n-col span="24" v-if="!form.id">
+          <n-col span="24">
             <n-form-item
               path="password"
               label="Contraseña"
@@ -109,7 +109,7 @@
               <n-input
                 type="password"
                 show-password-on="click"
-                placeholder="Custom Password Toggle Icon"
+                placeholder="Contraseña"
                 :minlength="6"
                 :status="formErrors?.password != undefined ? 'error' : ''"
                 v-model:value="form.password"
@@ -213,7 +213,7 @@ const loading = ref<boolean>(false);
 const formRef = ref<FormInst | null>(null);
 const form = ref<UserFormDTO>(_getUserInitValues(props.level));
 const formErrors = ref<UserFormErrorsDTO | null>(null);
-const formRules = ref<any>({ ..._getUserRules() });
+const formRules = computed(() => ({ ..._getUserRules(form.value.id) }));
 const teacherOptions = ref<SelectOption[]>([]);
 const studentOptions = ref<SelectOption[]>([]);
 

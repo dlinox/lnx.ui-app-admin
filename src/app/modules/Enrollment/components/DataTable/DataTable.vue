@@ -1,9 +1,29 @@
 <template>
   <div style="border-bottom: 1px solid #e9e9e9">
-    <n-row :gutter="12" style="padding: 12px 16px">
-      <n-col :span="12"> </n-col>
+    <n-row :gutter="12" class="p-4 flex justify-between">
+      <n-col :span="6">
+        <n-select
+          v-model:value="request.filters.periodId"
+          placeholder="Seleccionar Periodo Académico"
+          filterable
+          :options="optionsPeirod"
+          :loading="loadingSearchPeriod"
+          clearable
+          remote
+          size="large"
+          :virtual-scroll="false"
+          @search="debouncedhandleSearchPeriod"
+          @update:value="reLoadDataTable"
+        />
+      </n-col>
       <n-col :span="12">
-        <n-input size="large" placeholder="Buscar" v-model:value="request.search" @input="debouncedReload" clearable>
+        <n-input
+          size="large"
+          placeholder="Buscar"
+          v-model:value="request.search"
+          @input="debouncedReload"
+          clearable
+        >
           <template #suffix>
             <LnxIcon icon-name="search-normal-1" size="20" />
           </template>
@@ -12,18 +32,32 @@
     </n-row>
     <n-row>
       <n-col :span="24">
-        <n-data-table key="id" remote :single-line="false" :columns="columns" :data="items"
-          :pagination="_createPagination(pagination)" :pagination-show-size-picker="true" :loading="loadingTable"
-          @update:page="onPageChange" @update:page-size="onPageSizeChange" />
+        <n-data-table
+          key="id"
+          remote
+          :single-line="false"
+          :columns="columns"
+          :data="items"
+          :pagination="_createPagination(pagination)"
+          :pagination-show-size-picker="true"
+          :loading="loadingTable"
+          @update:page="onPageChange"
+          @update:page-size="onPageSizeChange"
+        />
       </n-col>
     </n-row>
 
     <slot name="extra" :reLoadDataTable="reLoadDataTable"> </slot>
   </div>
 
-  <EnrollmentGroupForm v-model="showModal" :studentId="studentId" :curriculumId="curriculumId" :courseId="courseId"
-    :enrollmetGroup="enrollmetGroup" @success="reLoadDataTable" />
-
+  <EnrollmentGroupForm
+    v-model="showModal"
+    :studentId="studentId"
+    :curriculumId="curriculumId"
+    :courseId="courseId"
+    :enrollmetGroup="enrollmetGroup"
+    @success="reLoadDataTable"
+  />
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
@@ -34,7 +68,7 @@ import {
   type DataTableResponseDTO,
   initValuesDataTablePagination,
 } from "@/core/types/DataTable.types";
-
+import { __searchPeriods } from "@/app/shared/services/selectables.services";
 import {
   _createColumns,
   _createPagination,
@@ -44,9 +78,11 @@ import { _loadDataTable } from "@/app/modules/Enrollment/services/enrollment.ser
 
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
-
+import type { SelectOption } from "naive-ui";
 const showModal = ref<boolean>(false);
 
+const loadingSearchPeriod = ref<boolean>(false);
+const optionsPeirod = ref<SelectOption[]>([]);
 const loadingTable = ref(false);
 const items = ref<any[]>([]);
 
@@ -56,6 +92,9 @@ const request = ref<DataTableRequestDTO>({
   search: null,
   page: pagination.page,
   pageSize: pagination.pageSize,
+  filters: {
+    periodId: null,
+  },
 } as DataTableRequestDTO);
 const response = ref<DataTableResponseDTO<any>>(
   {} as DataTableResponseDTO<any>
@@ -80,6 +119,16 @@ const reLoadDataTable = async () => {
 };
 
 const columns = _createColumns(openEnrollmentGroupModal, reLoadDataTable);
+
+const handleSearchPeriod = async (search: string) => {
+  loadingSearchPeriod.value = true;
+  optionsPeirod.value = await __searchPeriods(search);
+  loadingSearchPeriod.value = false;
+};
+
+const debouncedhandleSearchPeriod = debounce((search) => {
+  handleSearchPeriod(search);
+}, 400);
 
 const loadDataTable = async () => {
   loadingTable.value = true;
@@ -108,6 +157,7 @@ const onPageSizeChange = async (pageSize: number) => {
 };
 
 const init = async () => {
+  await handleSearchPeriod("");
   await loadDataTable();
 };
 

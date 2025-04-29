@@ -1,4 +1,4 @@
-import { http } from "@/core/http";
+import { useHttp } from "@/core/composables/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
@@ -12,11 +12,12 @@ import type {
 } from "@/app/modules/ModulePrice/types/ModulePrice.types";
 import type { ResponseServiceDTO } from "@/core/types/Response.types";
 
+const http = useHttp();
 export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<ModulePriceDataTableItemDTO>> => {
   try {
-    const response = await http().post("/module-price/load-data-table", request);
+    const response = await http.post("/module-price/load-data-table", request);
     return response.data.data as DataTableResponseDTO<ModulePriceDataTableItemDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -27,7 +28,7 @@ export const _storeItem = async (
   request: ModulePriceFormDTO
 ): Promise<ResponseServiceDTO<ModulePriceDTO | ModulePriceFormErrorsDTO>> => {
   try {
-    let reponse = await http().post("/module-price", request);
+    let reponse = await http.post("/module-price", request);
     return {
       status: true,
       data: reponse.data.data as ModulePriceFormDTO,
@@ -50,7 +51,7 @@ export const _updateItem = async (
   request: ModulePriceFormDTO
 ): Promise<ResponseServiceDTO<ModulePriceDTO | ModulePriceFormErrorsDTO>> => {
   try {
-    let reponse = await http().put("/module-price", request);
+    let reponse = await http.put("/module-price", request);
     return {
       status: true,
       data: reponse.data.data as ModulePriceFormDTO,
@@ -71,7 +72,7 @@ export const _updateItem = async (
 
 export const _deleteItem = async (request: ModulePriceDataTableItemDTO): Promise<boolean> => {
   try {
-    await http().delete("/module-price", { data: { id: request.id } });
+    await http.delete("/module-price", { data: { id: request.id } });
     return true;
   } catch (error) {
     return false;

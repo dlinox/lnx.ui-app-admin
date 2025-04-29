@@ -20,22 +20,6 @@
       >
         <n-row :gutter="16">
           <n-col :span="screenSize === 'sm' ? 12 : 8">
-            <n-form-item
-              path="code"
-              label="Código"
-              :feedback="formErrors?.code"
-            >
-              <n-input
-                v-model:value="form.code"
-                :status="formErrors?.code != undefined ? 'error' : ''"
-                @input="
-                  formErrors != null ? (formErrors.code = null) : () => {}
-                "
-              />
-            </n-form-item>
-          </n-col>
-
-          <n-col :span="screenSize === 'sm' ? 12 : 8">
             <n-form-item path="documentTypeId" label="Tipo de Documento">
               <n-select
                 v-model:value="form.documentTypeId"
@@ -72,6 +56,7 @@
               :feedback="formErrors?.name"
             >
               <n-input
+                v-upper-case
                 :status="formErrors?.name != undefined ? 'error' : ''"
                 v-model:value="form.name"
                 @input="
@@ -88,6 +73,7 @@
               :feedback="formErrors?.lastNameFather"
             >
               <n-input
+                v-upper-case
                 :status="formErrors?.lastNameFather != undefined ? 'error' : ''"
                 v-model:value="form.lastNameFather"
                 @input="
@@ -106,6 +92,7 @@
               :feedback="formErrors?.lastNameMother"
             >
               <n-input
+                v-upper-case
                 :status="formErrors?.lastNameMother != undefined ? 'error' : ''"
                 v-model:value="form.lastNameMother"
                 @input="
@@ -116,7 +103,7 @@
               />
             </n-form-item>
           </n-col>
-          <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <n-col :span="screenSize === 'sm' ? 12 : 8">
             <n-form-item path="gender" label="Genero">
               <n-select
                 v-model:value="form.gender"
@@ -128,7 +115,7 @@
             </n-form-item>
           </n-col>
 
-          <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <n-col :span="screenSize === 'sm' ? 12 : 8">
             <n-form-item path="birthDate" label="Fecha de Nacimiento">
               <n-input
                 v-model:value="form.dateOfBirth"
@@ -139,13 +126,13 @@
             </n-form-item>
           </n-col>
 
-          <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <n-col :span="screenSize === 'sm' ? 12 : 8">
             <n-form-item path="email" label="Correo Electrónico">
               <n-input v-model:value="form.email" />
             </n-form-item>
           </n-col>
 
-          <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <n-col :span="screenSize === 'sm' ? 12 : 8">
             <n-form-item path="phone" label="Teléfono">
               <n-input v-model:value="form.phone" />
             </n-form-item>
@@ -194,7 +181,7 @@ import { ref, computed, watch } from "vue";
 import type { FormInst } from "naive-ui";
 
 import { GENDERS_CONST } from "@/core/constants/genders.constans";
-import useBreakpoints from "@/core/composable/useBreakpoints";
+import useBreakpoints from "@/core/composables/useBreakpoints";
 
 import {
   type TeacherDataTableItemDTO,

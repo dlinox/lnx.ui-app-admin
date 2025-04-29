@@ -42,6 +42,10 @@ export const _createColumns = (
     minWidth: "300px",
   },
   {
+    title: "Tipo",
+    key: "type",
+  },
+  {
     title: "Habilitado",
     key: "isEnabled",
     width: "150px",

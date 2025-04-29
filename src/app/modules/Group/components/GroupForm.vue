@@ -32,46 +32,14 @@
             >
               <n-row gutter="16">
                 <n-col
-                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 24"
+                  :span="screenSize === 'lg' ? 3 : screenSize === 'md' ? 4 : 12"
                 >
                   <n-form-item label="Grupo" path="name" default-value="Grupo">
                     <n-input v-model:value="value.name" />
                   </n-form-item>
                 </n-col>
-
                 <n-col
-                  :span="
-                    screenSize === 'lg' ? 8 : screenSize === 'md' ? 10 : 24
-                  "
-                >
-                  <n-form-item label="Docente" path="teacher">
-                    <n-select
-                      v-model:value="value.teacherId"
-                      :options="teacherOptions"
-                      filterable
-                      clearable
-                      remote
-                      :virtual-scroll="false"
-                      @search="searchTeachersDebounce"
-                    />
-                  </n-form-item>
-                </n-col>
-                <n-col
-                  :span="screenSize == 'lg' ? 8 : screenSize === 'md' ? 10 : 24"
-                >
-                  <n-form-item label="Laboratorio" path="laboratory">
-                    <n-select
-                      v-model:value="value.laboratoryId"
-                      :options="props.laboratoryOptions"
-                      filterable
-                      clearable
-                      :virtual-scroll="false"
-                    />
-                  </n-form-item>
-                </n-col>
-
-                <n-col
-                  :span="screenSize == 'lg' ? 4 : screenSize === 'md' ? 8 : 24"
+                  :span="screenSize == 'lg' ? 4 : screenSize === 'md' ? 4 : 12"
                 >
                   <n-form-item label="Modalidad" path="modality">
                     <n-select
@@ -84,9 +52,9 @@
                   </n-form-item>
                 </n-col>
                 <n-col
-                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 6"
+                  :span="screenSize === 'lg' ? 3 : screenSize === 'md' ? 4 : 12"
                 >
-                  <n-form-item label="Cupos máximos" path="maxStudents">
+                  <n-form-item label="Cupos máx." path="maxStudents">
                     <n-input-number
                       v-model:value="value.maxStudents"
                       class="w-full"
@@ -94,9 +62,9 @@
                   </n-form-item>
                 </n-col>
                 <n-col
-                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 6"
+                  :span="screenSize === 'lg' ? 3 : screenSize === 'md' ? 4 : 12"
                 >
-                  <n-form-item label="Cupos mínimos" path="minStudents">
+                  <n-form-item label="Cupos mín." path="minStudents">
                     <n-input-number
                       v-model:value="value.minStudents"
                       class="w-full"
@@ -105,9 +73,11 @@
                 </n-col>
 
                 <n-col
-                  :span="screenSize === 'lg' ? 8 : screenSize === 'md' ? 8 : 12"
+                  :span="
+                    screenSize === 'lg' ? 11 : screenSize === 'md' ? 8 : 24
+                  "
                 >
-                  <n-form-item label="Horario - Días" path="availableStudents">
+                  <n-form-item label="Horario - Días" path="schedule.days">
                     <n-select
                       v-model:value="value.schedule.days"
                       multiple
@@ -117,7 +87,7 @@
                   </n-form-item>
                 </n-col>
                 <n-col
-                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 6"
+                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 12"
                 >
                   <n-form-item label="Hora de inicio">
                     <n-input
@@ -130,7 +100,7 @@
                   </n-form-item>
                 </n-col>
                 <n-col
-                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 6"
+                  :span="screenSize === 'lg' ? 4 : screenSize === 'md' ? 4 : 12"
                 >
                   <n-form-item label="Hora de fin">
                     <n-input
@@ -211,9 +181,8 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue";
-import debounce from "@/core/utils/debounce.utils";
 import { renderIcon } from "@/core/utils/icon.utils";
-import useBreakpoints from "@/core/composable/useBreakpoints";
+import useBreakpoints from "@/core/composables/useBreakpoints";
 import { DAYS } from "@/core/constants/days.constants";
 import {
   type GroupDataTableItemDTO,
@@ -224,8 +193,6 @@ import { _getGroupInitValues } from "@/app/modules/Group/configs/groupForm.confi
 
 import { __searchTeachers } from "@/app/shared/services/selectables.services";
 
-import type { SelectOption } from "naive-ui";
-
 import {
   _loadForm,
   _saveItems,
@@ -235,6 +202,7 @@ import { MODALITIES } from "@/core/constants/modalities.constants";
 
 import { useDialog } from "naive-ui";
 import LnxIcon from "@/core/components/LnxIcon.vue";
+
 const dialog = useDialog();
 const emit = defineEmits(["update:modelValue", "success"]);
 
@@ -242,7 +210,6 @@ const props = defineProps<{
   modelValue: boolean;
   item: GroupDataTableItemDTO | null;
   periodId: number;
-  laboratoryOptions: SelectOption[];
 }>();
 
 const { screenSize } = useBreakpoints();
@@ -254,7 +221,6 @@ const showModal = computed({
 
 const loadingInitForm = ref<boolean>(false);
 const loading = ref<boolean>(false);
-const teacherOptions = ref<SelectOption[]>([]);
 const form = ref<GroupFormDTO[]>([]);
 
 const initGroupValues = () =>
@@ -283,17 +249,6 @@ const submit = async () => {
   loading.value = false;
 };
 
-const searchTeachers = async ({
-  search = null as string | null,
-  id = null as string | null,
-}) => {
-  teacherOptions.value = await __searchTeachers({ search, id });
-};
-
-const searchTeachersDebounce = debounce(async (search) => {
-  await searchTeachers({ search });
-}, 400);
-
 const initForm = async () => {
   console.log("Inicializando formulario");
   if (props.item) {
@@ -303,16 +258,9 @@ const initForm = async () => {
     });
 
     if (formValues) {
-      const teacherIdsString = formValues
-        .map((item) => item.teacherId)
-        .filter((id) => id != null) // Filtrar nulos o indefinidos
-        .join(",");
-      console.log(teacherIdsString);
-      await searchTeachers({ id: teacherIdsString });
       form.value = formValues;
     } else {
       form.value = [{ ..._getGroupInitValues(), name: props.item.code }];
-      searchTeachers({ search: "" });
     }
   }
 };

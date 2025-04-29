@@ -1,5 +1,11 @@
 import { h } from "vue";
-import { NButton, NTag, type DataTableColumns } from "naive-ui";
+import {
+  NButton,
+  NPopover,
+  NTag,
+  NText,
+  type DataTableColumns,
+} from "naive-ui";
 import {
   type DataTablePaginationDTO,
   initValuesDataTablePagination,
@@ -27,146 +33,164 @@ export const _createColumns = (
     },
   },
   {
-    title: "Area",
-    key: "area",
+    title: "Modulo",
+    key: "module-group",
     minWidth: "200px",
+    children: [
+      {
+        title: "Nombre",
+        key: "module",
+        minWidth: "180px",
+      },
+      {
+        title: "Precios",
+        key: "modulePrice",
+        minWidth: "100px",
+        render: (row) => {
+          return h(
+            NPopover,
+            { trigger: "click" },
+            {
+              trigger: () =>
+                h(NButton, null, {
+                  default: () =>
+                    `Ver precios (${
+                      Array.isArray(row.modulePrice)
+                        ? row.modulePrice.length
+                        : 0
+                    })`,
+                }),
+              header: () =>
+                h(
+                  NText,
+                  { strong: true, depth: 1 },
+                  { default: () => "Lista de precios" }
+                ),
+              default: () =>
+                h(
+                  "ul",
+                  {},
+                  Array.isArray(row.modulePrice)
+                    ? row.modulePrice?.map((price: string) =>
+                        h("li", {}, `S/. ${price}`)
+                      )
+                    : h("li", {}, "No hay precios definidos")
+                ),
+            }
+          );
+        },
+      },
+    ],
   },
-  {
-    title: "Codigo",
-    key: "code",
-    minWidth: "80px",
-  },
+
   {
     title: "Curso",
-    key: "course",
-    minWidth: "200px",
-  },
-  {
-    title: "Precios Virtual",
-    key: "virtualPrice",
-    minWidth: "100px",
-    render: (row) => {
-      return h(
-        "div",
-        {
-          class:
-            Array.isArray(row.virtualPrice) &&
-            row.virtualPrice.length > 0 &&
-            row.virtualPrice[0] !== ""
-              ? ""
-              : //punto de color rojo
-                "text-red-500 relative px-2 py-1 bg-red-100 text-sm font-semibold text-center",
+    key: "course-group",
+    children: [
+      {
+        title: "Codigo",
+        key: "code",
+        minWidth: "80px",
+      },
+      {
+        title: "Nombre",
+        key: "course",
+        minWidth: "180px",
+      },
+      {
+        title: "Precios Virtual",
+        key: "virtualPrice",
+        minWidth: "100px",
+        render: (row) => {
+          return h(
+            NPopover,
+            { trigger: "click" },
+            {
+              trigger: () =>
+                h(NButton, null, {
+                  default: () =>
+                    `Ver precios (${
+                      Array.isArray(row.virtualPrice)
+                        ? row.virtualPrice.length
+                        : 0
+                    })`,
+                }),
+              header: () =>
+                h(
+                  NText,
+                  { strong: true, depth: 1 },
+                  { default: () => "Lista de precios" }
+                ),
+              default: () =>
+                h(
+                  "ul",
+                  {},
+                  Array.isArray(row.virtualPrice)
+                    ? row.virtualPrice?.map((price: string) =>
+                        h("li", {}, `S/. ${price}`)
+                      )
+                    : h("li", {}, "No hay precios definidos")
+                ),
+            }
+          );
         },
-        Array.isArray(row.virtualPrice) &&
-          row.virtualPrice.length > 0 &&
-          row.virtualPrice[0] !== ""
-          ? row.virtualPrice.map((price) =>
-              h(
-                NTag,
-                {
-                  class: "me-1 mb-1",
-                  tertiary: true,
-                  bordered: false,
-                  strong: true,
-                },
-                { default: () => `S/.${price}` }
-              )
-            )
-          : "Sin definir."
-      );
-    },
-  },
-  {
-    title: "Precios Presencial",
-    key: "presentialPrice",
-    minWidth: "100px",
-    render: (row) => {
-      return h(
-        "div",
-        {
-          class:
-            Array.isArray(row.presentialPrice) &&
-            row.presentialPrice.length > 0 &&
-            row.presentialPrice[0] !== ""
-              ? ""
-              : "text-red-500 px-2 py-1 bg-red-100 text-sm font-semibold text-center",
+      },
+      {
+        title: "Precios Presencial",
+        key: "presentialPrice",
+        minWidth: "100px",
+        render: (row) => {
+          return h(
+            NPopover,
+            { trigger: "click" },
+            {
+              trigger: () =>
+                h(NButton, null, {
+                  default: () =>
+                    `Ver precios (${
+                      Array.isArray(row.presentialPrice)
+                        ? row.presentialPrice.length
+                        : 0
+                    })`,
+                }),
+              header: () =>
+                h(
+                  NText,
+                  { strong: true, depth: 1 },
+                  { default: () => "Lista de precios" }
+                ),
+              default: () =>
+                h(
+                  "ul",
+                  {},
+                  Array.isArray(row.presentialPrice)
+                    ? row.presentialPrice?.map((price: string) =>
+                        h("li", {}, `S/. ${price}`)
+                      )
+                    : h("li", {}, "No hay precios definidos")
+                ),
+            }
+          );
         },
-        Array.isArray(row.presentialPrice) &&
-          row.presentialPrice.length > 0 &&
-          row.presentialPrice[0] !== ""
-          ? row.presentialPrice.map((price) =>
-              h(
-                NTag,
-                {
-                  class: "me-1 mb-1",
-                  tertiary: true,
-                  bordered: false,
-                  strong: true,
-                },
-                { default: () => `S/.${price}` }
-              )
-            )
-          : "Sin definir."
-      );
-    },
-  },
-
-  {
-    title: "Modulo",
-    key: "module",
-    minWidth: "200px",
-  },
-  {
-    title: "Precio Modulo",
-    key: "modulePrice",
-    minWidth: "100px",
-    render: (row) => {
-      return h(
-        "div",
-        {
-          class:
-            Array.isArray(row.modulePrice) &&
-            row.modulePrice.length > 0 &&
-            row.modulePrice[0] !== ""
-              ? ""
-              : "text-red-500 px-2 py-1 bg-red-100 text-sm font-semibold text-center",
+      },
+      {
+        title: "Estado",
+        key: "isEnabled",
+        width: "150px",
+        render: (row) => {
+          return h(
+            NTag,
+            {
+              type: row.isEnabled ? "success" : "error",
+              tertiary: true,
+              bordered: false,
+              strong: true,
+            },
+            { default: () => (row.isEnabled ? "	Habilitado" : "Deshabilitado") }
+          );
         },
-        Array.isArray(row.modulePrice) &&
-          row.modulePrice.length > 0 &&
-          row.modulePrice[0] !== ""
-          ? row.modulePrice.map((price) =>
-              h(
-                NTag,
-                {
-                  class: "me-1 mb-1",
-                  tertiary: true,
-                  bordered: false,
-                  strong: true,
-                },
-                { default: () => `S/.${price}` }
-              )
-            )
-          : "Sin definir."
-      );
-    },
-  },
-
-  {
-    title: "Habilitado",
-    key: "isEnabled",
-    width: "150px",
-    render: (row) => {
-      return h(
-        NTag,
-        {
-          type: row.isEnabled ? "success" : "error",
-          tertiary: true,
-          bordered: false,
-          strong: true,
-        },
-        { default: () => (row.isEnabled ? "	Habilitado" : "Deshabilitado") }
-      );
-    },
+      },
+    ],
   },
 ];
 

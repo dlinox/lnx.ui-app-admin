@@ -28,6 +28,66 @@
           </n-col>
 
           <n-col span="24">
+            <n-form-item path="courseId" label="Curso">
+              <n-select
+                v-model:value="form.courseId"
+                placeholder="Seeleccione un curso"
+                :options="courseItems"
+                :virtual-scroll="false"
+                clearable
+                filterable
+                @update:value="onSelectedCourse"
+              />
+            </n-form-item>
+          </n-col>
+          <n-col span="24">
+            <div class="wrapper-list-groups">
+              <n-list hoverable clickable>
+                <template #header>
+                  Grupos aperturados ({{
+                    groupItems?.length ? groupItems.length : 0
+                  }})
+                </template>
+                <n-list-item
+                  v-for="item in groupItems"
+                  :key="item.id"
+                  :class="{ 'item-selected': form.groupId == item.id }"
+                  :extra="item.price"
+                >
+                  <n-thing @click="onSelectedGroup(item)">
+                    <template #header>
+                      <n-tag :bordered="false" type="info" size="small">
+                        {{ item.modality }}
+                      </n-tag>
+                      {{ `${item.group} - S/. ${item.price}` }}
+                    </template>
+
+                    <template v-if="form.groupId == item.id" #header-extra>
+                      <n-button
+                        circle
+                        type="warning"
+                        :render-icon="renderIcon('verify')"
+                      ></n-button>
+                    </template>
+
+                    Min.: <b> {{ item.minStudents }} </b> | Matriculados:
+                    <b> {{ item.enrolledStudents }} </b> | Reservados:
+                    <b> {{ item.reservedStudents }} </b>
+                    <br />
+                    <n-tag :bordered="false" type="info" size="small">
+                      <strong>
+                        {{ item.schedules.days }} -
+                        {{ item.schedules.startHour }} a
+                        {{ item.schedules.endHour }}
+                      </strong>
+                    </n-tag>
+                  </n-thing>
+                </n-list-item>
+              </n-list>
+            </div>
+          </n-col>
+
+          <n-col span="24">
             <span
               role="button"
               @click="showPaymentModal = true"
@@ -80,7 +140,11 @@
               </tbody>
             </table>
             <div class="text-red-500 text-sm text-end text-sm">
-              {{ validatePayments()  }}
+              {{
+                isPaymentComplete
+                  ? ""
+                  : "El monto pagado no cubre el total requerido."
+              }}
             </div>
           </n-col>
 
@@ -111,7 +175,11 @@ import { ref, computed, watch } from "vue";
 import {
   _getModulesEnrollment,
   _enrollmentModuleStore,
+  _getEnabledGroupEnrollment,
 } from "@/app/modules/Enrollment/services/enrollment.services";
+
+import { __getItemsByModuleForSelect } from "@/app/modules/Course/services/course.services";
+
 import { renderIcon } from "@/core/utils/icon.utils";
 import PaymentForm from "@/app/modules/Payment/components/PaymentForm.vue";
 import type { PaymentDTO } from "@/app/modules/Payment/types/Payment.types";
@@ -138,13 +206,17 @@ const showModal = computed({
 const loading = ref<boolean>(false);
 const showPaymentModal = ref<boolean>(false);
 const moduleItems = ref<any>([]);
-
+const courseItems = ref<any>([]);
+const groupItems = ref<any>([]);
 const formRef = ref<FormInst | null>(null);
 const formRules = computed(() => _getFormRules());
 
 const form = ref<EnrollmentModuleFormDTO>(_getFormInitValues());
 
 const payments = ref<PaymentDTO[]>([]);
+
+const modulePrice = ref<number>(0);
+const coursePrice = ref<number>(0);
 const amount = ref<number>(0);
 
 const onSuccessPaymentValidation = (value: any) => {
@@ -158,26 +230,62 @@ const onSuccessPaymentValidation = (value: any) => {
 };
 
 const removePayment = (index: number) => {
-  let item = payments.value[index];
-  let token = item.token;
-  payments.value.splice(index, 1);
-  let payment = form.value.payments.find((item: any) => item.token == token);
-  if (!payment) return;
-  let indexPayment = form.value.payments.indexOf(payment);
-  form.value.payments.splice(indexPayment, 1);
+  const item = payments.value.splice(index, 1)[0];
+  const token = item?.token;
+  if (!token) return;
+
+  const indexPayment = form.value.payments.indexOf(token);
+  if (indexPayment !== -1) {
+    form.value.payments.splice(indexPayment, 1);
+  }
 };
 
-const onSelectedModule = (value: any) => {
-  console.log("Seleccionando modulo", value);
-
+const onSelectedModule = async (value: any) => {
   form.value.payments = [];
+  form.value.courseId = null;
+  form.value.groupId = null;
+  courseItems.value = [];
+  groupItems.value = [];
+
+  courseItems.value = await __getItemsByModuleForSelect(value);
+
   moduleItems.value.forEach((item: any) => {
     if (item.value == value) {
-      amount.value = item.price;
+      modulePrice.value = parseFloat(item.price);
+      amount.value = modulePrice.value;
     }
   });
 };
 
+const onSelectedCourse = async (value: any) => {
+  form.value.courseId = value;
+  await getEnabledGroupEnrollment(value);
+};
+
+const onSelectedGroup = (item: any) => {
+  console.log("Grupo seleccionado", item);
+  coursePrice.value = parseFloat(item.price);
+  if (form.value.groupId && form.value.groupId != item.id) {
+    form.value.groupId = item.id;
+    amount.value = modulePrice.value + coursePrice.value;
+  } else if (form.value.groupId == item.id) {
+    form.value.groupId = null;
+    amount.value = modulePrice.value;
+  } else {
+    form.value.groupId = item.id;
+    amount.value = modulePrice.value + coursePrice.value;
+  }
+};
+
+const getEnabledGroupEnrollment = async (courseId: number) => {
+  const response = await _getEnabledGroupEnrollment({
+    studentId: props.studentId,
+    curriculumId: props.curriculumId,
+    courseId: courseId,
+  });
+
+  groupItems.value = response.data;
+};
 const getModulesEnrollmentItems = async () => {
   const response = await _getModulesEnrollment(
     props.studentId,
@@ -186,26 +294,27 @@ const getModulesEnrollmentItems = async () => {
   moduleItems.value = response.data;
 };
 
-const validatePayments = () => {
-
-  let total = payments.value.reduce(
-    (acc, item: any) => acc + parseInt(item.amount),
-    0
-  );
-  return total >= amount.value ? null : "El monto pagado es menor al total";
-};
+const isPaymentComplete = computed(
+  () =>
+    payments.value.reduce((acc, item: any) => acc + Number(item.amount), 0) >=
+    amount.value
+);
 
 const handleSubmit = async () => {
   form.value.studentId = props.studentId;
   form.value.curriculumId = props.curriculumId;
-  loading.value = true;
-  const response = await _enrollmentModuleStore(form.value);
-  if (response.status) {
-    emit("success");
-    showModal.value = false;
-  }
-  loading.value = false;
 
+  if (formRef.value) {
+    const valid = await formRef.value.validate();
+    if (!valid) return;
+    loading.value = true;
+    const response = await _enrollmentModuleStore(form.value);
+    if (response.status) {
+      emit("success");
+      showModal.value = false;
+    }
+    loading.value = false;
+  }
   console.log("Guardando matricula", form.value);
 };
 
@@ -218,6 +327,12 @@ watch(showModal, (value) => {
   if (value) {
     form.value = Object.assign({}, { ..._getFormInitValues() });
     payments.value = [];
+    moduleItems.value = [];
+    courseItems.value = [];
+    groupItems.value = [];
+    modulePrice.value = 0;
+    coursePrice.value = 0;
+    amount.value = 0;
     init();
   }
 });

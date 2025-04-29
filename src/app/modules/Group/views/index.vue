@@ -6,7 +6,7 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Carga Académica</h6>
+      <h6 class="text-sm text-gray-400">Carga Académica</h6>
       Apertura de grupos
     </template>
 

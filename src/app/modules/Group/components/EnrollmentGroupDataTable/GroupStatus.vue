@@ -1,45 +1,36 @@
 <template>
-    <n-button-group>
-        <n-button quaternary>
-            {{ status }}
-        </n-button>
-        <n-dropdown v-if="(status == 'ABIERTO' || status == 'CERRADO') ? true : false" trigger="click"
-            :options="options" @select="handleSelect">
-            <n-button tertiary :loading="loading">
-                <template #icon>
-                    <LnxIcon icon-name="edit" />
-                </template>
-            </n-button>
-        </n-dropdown>
-    </n-button-group>
+  <n-button-group>
+    <n-button quaternary>
+      {{ status }}
+    </n-button>
+    <n-button
+      v-if="status == 'ABIERTO' || status == 'CERRADO' ? true : false"
+      tertiary
+      @click="showModal = true"
+    >
+      <template #icon>
+        <LnxIcon icon-name="edit" />
+      </template>
+    </n-button>
+  </n-button-group>
+  <FormManagerGroup
+    v-model="showModal"
+    :item="item"
+    @success="emit('success')"
+  />
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
-
+import { ref } from "vue";
+import FormManagerGroup from "@/app/modules/Group/components/FormManagerGroup/FormManagerGroup.vue";
 import { _changeStatusGroup } from "@/app/modules/Group/services/enrollment-group.services";
 
 const emit = defineEmits(["success"]);
 
-const props = defineProps<{
-    groupId: number;
-    status: string;
+defineProps<{
+  groupId: number;
+  status: string;
+  item: any;
 }>();
 
-const options = computed(() => [
-    { label: "Cerrar", key: "CERRADO", disabled: props.status == 'CERRADO' },
-    { label: "Reabrir", key: "ABIERTO", disabled: props.status == 'ABIERTO' },
-]);
-
-const loading = ref<boolean>(false);
-
-const handleSelect = async (key: any) => {
-    loading.value = true;
-    await _changeStatusGroup({
-        id: props.groupId,
-        status: key,
-    });
-    emit("success");
-
-    loading.value = false;
-};
+const showModal = ref<boolean>(false);
 </script>

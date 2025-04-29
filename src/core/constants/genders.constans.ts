@@ -8,9 +8,5 @@ export const GENDERS_CONST: ItemSelectDTO[] = [
   {
     label: "FEMENINO",
     value: 2,
-  },
-  {
-    label: "NO ESPECIFICADO",
-    value: 0,
-  },
+  }
 ];

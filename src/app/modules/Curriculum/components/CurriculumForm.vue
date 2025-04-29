@@ -29,6 +29,25 @@
             </n-form-item>
           </n-col>
           <n-col span="24">
+            <n-form-item
+              path="gradingModel"
+              label="Modelo de calificación"
+              :feedback="formErrors?.gradingModel"
+            >
+              <n-select
+                v-model:value="form.gradingModel"
+                :options="GRADING_MODEL_CONST"
+                :virtual-scroll="false"
+                :status="formErrors?.gradingModel != undefined ? 'error' : ''"
+                @update:value="
+                  formErrors != null
+                    ? (formErrors.gradingModel = null)
+                    : () => {}
+                "
+              />
+            </n-form-item>
+          </n-col>
+          <n-col span="24">
             <n-space justify="end">
               <n-form-item
                 label-placement="left"
@@ -66,13 +85,15 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormInst, FormRules } from "naive-ui";
+import type { FormInst } from "naive-ui";
 import { ref, computed, watch } from "vue";
 import {
   type CurriculumDTO,
   type CurriculumFormDTO,
   type CurriculumFormErrorsDTO,
 } from "@/app/modules/Curriculum/types/Curriculum.types";
+
+import { GRADING_MODEL_CONST } from "@/app/shared/constants/gradingModel.constants";
 
 import {
   _getCurriculumInitValues,
@@ -100,7 +121,7 @@ const loading = ref<boolean>(false);
 const formRef = ref<FormInst | null>(null);
 const form = ref<CurriculumFormDTO>(_getCurriculumInitValues());
 const formErrors = ref<CurriculumFormErrorsDTO | null>(null);
-const formRules = ref<FormRules>({ ..._getCurriculumRules() });
+const formRules = ref<any>({ ..._getCurriculumRules() });
 
 const handleSubmit = async () => {
   if (formRef.value) {

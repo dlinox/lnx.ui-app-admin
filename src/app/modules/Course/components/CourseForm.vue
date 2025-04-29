@@ -275,7 +275,7 @@ import {
   __getCoursesForSelect,
 } from "@/app/modules/Course/services/course.services";
 
-import useBreakpoints from "@/core/composable/useBreakpoints";
+import useBreakpoints from "@/core/composables/useBreakpoints";
 
 import { __getAreasForSelect } from "@/app/modules/Area/services/area.services";
 import { __getModulesForSelect } from "@/app/modules/Module/services/module.services";

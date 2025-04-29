@@ -12,7 +12,8 @@ import DataTableOp from "@/app/modules/Student/components/DataTable/DataTableOp.
 
 export const _createColumns = (
   openModal: (item: StudentDataTableItemDTO) => void,
-  deleteItem: (item: StudentDataTableItemDTO) => void
+  deleteItem: (item: StudentDataTableItemDTO) => void,
+  createUser: (item: StudentDataTableItemDTO) => void
 ): DataTableColumns => [
   {
     title: "Ops.",
@@ -30,6 +31,9 @@ export const _createColumns = (
           onDelete: () => {
             deleteItem(rowItem);
           },
+          onCreateUser : () => {
+            createUser(rowItem);
+          },
           item: rowItem,
         },
         {
@@ -42,12 +46,12 @@ export const _createColumns = (
   {
     title: "Codigo",
     key: "code",
-    minWidth: "120px",
+    minWidth: "100px",
   },
   {
-    title: "Número de documento",
+    title: "Nro. Documento",
     key: "documentNumber",
-    minWidth: "120px",
+    minWidth: "90px",
   },
 
   {
@@ -58,16 +62,31 @@ export const _createColumns = (
   {
     title: "Apellido Paterno",
     key: "lastNameFather",
-    minWidth: "120px",
+    minWidth: "100px",
   },
   {
     title: "Apellido Materno",
     key: "lastNameMother",
-    minWidth: "120px",
+    minWidth: "100px",
   },
   {
     title: "Género",
     key: "gender",
+    width: "75px",
+  },
+  {
+    title: "Email",
+    key: "email",
+    minWidth: "130px",
+  },
+  {
+    title: "Celular",
+    key: "phone",
+    minWidth: "100px",
+  },
+  {
+    title: "Tipo de estudiante",
+    key: "studentType",
     minWidth: "150px",
     render: (row) => {
       return h(
@@ -78,30 +97,10 @@ export const _createColumns = (
           strong: true,
         },
         {
-          default: () =>
-            row.gender === 1
-              ? "MASCULINO"
-              : row.gender === 2
-              ? "FEMENINO"
-              : "NO ESPECIFICADO",
+          default: () => row.studentType,
         }
       );
     },
-  },
-  {
-    title: "Email",
-    key: "email",
-    minWidth: "80px",
-  },
-  {
-    title: "Teléfono",
-    key: "phone",
-    minWidth: "100px",
-  },
-  {
-    title: "Tipo de estudiante",
-    key: "studentType",
-    minWidth: "150px",
   },
 
   {

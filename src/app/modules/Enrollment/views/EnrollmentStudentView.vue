@@ -7,8 +7,8 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Matricular estudiante</h6>
-      Nombre del estudiante
+      <h6 class="text-sm text-gray-500">Matricular estudiante</h6>
+      Matricula regular
     </template>
     <template #header-extra>
       <n-select
@@ -41,11 +41,13 @@
                 {{ student?.studentType }}
               </n-statistic>
               <n-statistic class="small" label="Documento">
-                {{
-                  student?.documentNumber
-                    ? student?.documentNumber
-                    : "No registrado"
-                }}
+                <span :class="student?.documentNumber ? '' : 'text-stone-400'">
+                  {{
+                    student?.documentNumber
+                      ? student?.documentNumber
+                      : "No registra"
+                  }}
+                </span>
               </n-statistic>
 
               <n-statistic class="small" label="Nombres">
@@ -53,11 +55,15 @@
               </n-statistic>
 
               <n-statistic class="small" label="Correo electronico">
-                {{ student?.email ? student?.email : "No registrado" }}
+                <span :class="student?.email ? '' : 'text-stone-400'">
+                  {{ student?.email ? student?.email : "No registra" }}
+                </span>
               </n-statistic>
 
               <n-statistic class="small" label="Telefono">
-                {{ student?.phone ? student?.phone : "No registrado" }}
+                <span :class="student?.phone ? '' : 'text-stone-400'">
+                  {{ student?.phone ? student?.phone : "No registra" }}
+                </span>
               </n-statistic>
             </n-space>
           </n-spin>
@@ -91,7 +97,7 @@
               @click="showAddModuleForm = true"
               :disabled="!periodStore.enrollment"
             >
-              Agregar Modulo
+              Nuevo Modulo
             </n-button>
           </div>
           <n-collapse>
@@ -248,7 +254,7 @@ import { useRoute } from "vue-router";
 
 import { renderIcon } from "@/core/utils/icon.utils";
 
-import useBreakpoints from "@/core/composable/useBreakpoints";
+import useBreakpoints from "@/core/composables/useBreakpoints";
 import { _createColumns } from "@/app/modules/Course/configs/dataTable.configs";
 import {
   _getStudentEnrollment,

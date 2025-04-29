@@ -14,7 +14,7 @@ export const _getUserInitValues = (level: string): UserFormDTO => {
   };
 };
 
-export const _getUserRules = () => {
+export const _getUserRules = (id : null | number = null ) => {
   return {
     modelId: [
       {
@@ -55,7 +55,7 @@ export const _getUserRules = () => {
     ],
     password: [
       {
-        required: true,
+        required: id === null ? true : false,
         trigger: ["blur", "input"],
         message: "Obligatorio",
       },

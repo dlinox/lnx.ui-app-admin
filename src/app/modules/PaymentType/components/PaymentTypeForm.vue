@@ -29,6 +29,23 @@
             </n-form-item>
           </n-col>
           <n-col span="24">
+            <n-form-item
+              path="commission"
+              label="Comisión (S/.)"
+              :feedback="formErrors?.commission"
+            >
+              <n-input-number
+                class="w-full"
+                :min="0"
+                :status="formErrors?.commission != undefined ? 'error' : ''"
+                v-model:value="form.commission"
+                @input="
+                  formErrors != null ? (formErrors.commission = null) : () => {}
+                "
+              />
+            </n-form-item>
+          </n-col>
+          <n-col span="24">
             <n-space justify="end">
               <n-form-item
                 label-placement="left"
@@ -97,7 +114,7 @@ const loading = ref<boolean>(false);
 const formRef = ref<FormInst | null>(null);
 const form = ref<PaymentTypeFormDTO>(_getPaymentTypeInitValues());
 const formErrors = ref<PaymentTypeFormErrorsDTO | null>(null);
-const formRules = ref<FormRules>({ ..._getPaymentTypeRules() });
+const formRules = ref<any>({ ..._getPaymentTypeRules() });
 
 const handleSubmit = async () => {
   if (formRef.value) {

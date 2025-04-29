@@ -12,18 +12,81 @@
       aria-modal="true"
     >
       <n-form ref="formRef" :model="form" :rules="formRules" size="large">
-        <n-row>
+        <n-row gutter="12">
           <n-col span="24">
+            <n-form-item
+              path="curriculumId"
+              label="Plan de estudios"
+              :feedback="formErrors?.curriculumId"
+            >
+              <n-select
+                clearable
+                placeholder="Seleccione un plan de estudios"
+                v-model:value="form.curriculumId"
+                :options="curriculumOptions"
+                :virtual-scroll="false"
+                :status="formErrors?.curriculumId != undefined ? 'error' : ''"
+                @input="
+                  formErrors != null
+                    ? (formErrors.curriculumId = null)
+                    : () => {}
+                "
+              />
+            </n-form-item>
+          </n-col>
+
+          <n-col span="12">
             <n-form-item
               path="code"
               label="Código"
               :feedback="formErrors?.code"
             >
               <n-input
+                v-upper-case
                 :status="formErrors?.code != undefined ? 'error' : ''"
                 v-model:value="form.code"
                 @input="
                   formErrors != null ? (formErrors.code = null) : () => {}
+                "
+              />
+            </n-form-item>
+          </n-col>
+          <n-col span="12">
+            <n-form-item
+              path="level"
+              label="Nivel"
+              :feedback="formErrors?.level"
+            >
+              <n-select
+                clearable
+                placeholder="Seleccione un nivel"
+                v-model:value="form.level"
+                :options="[
+                  { label: 'I', value: 1 },
+                  { label: 'II', value: 2 },
+                  { label: 'III', value: 3 },
+                  { label: 'IV', value: 4 },
+                  { label: 'V', value: 5 },
+                  { label: 'VI', value: 6 },
+                  { label: 'VII', value: 7 },
+                  { label: 'VIII', value: 8 },
+                  { label: 'IX', value: 9 },
+                  { label: 'X', value: 10 },
+                  { label: 'XI', value: 11 },
+                  { label: 'XII', value: 12 },
+                  { label: 'XIII', value: 13 },
+                  { label: 'XIV', value: 14 },
+                  { label: 'XV', value: 15 },
+                  { label: 'XVI', value: 16 },
+                  { label: 'XVII', value: 17 },
+                  { label: 'XVIII', value: 18 },
+                  { label: 'XIX', value: 19 },
+                  { label: 'XX', value: 20 },
+                ]"
+                :virtual-scroll="false"
+                :status="formErrors?.level != undefined ? 'error' : ''"
+                @input="
+                  formErrors != null ? (formErrors.level = null) : () => {}
                 "
               />
             </n-form-item>
@@ -45,20 +108,17 @@
           </n-col>
           <n-col span="24">
             <n-form-item
-              path="curriculumId"
-              label="Plan de estudios"
-              :feedback="formErrors?.curriculumId"
+              path="description"
+              label="Descripción"
+              :feedback="formErrors?.description"
             >
-              <n-select
-                clearable
-                placeholder="Seleccione un plan de estudios"
-                v-model:value="form.curriculumId"
-                :options="curriculumOptions"
-                :virtual-scroll="false"
-                :status="formErrors?.curriculumId != undefined ? 'error' : ''"
+              <n-input
+                type="textarea"
+                :status="formErrors?.description != undefined ? 'error' : ''"
+                v-model:value="form.description"
                 @input="
                   formErrors != null
-                    ? (formErrors.curriculumId = null)
+                    ? (formErrors.description = null)
                     : () => {}
                 "
               />

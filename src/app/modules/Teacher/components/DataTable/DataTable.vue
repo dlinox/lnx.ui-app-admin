@@ -69,6 +69,7 @@ import {
 import {
   _loadDataTable,
   _deleteItem,
+  _createUser,
 } from "@/app/modules/Teacher/services/teacher.services";
 
 import TeacherForm from "@/app/modules/Teacher/components/TeacherForm.vue";
@@ -101,7 +102,14 @@ const deleteItem = async (item: TeacherDataTableItemDTO) => {
   await reLoadDataTable();
 };
 
-const columns = _createColumns(openFormModal, deleteItem);
+const createUser = async (item: TeacherDataTableItemDTO) => {
+  const response = await _createUser(item);
+  if (response) {
+    await reLoadDataTable();
+  }
+};
+
+const columns = _createColumns(openFormModal, deleteItem, createUser);
 
 const reLoadDataTable = async () => {
   request.value.page = 1;

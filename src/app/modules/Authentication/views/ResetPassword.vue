@@ -28,6 +28,15 @@
             Enviar
           </n-button>
         </n-form-item>
+        <p class="text-sm text-end">
+          Ya tengo cuenta,
+          <router-link
+            to="/login"
+            class="text-slate-500 hover:text-blue-400 hover:underline"
+          >
+            iniciar sesión.
+          </router-link>
+        </p>
       </n-form>
     </div>
   </div>

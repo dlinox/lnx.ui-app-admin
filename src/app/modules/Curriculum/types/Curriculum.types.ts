@@ -1,6 +1,7 @@
 export interface CurriculumDTO {
   id: number | null;
   name: string | null;
+  gradingModel: number;
   isEnabled: boolean;
 }
 
@@ -8,6 +9,7 @@ export interface CurriculumFormDTO extends CurriculumDTO {}
 
 export interface CurriculumFormErrorsDTO {
   name: string | null;
+  gradingModel: string | null;
   isEnabled: string | null;
 }
 

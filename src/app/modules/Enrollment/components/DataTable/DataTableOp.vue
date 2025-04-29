@@ -1,5 +1,5 @@
 <template>
-  <EditEnrollmentGroup v-if="periodStore.enrollment?.name == item.period" :item="item"
+  <EditEnrollmentGroup v-if="periodStore.enrollment?.period == item.period" :item="item"
     @resetEnrollment="($event) => emit('openForm', $event)" @changeGroup="($event) => emit('openForm', $event)"
     @reserveEnrollment="emit('success')" @cancelEnrollment="emit('success')" />
 

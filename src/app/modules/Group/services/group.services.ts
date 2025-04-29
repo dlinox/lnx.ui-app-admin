@@ -1,6 +1,4 @@
-// import { http } from "@/core/http";
-
-import { useHttp } from "@/core/composable/useHttp";
+import { useHttp } from "@/core/composables/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
@@ -88,3 +86,33 @@ export const _clone = async (
     return false;
   }
 };
+
+export const _getTeacherOptions = async (): Promise<any[]> => {
+  try {
+    const response = await http.get("/group/options/teacher");
+    return response.data.data;
+  } catch (error) {
+    return [];
+  }
+}
+
+export const _getLaboratoryOptions = async (): Promise<any[]> => {
+  try {
+    const response = await http.get("/group/options/laboratory");
+    return response.data.data;
+  } catch (error) {
+    return [];
+  }
+}
+
+
+export const _saveGroupStatus = async (
+  request: any
+): Promise<boolean> => {
+  try {
+    await http.post("/group/save-status", request);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}

@@ -7,19 +7,32 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useDialog } from "naive-ui";
 
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import { renderIcon } from "@/core/utils/icon.utils";
+import { usePermission } from "@/core/composables/usePermission";
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits(["edit", "delete", "createUser"]);
 const dialog = useDialog();
+const { hasPermission } = usePermission();
 
-defineProps<{
+const props = defineProps<{
   item: any;
 }>();
 
-const options = [
+const options = computed(() => [
+  {
+    show: props.item.userId == null && hasPermission([""]),
+    label: "Crear cuenta de usuario",
+    id: "create-user",
+    key: "create-user",
+    icon: renderIcon("security-user"),
+    props: {
+      onClick: () => emit("createUser"),
+    },
+  },
   {
     label: "Editar",
     key: "edit",
@@ -45,8 +58,6 @@ const options = [
           closable: false,
           showIcon: false,
           negativeButtonProps: {
-            secondary: true,
-            type: "tertiary",
             size: "large",
           },
           positiveButtonProps: {
@@ -60,5 +71,5 @@ const options = [
       },
     },
   },
-];
+]);
 </script>

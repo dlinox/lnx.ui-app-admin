@@ -1,4 +1,4 @@
-import { http } from "@/core/http";
+import { useHttp } from "@/core/composables/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
@@ -13,11 +13,13 @@ import type {
 import { type ResponseServiceDTO } from "@/core/types/Response.types";
 import type { ItemSelectDTO } from "@/core/types/Select.types";
 
+const http = useHttp();
+
 export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<RoleDTO>> => {
   try {
-    const response = await http().post("/role/load-data-table", request);
+    const response = await http.post("/role/load-data-table", request);
     return response.data.data as DataTableResponseDTO<RoleDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -28,7 +30,7 @@ export const _storeItem = async (
   request: RoleFormDTO
 ): Promise<ResponseServiceDTO<RoleDTO | RoleFormErrorsDTO>> => {
   try {
-    let reponse = await http().post("/role", request);
+    let reponse = await http.post("/role", request);
     return {
       status: true,
       data: reponse.data.data as RoleFormDTO,
@@ -51,7 +53,7 @@ export const _updateItem = async (
   request: RoleFormDTO
 ): Promise<ResponseServiceDTO<RoleDTO | RoleFormErrorsDTO>> => {
   try {
-    let reponse = await http().put("/role", request);
+    let reponse = await http.put("/role", request);
     return {
       status: true,
       data: reponse.data.data as RoleFormDTO,
@@ -72,7 +74,7 @@ export const _updateItem = async (
 
 export const _deleteItem = async (request: RoleFormDTO): Promise<boolean> => {
   try {
-    await http().delete("/role", { data: { id: request.id } });
+    await http.delete("/role", { data: { id: request.id } });
     return true;
   } catch (error) {
     return false;
@@ -83,7 +85,7 @@ export const __getRolesForSelect = async (
   level: string
 ): Promise<ItemSelectDTO[]> => {
   try {
-    let response = await http().get("/role/items/for-select", {
+    let response = await http.get("/role/items/for-select", {
       params: { level },
     });
     return response.data.data as ItemSelectDTO[];

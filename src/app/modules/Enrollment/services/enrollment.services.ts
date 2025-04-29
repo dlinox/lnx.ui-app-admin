@@ -1,14 +1,18 @@
-import { http } from "@/core/http";
+
+import { useHttp } from "@/core/composables/useHttp";
+
 import { initValuesDataTableResponse, type DataTableResponseDTO } from "@/core/types/DataTable.types";
 import type { ResponseServiceDTO } from "@/core/types/Response.types";
 import type { PaymentDTO } from "../../Payment/types/Payment.types";
 
 
+const http = useHttp();
+
 export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<any>> => {
   try {
-    const response = await http().post("/enrollment/load-data-table", request);
+    const response = await http.post("/enrollment/load-data-table", request);
     return response.data.data as DataTableResponseDTO<any>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -19,7 +23,7 @@ export const _enrollmentModuleStore = async (
   request: any
 ): Promise<ResponseServiceDTO<any>> => {
   try {
-    let reponse = await http().post(`/enrollment/module-store`, {
+    let reponse = await http.post(`/enrollment/module-store`, {
       ...request,
     });
     return {
@@ -39,7 +43,7 @@ export const _enrollmentGroupStore = async (
   request: any
 ): Promise<ResponseServiceDTO<any>> => {
   try {
-    let reponse = await http().post(`/enrollment/group-store`, {
+    let reponse = await http.post(`/enrollment/group-store`, {
       ...request,
     });
     return {
@@ -59,7 +63,7 @@ export const _enrollmentGroupUpdate = async (
   request: any
 ): Promise<ResponseServiceDTO<any>> => {
   try {
-    let reponse = await http().post(`/enrollment/group-update`, {
+    let reponse = await http.post(`/enrollment/group-update`, {
       ...request,
     });
     return {
@@ -79,7 +83,7 @@ export const _enrollmentGroupReserved = async (
   request: any
 ): Promise<ResponseServiceDTO<any>> => {
   try {
-    let reponse = await http().post(`/enrollment/group-reserved`, {
+    let reponse = await http.post(`/enrollment/group-reserved`, {
       ...request,
     });
     return {
@@ -98,7 +102,7 @@ export const _enrollmentGroupCancel = async (
   request: any
 ): Promise<ResponseServiceDTO<any>> => {
   try {
-    let reponse = await http().post(`/enrollment/group-cancel`, {
+    let reponse = await http.post(`/enrollment/group-cancel`, {
       ...request,
     });
     return {
@@ -117,7 +121,7 @@ export const _getEnabledGroupEnrollment = async (
   request: any
 ): Promise<ResponseServiceDTO<any>> => {
   try {
-    let reponse = await http().post(`/enrollment/enabled-groups`, request);
+    let reponse = await http.post(`/enrollment/enabled-groups`, request);
     return {
       status: true,
       data: reponse.data.data as any,
@@ -136,7 +140,7 @@ export const _getStudentEnrollment = async (
   periodId: number
 ): Promise<any> => {
   try {
-    let reponse = await http().post(
+    let reponse = await http.post(
       `/enrollment/student-enrollment-avaliable`,
       {
         studentId: id,
@@ -156,7 +160,7 @@ export const _getModulesEnrollment = async (
   curriculumId: number
 ): Promise<ResponseServiceDTO<any>> => {
   try {
-    let reponse = await http().post(
+    let reponse = await http.post(
       `/enrollment/${studentId}/student/${curriculumId}/curriculum`
     );
     return {
@@ -174,7 +178,7 @@ export const _getModulesEnrollment = async (
 // Route::post('download-enrollment-pdfF', [EnrollmentController::class, 'downloadEnrollmentPDF']);
 export const _downloadEnrollmentPDF = async (request: any): Promise<any> => {
   try {
-    let reponse = await http().post(
+    let reponse = await http.post(
       `/enrollment/download-enrollment-pdf`,
       {
         ...request,
@@ -193,7 +197,7 @@ export const _downloadEnrollmentPDF = async (request: any): Promise<any> => {
 // Route::post('get-enrollment-group-payments', [EnrollmentController::class, 'getEnrollmentGroupPayments']);
 export const _getEnrollmentGroupPayments = async (request: any): Promise<PaymentDTO[]> => {
   try {
-    let reponse = await http().post(`/enrollment/get-enrollment-group-payments`, {
+    let reponse = await http.post(`/enrollment/get-enrollment-group-payments`, {
       ...request,
     });
     return reponse.data.data;
@@ -209,7 +213,7 @@ export const _getStudentEnrollmentSpecial = async (
   periodId: number
 ): Promise<any> => {
   try {
-    let reponse = await http().post(
+    let reponse = await http.post(
       `/enrollment/student-enrollment-avaliable-special`,
       {
         studentId: id,
@@ -223,3 +227,4 @@ export const _getStudentEnrollmentSpecial = async (
     return null;
   }
 }
+

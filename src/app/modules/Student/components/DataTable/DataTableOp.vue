@@ -8,19 +8,32 @@
 
 <script setup lang="ts">
 import { useDialog } from "naive-ui";
-
+import { usePermission } from "@/core/composables/usePermission";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import { renderIcon } from "@/core/utils/icon.utils";
+import { computed } from "vue";
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits(["edit", "delete", "create-user"]);
 const dialog = useDialog();
 
-defineProps<{
+const { hasPermission } = usePermission();
+const props = defineProps<{
   item: any;
 }>();
 
-const options = [
+const options = computed(() => [
   {
+    show: props.item.userId == null && hasPermission([""]),
+    label: "Crear cuenta de usuario",
+    id: "create-user",
+    key: "create-user",
+    icon: renderIcon("security-user"),
+    props: {
+      onClick: () => emit("create-user"),
+    },
+  },
+  {
+    show: hasPermission([""]),
     label: "Editar",
     key: "edit",
     icon: renderIcon("edit-2"),
@@ -29,6 +42,7 @@ const options = [
     },
   },
   {
+    show: hasPermission([""]),
     label: "Eliminar",
     key: "delete",
     icon: renderIcon("trash", "red"),
@@ -43,10 +57,8 @@ const options = [
           positiveText: "Eliminar",
           negativeText: "Cancelar",
           closable: false,
-          showIcon: false,
+          showIcon: true,
           negativeButtonProps: {
-            secondary: true,
-            type: "tertiary",
             size: "large",
           },
           positiveButtonProps: {
@@ -60,5 +72,5 @@ const options = [
       },
     },
   },
-];
+]);
 </script>

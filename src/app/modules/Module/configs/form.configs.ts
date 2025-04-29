@@ -5,6 +5,8 @@ export const _getModuleInitValues = (): ModuleFormDTO => {
     id: null,
     name: null,
     code: null,
+    description: null,
+    level: null,
     curriculumId: null,
     curriculum: null,
     isExtracurricular: false,
@@ -28,6 +30,15 @@ export const _getModuleRules = () => {
         message: "Obligatorio",
       },
     ],
+    level: [
+      {
+        type: "number",
+        required: true,
+        trigger: ["blur", "input"],
+        message: "Obligatorio",
+      },
+    ],
+    description: [],
     curriculumId: [
       {
         type: "number",

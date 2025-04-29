@@ -1,42 +1,60 @@
 <template>
   <n-modal v-model:show="showModal">
-    <n-card style="width: 500px" title="MATRICULA EN GRUPO" :segmented="{
-      content: true,
-      footer: true,
-    }" size="small" role="dialog" aria-modal="true">
+    <n-card
+      style="width: 500px"
+      title="MATRICULA EN GRUPO"
+      :segmented="{
+        content: true,
+        footer: true,
+      }"
+      size="small"
+      role="dialog"
+      aria-modal="true"
+    >
       <n-row :gutter="[16, 16]">
         <n-col span="24">
           <div class="wrapper-list-groups">
             <n-list hoverable clickable>
               <template #header>
-                Grupos aperturados ({{ groupItems.length }})
+                Grupos aperturados ({{
+                  groupItems?.length ? groupItems.length : 0
+                }})
               </template>
-              <n-list-item v-for="item in groupItems" :key="item.id"
-                :class="{ 'item-selected': form.groupId == item.id }" :extra="item.price">
-                <n-thing :title="`${item.group} - S/. ${item.price}`" @click="onSelectedGroup(item)">
+              <n-list-item
+                v-for="item in groupItems"
+                :key="item.id"
+                :class="{ 'item-selected': form.groupId == item.id }"
+                :extra="item.price"
+              >
+                <n-thing
+                  :title="`${item.group} - S/. ${item.price}`"
+                  @click="onSelectedGroup(item)"
+                >
                   <template v-if="form.groupId == item.id" #header-extra>
-                    <n-button circle type="warning" :render-icon="renderIcon('verify')"></n-button>
+                    <n-button
+                      circle
+                      type="warning"
+                      :render-icon="renderIcon('verify')"
+                    ></n-button>
                   </template>
                   <template #description>
-                    <n-space size="small" style="margin-top: 4px">
+                    <n-space size="small">
                       <n-tag :bordered="false" type="info" size="small">
                         {{ item.modality }}
                       </n-tag>
                     </n-space>
                   </template>
 
-                  Minimo : <b> {{ item.minStudents }} </b>
-                  |
-                  Matriculados: <b> {{ item.enrolledStudents }} </b>
-                  |
-                  Reservados: <b> {{ item.reservedStudents }} </b>
-                  <br>
-                  Docente: <b> {{ item.teacher }} </b>
+                  Min.: <b> {{ item.minStudents }} </b> | Matriculados:
+                  <b> {{ item.enrolledStudents }} </b> | Reservados:
+                  <b> {{ item.reservedStudents }} </b>
                   <br />
-                  Laboratorio: <b> {{ item.laboratory }} </b>
-                  <br />
-                  <n-tag v-for="(j, index) in item.schedules" :key="index" :bordered="false" type="info" size="small">
-                    {{ j.day }} - {{ j.startHour }} - {{ j.endHour }}
+                  <n-tag :bordered="false" type="info" size="small">
+                    <strong>
+                      {{ item.schedules.days }} -
+                      {{ item.schedules.startHour }} a
+                      {{ item.schedules.endHour }}
+                    </strong>
                   </n-tag>
                 </n-thing>
               </n-list-item>
@@ -45,19 +63,30 @@
         </n-col>
 
         <n-col span="24">
-          <span role="button" @click="showPaymentModal = true"
-            class="border border-dashed border-gray-300 p-4 rounded-sm flex items-center justify-center cursor-pointer text-gray-400 hover:bg-gray-50 font-bold hover:text-gray-500 mb-4">
+          <span
+            role="button"
+            @click="showPaymentModal = true"
+            class="border border-dashed border-gray-300 p-4 rounded-sm flex items-center justify-center cursor-pointer text-gray-400 hover:bg-gray-50 font-bold hover:text-gray-500 mb-4"
+          >
             <LnxIcon class="me-3" icon-name="money-add" size="20" />
             Agregar pago
           </span>
 
           <table class="table-auto w-full">
             <tbody>
-              <tr v-for="(item, index) in payments" :key="index"
-                class="border-b border-gray-300 border-dashed px-4 py-2">
+              <tr
+                v-for="(item, index) in payments"
+                :key="index"
+                class="border-b border-gray-300 border-dashed px-4 py-2"
+              >
                 <td class="px-4 py-2 flex items-center">
-                  <n-button type="error" size="small" secondary @click="removePayment(index)"
-                    :render-icon="renderIcon('trash')"></n-button>
+                  <n-button
+                    type="error"
+                    size="small"
+                    secondary
+                    @click="removePayment(index)"
+                    :render-icon="renderIcon('trash')"
+                  ></n-button>
 
                   <i class="ms-2">
                     {{ item.sequenceNumber }}
@@ -91,14 +120,24 @@
         </n-col>
 
         <n-col span="24">
-          <n-button size="large" type="primary" @click="handleSubmit" block :loading="loading">
+          <n-button
+            size="large"
+            type="primary"
+            @click="handleSubmit"
+            block
+            :loading="loading"
+          >
             Realizar Matricula
           </n-button>
         </n-col>
       </n-row>
     </n-card>
   </n-modal>
-  <PaymentForm v-model="showPaymentModal" :studentId="props.studentId" @success="onSuccessPaymentValidation" />
+  <PaymentForm
+    v-model="showPaymentModal"
+    :studentId="props.studentId"
+    @success="onSuccessPaymentValidation"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -114,7 +153,6 @@ import type { PaymentDTO } from "@/app/modules/Payment/types/Payment.types";
 import type { EnrollmentGroupFormDTO } from "../../types/EnrollmentGroup.types";
 import { _getFormInitValues } from "../../configs/formGroup.config";
 import PaymentForm from "@/app/modules/Payment/components/PaymentForm.vue";
-
 
 const emit = defineEmits(["update:modelValue", "success"]);
 
@@ -140,7 +178,9 @@ const groupItems = ref<any>([]);
 const payments = ref<PaymentDTO[]>([]);
 const amount = ref<number>(0);
 
-const form = ref<EnrollmentGroupFormDTO>(Object.assign({}, { ..._getFormInitValues() }));
+const form = ref<EnrollmentGroupFormDTO>(
+  Object.assign({}, { ..._getFormInitValues() })
+);
 
 const onSuccessPaymentValidation = (value: any) => {
   console.log("Pago validado", value);
@@ -156,8 +196,7 @@ const onSelectedGroup = (item: any) => {
   if (form.value.groupId && form.value.groupId != item.id) {
     form.value.groupId = item.id;
     amount.value = item.price;
-  }
-  else if (form.value.groupId == item.id) {
+  } else if (form.value.groupId == item.id) {
     form.value.groupId = null;
     amount.value = 0;
   } else {
@@ -187,7 +226,6 @@ const removePayment = (index: number) => {
 };
 
 const validatePayments = () => {
-
   let total = payments.value.reduce(
     (acc, item: any) => acc + parseInt(item.amount),
     0
@@ -207,8 +245,7 @@ const handleSubmit = async () => {
     }
     loading.value = false;
     return;
-  }
-  else {
+  } else {
     const response = await _enrollmentGroupStore(form.value);
     if (response.status) {
       emit("success");
@@ -216,12 +253,10 @@ const handleSubmit = async () => {
     }
     loading.value = false;
   }
-
 };
 
 const getPayments = async (id: number) => {
   payments.value = await _getEnrollmentGroupPayments({ id: id });
-
 };
 const init = async () => {
   payments.value = [];
@@ -230,7 +265,9 @@ const init = async () => {
   amount.value = 0;
   await getEnabledGroupEnrollment();
   if (props.enrollmetGroup) {
-    let group = groupItems.value.find((item: any) => item.id == props.enrollmetGroup.groupId);
+    let group = groupItems.value.find(
+      (item: any) => item.id == props.enrollmetGroup.groupId
+    );
     if (group) {
       form.value.groupId = group.id;
       amount.value = group.price;
@@ -239,13 +276,10 @@ const init = async () => {
     await getPayments(props.enrollmetGroup.id);
 
     if (payments.value.length > 0) {
-
-
       payments.value.forEach((item: any) => {
         form.value.payments.push(item.token);
       });
     }
-
   }
   console.log("Inicializando formulario");
 };

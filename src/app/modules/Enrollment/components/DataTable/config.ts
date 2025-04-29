@@ -14,7 +14,7 @@ export const _createColumns = (
     {
       title: "Ops.",
       key: "ops",
-      width: "80px",
+      width: "130px",
       fixed: "left",
       render(rowData: any) {
         const rowItem = rowData as any;
@@ -32,7 +32,12 @@ export const _createColumns = (
       },
     },
     {
-      title: "Estado de matrícula",
+      title: "Período",
+      key: "period",
+      minWidth: "100",
+    },
+    {
+      title: "Estado de mat.",
       key: "enrollmentStatus",
       minWidth: "150px",
     },
@@ -64,17 +69,7 @@ export const _createColumns = (
       key: "modality",
       minWidth: "100px",
     },
-    {
-      title: "Laboratorio",
-      key: "laboratory",
-      minWidth: "150px",
-    },
-
-    {
-      title: "Período",
-      key: "period",
-      minWidth: "100",
-    },
+   
   ];
 
 export const _createPagination = (

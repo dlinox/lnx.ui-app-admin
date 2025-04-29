@@ -47,6 +47,13 @@
     :roleOptions="roleOptions"
     @success="reLoadDataTable"
   />
+  <AccountUserForm
+    v-model="showModalAccount"
+    :item="editItem"
+    :level="props.level"
+    :roleOptions="roleOptions"
+    @success="reLoadDataTable"
+  />
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
@@ -68,6 +75,7 @@ import {
 } from "@/app/modules/User/services/user.services";
 
 import UserForm from "@/app/modules/User/components/UserForm.vue";
+import AccountUserForm from "@/app/modules/User/components/AccountUserForm.vue";
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import { __getRolesForSelect } from "@/app/modules/Role/services/role.services";
@@ -80,6 +88,7 @@ const props = defineProps<{
 
 const loadingTable = ref(false);
 const items = ref<UserDTO[]>([]);
+const showModalAccount = ref<boolean>(false);
 const showModal = ref<boolean>(false);
 const editItem = ref<UserDTO | null>(null);
 const pagination = reactive({ ...initValuesDataTablePagination() });
@@ -97,7 +106,11 @@ const response = ref<DataTableResponseDTO<UserDTO>>(
 
 const openFormModal = (item: UserDTO | null) => {
   editItem.value = item;
-  showModal.value = true;
+  if (props.level === "student" || props.level === "teacher") {
+    showModalAccount.value = true;
+  } else {
+    showModal.value = true;
+  }
 };
 
 const deleteItem = async (item: UserDTO) => {
@@ -142,7 +155,7 @@ const init = async () => {
   request.value.filters = {
     level: props.level,
   };
-  roleOptions.value = await __getRolesForSelect( props.level);
+  roleOptions.value = await __getRolesForSelect(props.level);
   await loadDataTable();
 };
 

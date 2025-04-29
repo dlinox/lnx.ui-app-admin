@@ -12,7 +12,8 @@ import DataTableOp from "@/app/modules/Teacher/components/DataTable/DataTableOp.
 
 export const _createColumns = (
   openModal: (item: TeacherDataTableItemDTO) => void,
-  deleteItem: (item: TeacherDataTableItemDTO) => void
+  deleteItem: (item: TeacherDataTableItemDTO) => void,
+  createUser: (item: TeacherDataTableItemDTO) => void
 ): DataTableColumns => [
   {
     title: "Ops.",
@@ -29,6 +30,9 @@ export const _createColumns = (
           },
           onDelete: () => {
             deleteItem(rowItem);
+          },
+          onCreateUser: () => {
+            createUser(rowItem);
           },
           item: rowItem,
         },

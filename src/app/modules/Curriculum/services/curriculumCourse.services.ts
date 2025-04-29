@@ -1,4 +1,4 @@
-import { http } from "@/core/http";
+import { useHttp } from "@/core/composables/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
@@ -13,12 +13,12 @@ import { _getCurriculumCourseInitValues } from "../configs/form.configs";
 import type { ResponseServiceDTO } from "@/core/types/Response.types";
 
 const modulePath = "/curriculum/course" as string;
-
+const http = useHttp();
 export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<CurriculumCourseDataTableItemDTO>> => {
   try {
-    const response = await http().post(
+    const response = await http.post(
       `${modulePath}/load-data-table`,
       request
     );
@@ -35,7 +35,7 @@ export const _storeItem = async (
   ResponseServiceDTO<CurriculumCourseFormDTO | CurriculumCourseFormErrorsDTO>
 > => {
   try {
-    const reponse = await http().post(modulePath, request);
+    const reponse = await http.post(modulePath, request);
     return {
       status: true,
       data: reponse.data.data as CurriculumCourseFormDTO,
@@ -60,7 +60,7 @@ export const _updateItem = async (
   ResponseServiceDTO<CurriculumCourseFormDTO | CurriculumCourseFormErrorsDTO>
 > => {
   try {
-    const reponse = await http().put(modulePath, request);
+    const reponse = await http.put(modulePath, request);
     return {
       status: true,
       data: reponse.data.data as CurriculumCourseFormDTO,
@@ -83,7 +83,7 @@ export const _deleteItem = async (
   request: CurriculumCourseDataTableItemDTO
 ): Promise<boolean> => {
   try {
-    await http().delete(modulePath, { data: { id: request.id } });
+    await http.delete(modulePath, { data: { id: request.id } });
     return true;
   } catch (error) {
     return false;
@@ -94,7 +94,7 @@ export const _getItemById = async (
   id: number
 ): Promise<CurriculumCourseFormDTO> => {
   try {
-    const response = await http().get(`${modulePath}/get-item-by-id/${id}`);
+    const response = await http.get(`${modulePath}/get-item-by-id/${id}`);
     return response.data.data as CurriculumCourseFormDTO;
   } catch (error) {
     return _getCurriculumCourseInitValues();

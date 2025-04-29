@@ -1,4 +1,4 @@
-import { http } from "@/core/http";
+import { useHttp } from "@/core/composables/useHttp";
 import {
   type DataTableResponseDTO,
   initValuesDataTableResponse,
@@ -13,11 +13,12 @@ import type {
 import { type ResponseServiceDTO } from "@/core/types/Response.types";
 import type { ItemSelectDTO } from "@/core/types/Select.types";
 
+const http = useHttp();
 export const _loadDataTable = async (
   request: any
 ): Promise<DataTableResponseDTO<ModuleDTO>> => {
   try {
-    const response = await http().post("/module/load-data-table", request);
+    const response = await http.post("/module/load-data-table", request);
     return response.data.data as DataTableResponseDTO<ModuleDTO>;
   } catch (error) {
     return initValuesDataTableResponse();
@@ -28,7 +29,7 @@ export const _storeItem = async (
   request: ModuleFormDTO
 ): Promise<ResponseServiceDTO<ModuleDTO | ModuleFormErrorsDTO>> => {
   try {
-    let reponse = await http().post("/module", request);
+    let reponse = await http.post("/module", request);
     return {
       status: true,
       data: reponse.data.data as ModuleFormDTO,
@@ -51,7 +52,7 @@ export const _updateItem = async (
   request: ModuleFormDTO
 ): Promise<ResponseServiceDTO<ModuleDTO | ModuleFormErrorsDTO>> => {
   try {
-    let reponse = await http().put("/module", request);
+    let reponse = await http.put("/module", request);
     return {
       status: true,
       data: reponse.data.data as ModuleFormDTO,
@@ -72,7 +73,7 @@ export const _updateItem = async (
 
 export const _deleteItem = async (request: ModuleFormDTO): Promise<boolean> => {
   try {
-    await http().delete("/module", { data: { id: request.id } });
+    await http.delete("/module", { data: { id: request.id } });
     return true;
   } catch (error) {
     return false;
@@ -83,7 +84,7 @@ export const __getModulesForSelect = async (
   query: any
 ): Promise<ItemSelectDTO[]> => {
   try {
-    let response = await http().get("/module/items/for-select", {
+    let response = await http.get("/module/items/for-select", {
       params: query,
     });
     return response.data.data as ItemSelectDTO[];
@@ -96,7 +97,7 @@ export const __getModulesForCurriculumForSelect = async (
   id: any
 ): Promise<ItemSelectDTO[]> => {
   try {
-    let response = await http().get(
+    let response = await http.get(
       "/module/items/for-select/curriculum/" + id
     );
     return response.data.data as ItemSelectDTO[];

@@ -30,35 +30,34 @@
           </n-col>
           <n-col span="24">
             <n-form-item
-              path="deviceCount"
-              label="Cantidad de dispositivos"
-              :feedback="formErrors?.deviceCount"
+              path="type"
+              label="Tipo de laboratorio"
+              :feedback="formErrors?.type"
             >
-              <n-input-number
-                class="w-full"
-                :status="formErrors?.deviceCount != undefined ? 'error' : ''"
-                v-model:value="form.deviceCount"
+              <n-select
+                :status="formErrors?.type != undefined ? 'error' : ''"
+                v-model:value="form.type"
                 @input="
-                  formErrors != null
-                    ? (formErrors.deviceCount = null)
-                    : () => {}
+                  formErrors != null ? (formErrors.type = null) : () => {}
                 "
+                :options="LABORATOTY_TYPES_CONST"
+                placeholder="Seleccione un tipo de laboratorio"
               />
             </n-form-item>
           </n-col>
 
-          <n-col span="24">
+          <n-col span="24" v-if="form.type === 'VIRTUAL'">
             <n-form-item
-              path="deviceDetail"
-              label="Detalle de dispositivos"
-              :feedback="formErrors?.deviceDetail"
+              path="virtualLink"
+              label="Enlace virtual"
+              :feedback="formErrors?.virtualLink"
             >
               <n-input
-                :status="formErrors?.deviceDetail != undefined ? 'error' : ''"
-                v-model:value="form.deviceDetail"
+                :status="formErrors?.virtualLink != undefined ? 'error' : ''"
+                v-model:value="form.virtualLink"
                 @input="
                   formErrors != null
-                    ? (formErrors.deviceDetail = null)
+                    ? (formErrors.virtualLink = null)
                     : () => {}
                 "
               />
@@ -94,8 +93,9 @@
             type="primary"
             @click="handleSubmit"
             :loading="loading"
-            >Guardar</n-button
           >
+            Guardar
+          </n-button>
         </n-space>
       </template>
     </n-card>
@@ -103,8 +103,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormInst, FormRules } from "naive-ui";
+import type { FormInst } from "naive-ui";
 import { ref, computed, watch } from "vue";
+
+// LABORATOTY_TYPES_CONST
+import { LABORATOTY_TYPES_CONST } from "@/core/constants/laboratory.constants";
 import {
   type LaboratoryDTO,
   type LaboratoryFormDTO,
@@ -134,7 +137,9 @@ const loading = ref<boolean>(false);
 const formRef = ref<FormInst | null>(null);
 const form = ref<LaboratoryFormDTO>(_getLaboratoryInitValues());
 const formErrors = ref<LaboratoryFormErrorsDTO | null>(null);
-const formRules = ref<FormRules>({ ..._getLaboratoryRules() });
+const formRules = computed(() => {
+  return _getLaboratoryRules(form.value);
+});
 
 const handleSubmit = async () => {
   if (formRef.value) {

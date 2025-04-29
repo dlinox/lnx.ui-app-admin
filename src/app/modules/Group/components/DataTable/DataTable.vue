@@ -6,7 +6,7 @@
           :render-icon="renderIcon('convertshape')"
           @click="showModalClone = true"
         >
-          Clonar
+          Clonar grupos
         </n-button>
       </n-col>
       <n-col :span="12">
