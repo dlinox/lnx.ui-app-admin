@@ -6,8 +6,8 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Gestión del Plan de Estudio</h6>
-      {{ curriculum?.name }}
+      <span class="text-sm text-slate-500"> Gestión del Plan de Estudio </span>
+      <h5 class="text-lg font-bold text-slate-800">{{ curriculum?.name }}</h5>
     </template>
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">

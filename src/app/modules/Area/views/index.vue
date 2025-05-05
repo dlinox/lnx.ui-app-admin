@@ -6,8 +6,8 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Gestión de Areas academicas</h6>
-      Areas
+      <span class="text-sm text-slate-500"> Gestión de Areas academicas </span>
+      <h5 class="text-lg font-bold text-slate-800">Areas</h5>
     </template>
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">

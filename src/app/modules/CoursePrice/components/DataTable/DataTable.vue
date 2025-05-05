@@ -166,7 +166,6 @@ const init = async () => {
 watch(
   propsComputed,
   async (newFilters, _oldFilters) => {
-    console.log("Filtros alterados", newFilters);
     request.value.filters = newFilters;
     coursesItems.value = await __getCoursesForSelect({
       curriculumId: request.value.filters.curriculumId,

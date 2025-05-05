@@ -6,8 +6,8 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Finanzas</h6>
-      Gestión de precios
+      <span class="text-sm text-slate-500"> Precios </span>
+      <h5 class="text-lg font-bold text-slate-800">Gestión de precios</h5>
     </template>
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">
@@ -53,6 +53,7 @@ import { renderIcon } from "@/core/utils/icon.utils";
 import { __searchCurriculums } from "@/app/shared/services/selectables.services";
 import DataTable from "@/app/modules/ModulePrice/components/DataTable/DataTable.vue";
 import PriceForm from "@/app/modules/ModulePrice/components/ModulePriceForm.vue";
+
 const curriculumOptions = ref<SelectOption[]>([]);
 
 const showModal = ref<boolean>(false);

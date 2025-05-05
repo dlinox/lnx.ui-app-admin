@@ -1,5 +1,5 @@
 import { h } from "vue";
-import { NButton, type DataTableColumns } from "naive-ui";
+import { type DataTableColumns } from "naive-ui";
 import { type AcademicSupervisionDTO } from "@/app/modules/AcademicSupervision/types/AcademicSupervision.types";
 import {
   type DataTablePaginationDTO,

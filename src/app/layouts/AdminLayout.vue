@@ -191,7 +191,7 @@ const menuOptions: MenuOption[] = [
   {
     label: "Carga Académica",
     key: "academic-workload",
-    icon: renderIcon("archive-book"),
+    icon: renderIcon("folder-open"),
     children: [
       menuItem({
         label: "Apertura de Grupos",
@@ -211,7 +211,7 @@ const menuOptions: MenuOption[] = [
     label: "Supervisión Académica",
     key: "academic-supervision",
     route: "AcademicSupervision",
-    iconName: "archive-book",
+    iconName: "speedometer",
   }),
   {
     label: "Notas",
@@ -224,10 +224,16 @@ const menuOptions: MenuOption[] = [
       //   iconName: "archive-add",
       // },
       // {
-      //   label: "Rectificación de Notas",
+      //   label: "Ac de Notas",
       //   key: "grades-rectification",
       //   iconName: "archive-slash",
       // },
+      menuItem({
+        label: "Acta de Notas",
+        key: "AcademicRecord",
+        route: "AcademicRecord",
+        iconName: "archive-book",
+      }),
       menuItem({
         label: "Habilitaciones",
         key: "grade-deadline",
@@ -311,18 +317,18 @@ const menuOptions: MenuOption[] = [
   },
 
   {
-    label: "Finanzas",
+    label: "Costos",
     key: "financial",
     icon: renderIcon("money"),
     children: [
       menuItem({
-        label: "Costo de Matrícula (Módulos)",
+        label: "Matrícula (Módulos)",
         key: "ModulePrice",
         route: "ModulePrice",
         iconName: "moneys",
       }),
       menuItem({
-        label: "Costo de Mensualidad (Cursos)",
+        label: "Mensualidad (Cursos)",
         key: "CoursePrice",
         route: "CoursePrice",
         iconName: "moneys",
@@ -333,19 +339,21 @@ const menuOptions: MenuOption[] = [
   {
     label: "Reportes",
     key: "reports",
-    icon: renderIcon("chart"),
+    icon: renderIcon("archive"),
     children: [
-      {
-        label: "Reporte de Matrículas",
-        key: "enrollments-report",
-        iconName: "chart-21",
-      },
-      { label: "Reporte de Notas", key: "grades-report", iconName: "chart-21" },
-      {
-        label: "Reporte de Carga Académica",
-        key: "academic-load-report",
-        iconName: "chart-21",
-      },
+      menuItem({
+        label: "Reporte de Estudiantes",
+        key: "StudentReportView",
+        route: "StudentReportView",
+        iconName: "document-filter",
+      }),
+      // GroupReportView
+      menuItem({
+        label: "Reporte de Grupos",
+        key: "GroupReportView",
+        route: "GroupReportView",
+        iconName: "document-filter",
+      }),
     ],
   },
   {
@@ -449,7 +457,6 @@ const menuFooterOptions = [
 ];
 
 const signOut = async () => {
-  console.log("signOut");
   loading.value = true;
   const response = await _signOut();
 

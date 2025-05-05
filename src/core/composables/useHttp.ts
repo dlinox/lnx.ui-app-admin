@@ -29,6 +29,7 @@ export function useHttp(
       const statusCode = error.response?.status;
 
       if (statusCode === 300) {
+        //el errorMessage puede ser html darle formato
         toastify(errorMessage, { type: "info" } as ToastOptions);
       } else {
         toastify(errorMessage, { type: "error" } as ToastOptions);

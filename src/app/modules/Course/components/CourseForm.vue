@@ -322,7 +322,7 @@ const getModuleOptions = async () => {
 };
 
 const onChangeCurriculum = async (init = false) => {
-  console.log("onChangeCurriculum", init);
+  
   if (formErrors.value) {
     formErrors.value.curriculumId = null;
   }

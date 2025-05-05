@@ -1,19 +1,17 @@
 <template>
-  <n-card :segmented="{
-    header: true,
-    content: true,
-  }">
+  <n-card
+    :segmented="{
+      header: true,
+      content: true,
+    }"
+  >
     <template #header>
-      <h6 style="color: #999; margin: 0">
-        Gestión matrícula virtual
-      </h6>
-      Matrícula virtual
+      <span class="text-sm text-slate-500"> Gestión de matrículas </span>
+      <h5 class="text-lg font-bold text-slate-800">Matrículas</h5>
     </template>
-    <template #header-extra>
-    </template>
+    <template #header-extra> </template>
   </n-card>
-  <DataTable>
-  </DataTable>
+  <DataTable> </DataTable>
 </template>
 <script lang="ts" setup>
 import { _createColumns } from "@/app/modules/Course/configs/dataTable.configs";

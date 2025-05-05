@@ -27,6 +27,20 @@ export const _createColumns = (loadDataTable: () => void): DataTableColumns => [
         minWidth: "150px",
       },
       {
+        title: "Horario",
+        key: "schedules",
+        minWidth: "150px",
+        render: (row: any) => {
+          return h(
+            NTag,
+            {},
+            {
+              default: () => row.schedules,
+            }
+          );
+        },
+      },
+      {
         title: "Modalidad",
         key: "modality",
         minWidth: "120px",

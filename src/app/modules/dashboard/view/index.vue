@@ -1,28 +1,38 @@
 <template>
-  <!-- <div
-    style="
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-      margin-bottom: 20px;
-    "
-  >
-    <div
-      v-for="icon in iconNames"
-      :key="icon"
-      class="icon"
-      style="font-size: 30px; border: 1px solid #000; padding: 10px"
-    >
-      <span>{{ icon }}</span>
-      <br />
-      <LnxIcon :iconName="icon"></LnxIcon>
-    </div>
-  </div> -->
+  <div class="p-4">
+    <n-row :gutter="[16, 16]">
+      <n-col :span="screenSize == 'sm' ? 24 : 8">
+        <EnrollmentsPeriodWidget />
+      </n-col>
+      <n-col :span="screenSize == 'sm' ? 24 : 8">
+        <AllStudentWidget />
+      </n-col>
+      <n-col :span="screenSize == 'sm' ? 24 : 8">
+        <AllTeacherWidget />
+      </n-col>
+      <n-col :span="24">
+        <AcademicWidget />
+      </n-col>
+
+      <n-col :span="screenSize == 'sm' || screenSize == 'md' ? 24 : 12">
+        <EnrolledStudentsChart />
+      </n-col>
+      <n-col :span="screenSize == 'sm' || screenSize == 'md' ? 24 : 12">
+        <GroupsEnabledChart />
+      </n-col>
+    </n-row>
+  </div>
 </template>
+
 <script setup lang="ts">
-// import LnxIcon from "@/core/components/LnxIcon.vue";
-// import { iconNames } from "@/core/constans/icons.constants";
+import EnrollmentsPeriodWidget from "@/app/modules/dashboard/components/widgets/EnrollmentsPeriodWidget.vue";
+import AllStudentWidget from "@/app/modules/dashboard/components/widgets/AllStudentWidget.vue";
+import AllTeacherWidget from "@/app/modules/dashboard/components/widgets/AllTeacherWidget.vue";
+import AcademicWidget from "@/app/modules/dashboard/components/widgets/AcademicWidget.vue";
+import EnrolledStudentsChart from "@/app/modules/dashboard/components/charts/EnrolledStudentsChart.vue";
+import GroupsEnabledChart from "@/app/modules/dashboard/components/charts/GroupsEnabledChart.vue";
+
+import useBreakpoints from "@/core/composables/useBreakpoints";
+
+const { screenSize } = useBreakpoints();
 </script>

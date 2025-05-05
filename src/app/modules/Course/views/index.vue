@@ -6,9 +6,10 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Gestión de Courses academicas</h6>
-      Courses
+      <span class="text-sm text-slate-500"> Gestión de Cursos </span>
+      <h5 class="text-lg font-bold text-slate-800">Cursos</h5>
     </template>
+
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">
         Agregar
@@ -17,7 +18,12 @@
   </n-card>
   <DataTable :curriculumOptions="curriculumOptions">
     <template #extra="{ reLoadDataTable }">
-      <CourseForm v-model="showModal" :item="null" @success="reLoadDataTable" :curriculumOptions="curriculumOptions" />
+      <CourseForm
+        v-model="showModal"
+        :item="null"
+        @success="reLoadDataTable"
+        :curriculumOptions="curriculumOptions"
+      />
     </template>
   </DataTable>
 </template>

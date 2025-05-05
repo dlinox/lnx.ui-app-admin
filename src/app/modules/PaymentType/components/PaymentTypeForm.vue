@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormInst, FormRules } from "naive-ui";
+import type { FormInst } from "naive-ui";
 import { ref, computed, watch } from "vue";
 import {
   type PaymentTypeDTO,

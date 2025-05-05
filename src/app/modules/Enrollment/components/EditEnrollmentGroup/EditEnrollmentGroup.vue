@@ -77,9 +77,7 @@ const handleSelect = async (option: any) => {
             emit('resetEnrollment', props.item);
             break;
     }
-    console.log(option);
 };
-//item
 const options = computed(() => [
     {
         label: 'Cambiar grupo',

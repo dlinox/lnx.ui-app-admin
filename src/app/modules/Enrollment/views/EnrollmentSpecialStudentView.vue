@@ -7,8 +7,8 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Matricular estudiante</h6>
-      Matricula Especial
+      <span class="text-sm text-slate-500"> Matricular estudiante </span>
+      <h5 class="text-lg font-bold text-slate-800">Matricula Especial</h5>
     </template>
     <template #header-extra>
       <n-select

@@ -6,8 +6,12 @@
     }"
   >
     <template #header>
-      <h6 style="color: #999; margin: 0">Finanzas</h6>
-      Gestión de precios
+      <span class="text-sm text-slate-500"> 
+        Gestión de precios  
+      </span>
+      <h5 class="text-lg font-bold text-slate-800">
+        Mensualidades
+      </h5>
     </template>
     <template #header-extra>
       <n-button :render-icon="renderIcon('additem')" @click="showModal = true">
@@ -34,9 +38,7 @@
     v-if="formSearch!.curriculumId"
     :curriculumId="formSearch.curriculumId"
   >
-    <template
-      #extra="{ reLoadDataTable, studentTypesItems, coursesItems }"
-    >
+    <template #extra="{ reLoadDataTable, studentTypesItems, coursesItems }">
       <CoursePriceForm
         v-model="showModal"
         :item="null"

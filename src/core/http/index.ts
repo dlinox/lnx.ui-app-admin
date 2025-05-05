@@ -33,9 +33,6 @@ export const http = (
           duration: 5000,
           position: 'top-right',
         });
-
-
-        console.log(error.response?.data);
       }
       return Promise.reject(error);
     }

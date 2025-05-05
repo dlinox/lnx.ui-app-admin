@@ -62,8 +62,6 @@ import { _loadDataTable } from "@/app/modules/GradeDeadline/services/gradeDeadli
 import GradeDeadlineForm from "@/app/modules/GradeDeadline/components/Form/Form.vue";
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
-import { usePeriodStore } from "@/app/store/period.stores";
-const periodStore = usePeriodStore();
 
 const loadingTable = ref(false);
 const items = ref<GradeDeadlineDTO[]>([]);
@@ -93,8 +91,6 @@ const reLoadDataTable = async () => {
 
 const loadDataTable = async () => {
   loadingTable.value = true;
-
-  await periodStore.getEnrollment();
   response.value = await _loadDataTable(request.value);
   items.value = response.value.data;
   pagination.total = response.value.total;

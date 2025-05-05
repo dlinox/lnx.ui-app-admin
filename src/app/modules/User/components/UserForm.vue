@@ -289,8 +289,6 @@ const searchStudentsDebounce = debounce(async (search) => {
 const init = () => {
   console.log("Inicializando formulario");
   form.value = props.item ? { ...props.item } : _getUserInitValues(props.level);
-
-  console.log("props.item", props.item);
   if (props.item && props.level == "teacher") {
     const teacherId = props.item.modelId;
     searchTeachers({ id: teacherId });
