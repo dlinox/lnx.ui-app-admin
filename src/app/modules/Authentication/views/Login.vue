@@ -2,9 +2,16 @@
   <div class="w-screen h-screen flex justify-center items-center bg-gray-100">
     <div class="w-96 bg-white rounded border border-gray-200 px-4 py-6">
       <div>
+        <div>
+          <img
+            src="/resources/images/Logo_UNAP.png"
+            alt="Logo UNAP"
+            class="w-24 h-24 mx-auto mb-4"
+          />
+        </div>
         <h2 class="text-2xl font-bold text-slate-800 mb-2">Iniciar sesión</h2>
         <p class="text-slate-500 mb-4">
-          Inicia sesión con tu usuario y contraseña
+          Inicia sesión con usuario y contraseña
         </p>
       </div>
       <n-form

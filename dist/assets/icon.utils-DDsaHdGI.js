@@ -1,1 +1,0 @@
-import{h as r,bb as n}from"./index-C9c7JGRw.js";const c=(s,e="inherit")=>()=>r(n,{color:e},{default:()=>r("svg",{class:"lnx-icon"},[r("use",{"xlink:href":`/resources/icons/sprite.svg#icon-${s}`})])});export{c as r};
