@@ -6,7 +6,7 @@ import {
 import { h } from "vue";
 import DataTableOp from "./DataTableOp.vue";
 
-export const _createColumns = (): DataTableColumns => [
+export const _createColumns = (onSuccess: () => void): DataTableColumns => [
   {
     title: "Registros",
     key: "records",
@@ -18,6 +18,9 @@ export const _createColumns = (): DataTableColumns => [
         DataTableOp,
         {
           item: rowItem,
+          onSuccess: () => {
+            onSuccess();
+          },
         },
         {
           default: () => "Editar",
@@ -44,6 +47,11 @@ export const _createColumns = (): DataTableColumns => [
     title: "Periodo",
     key: "period",
     minWidth: "120px",
+  },
+  {
+    title: "Cod. Acta",
+    key: "recordCodes",
+    minWidth: "80px",
   },
   {
     title: "Ultimo registro",

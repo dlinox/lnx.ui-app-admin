@@ -35,7 +35,6 @@
 
     <slot name="extra" :reLoadDataTable="reLoadDataTable"> </slot>
   </div>
-
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
@@ -57,6 +56,7 @@ import { _loadDataTable } from "@/app/modules/AcademicRecord/services/academicRe
 
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
+import type { TableColumns } from "naive-ui/es/data-table/src/interface";
 
 const loadingTable = ref(false);
 const items = ref<AcademicRecordDTO[]>([]);
@@ -71,8 +71,7 @@ const response = ref<DataTableResponseDTO<AcademicRecordDTO>>(
   {} as DataTableResponseDTO<AcademicRecordDTO>
 );
 
-
-const columns = _createColumns();
+const columns = ref<TableColumns>([]);
 
 const reLoadDataTable = async () => {
   request.value.page = 1;
@@ -106,6 +105,7 @@ const onPageSizeChange = async (pageSize: number) => {
 };
 
 const init = async () => {
+  columns.value = _createColumns(loadDataTable);
   await loadDataTable();
 };
 

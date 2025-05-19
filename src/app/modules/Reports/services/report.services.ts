@@ -74,6 +74,22 @@ export const _pdfEnabledGroups = async (request: any) => {
   }
 };
 
+export const _pdfCollectionGroup = async (request: any) => {
+  try {
+    const response = await http.post(
+      `${baseUrl}group/collection-group`,
+      request,
+      {
+        responseType: "blob",
+      }
+    );
+    pdfDownload(response.data, `reporte-recaudacion-grupo`);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 const pdfDownload = (data: any, filename: string) => {
   const blob = new Blob([data], { type: "application/pdf" });
   const url = window.URL.createObjectURL(blob);

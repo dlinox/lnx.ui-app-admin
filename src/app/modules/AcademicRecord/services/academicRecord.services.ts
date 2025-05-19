@@ -46,3 +46,24 @@ export const _getRecordPdf = async (id: number): Promise<any> => {
     return null;
   }
 };
+
+export const _printRecord = async (request: any): Promise<any> => {
+  try {
+    const response = await http.post(`${BASE_URL}/print-record-pdf`, request, {
+      responseType: "blob",
+    });
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const timestamp = new Date().getTime();
+    a.href = url;
+    a.download = `reporte-academico-${timestamp}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    return true;
+  } catch (error) {
+    return null;
+  }
+};

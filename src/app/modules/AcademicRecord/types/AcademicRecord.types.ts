@@ -1,12 +1,3 @@
-/*
-     'id' => $this->id,
-            'group' => $this->group,
-            'course' => $this->course,
-            'teacher' => $this->teacher,
-            'period' => $this->period,
-            'observations' => $this->observations,
-            'createdAt' => $this->created_at,
-*/
 export interface AcademicRecordDTO {
   id: number | null;
   group: string | null;
@@ -17,13 +8,12 @@ export interface AcademicRecordDTO {
   createdAt: string | null;
 }
 
-// export interface AcademicRecordFormDTO {
-//   id: number | null;
-//   groupId: number | null;
-//   observations: string | null;
-// }
+export interface AcademicRecordPrintFormDTO {
+  id: number | null;
+  code: string | null;
+}
 
-// export interface AcademicRecordFormErrorsDTO {
-//   groupId: string | null;
-//   observations: string | null;
-// }
+export interface AcademicRecordPrintFormErrorsDTO {
+  id: string | null;
+  code: string | null;
+}
