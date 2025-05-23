@@ -2,7 +2,7 @@
   <n-modal v-model:show="showModal">
     <n-card
       style="width: 500px"
-      title="MATRICULA EN GRUPO"
+      :title="isSpecial ? 'Matricula Especial' : 'Matricula Regular'"
       :segmented="{
         content: true,
         footer: true,
@@ -158,6 +158,7 @@ const emit = defineEmits(["update:modelValue", "success"]);
 
 const props = defineProps<{
   modelValue: boolean;
+  isSpecial: boolean;
   studentId: any;
   curriculumId: any;
   courseId: any;
@@ -210,6 +211,7 @@ const getEnabledGroupEnrollment = async () => {
     studentId: props.studentId,
     curriculumId: props.curriculumId,
     courseId: props.courseId,
+    isSpecial: props.isSpecial,
   });
 
   groupItems.value = response.data;
@@ -219,7 +221,7 @@ const removePayment = (index: number) => {
   let item = payments.value[index];
   let token = item.token;
   payments.value.splice(index, 1);
-  let payment = form.value.payments.find((item: any) => item.token == token);
+  let payment = form.value.payments.find((pay: any) => pay === token);
   if (!payment) return;
   let indexPayment = form.value.payments.indexOf(payment);
   form.value.payments.splice(indexPayment, 1);
@@ -238,7 +240,10 @@ const handleSubmit = async () => {
   loading.value = true;
 
   if (props.enrollmetGroup?.id) {
-    const response = await _enrollmentGroupUpdate(form.value);
+    const response = await _enrollmentGroupUpdate({
+      ...form.value,
+      isSpecial: props.isSpecial,
+    });
     if (response.status) {
       emit("success");
       showModal.value = false;
@@ -246,7 +251,10 @@ const handleSubmit = async () => {
     loading.value = false;
     return;
   } else {
-    const response = await _enrollmentGroupStore(form.value);
+    const response = await _enrollmentGroupStore({
+      ...form.value,
+      isSpecial: props.isSpecial,
+    });
     if (response.status) {
       emit("success");
       showModal.value = false;
@@ -258,8 +266,12 @@ const handleSubmit = async () => {
 const getPayments = async (id: number) => {
   payments.value = await _getEnrollmentGroupPayments({ id: id });
 };
+
 const init = async () => {
   payments.value = [];
+
+  form.value = _getFormInitValues();
+
   form.value.payments = [];
   form.value.groupId = null;
   amount.value = 0;

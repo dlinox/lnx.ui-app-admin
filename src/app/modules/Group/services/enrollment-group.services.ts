@@ -37,3 +37,23 @@ export const _changeStatusGroup = async (request: any): Promise<any> => {
     };
   }
 };
+
+export const _getStudents = async (groupId: number): Promise<any[]> => {
+  try {
+    const response = await http.get(
+      "/enrollment-groups/get-students/" + groupId
+    );
+    return response.data.data;
+  } catch (error) {
+    return [];
+  }
+};
+
+export const _sendMassiveEmail = async (groupId: number): Promise<boolean> => {
+  try {
+    await http.post("/enrollment-groups/send-massive-email/" + groupId);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};

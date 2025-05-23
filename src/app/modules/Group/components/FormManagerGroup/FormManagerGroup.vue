@@ -81,6 +81,16 @@
           </n-col>
         </n-row>
       </n-form>
+      <n-space justify="end" class="p-3">
+        <n-button
+          @click="showModalStudents = true"
+          :loading="loading"
+          :render-icon="renderIcon('people')"
+        >
+          Estudiantes MATRICULADOS
+        </n-button>
+      </n-space>
+
       <template #footer>
         <n-flex justify="end">
           <n-button @click="() => (showModal = false)">Cancelar</n-button>
@@ -97,6 +107,8 @@
       </template>
     </n-card>
   </n-modal>
+
+  <EnrolledStudents v-model="showModalStudents" :groupId="props.item.id" />
 </template>
 
 <script lang="ts" setup>
@@ -113,7 +125,12 @@ import {
   _getLaboratoryOptions,
 } from "@/app/modules/Group/services/group.services";
 
+import { _getStudents } from "@/app/modules/Group/services/enrollment-group.services";
+
 import { useDialog } from "naive-ui";
+import { renderIcon } from "@/core/utils/icon.utils";
+import EnrolledStudents from "@/app/modules/Group/components/EnrolledStudents/EnrolledStudents.vue";
+
 const dialog = useDialog();
 
 const emit = defineEmits(["update:modelValue", "success"]);
@@ -131,7 +148,10 @@ const showModal = computed({
   set: (value) => emit("update:modelValue", value),
 });
 
+const showModalStudents = ref<boolean>(false);
+
 const loading = ref<boolean>(false);
+
 const form = ref<any>({
   id: null,
   teacherId: null,

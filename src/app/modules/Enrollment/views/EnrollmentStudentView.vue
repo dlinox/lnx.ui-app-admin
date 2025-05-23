@@ -245,6 +245,7 @@
     :curriculumId="curriculumId"
     :courseId="courseId"
     :enrollmetGroup="enrollmetGroup"
+    :isSpecial="false"
     @success="getStudentEnrollment"
   />
 </template>

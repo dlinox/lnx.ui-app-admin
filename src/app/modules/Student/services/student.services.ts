@@ -129,3 +129,12 @@ export const __getInfoById = async (
     return null;
   }
 };
+
+export const __searchForSelect = async (request: any): Promise<any[]> => {
+  try {
+    const response = await http.post("/student/search-for-select", request);
+    return response.data.data;
+  } catch (error) {
+    return [];
+  }
+};

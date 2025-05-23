@@ -98,6 +98,7 @@ export const __searchModulesByCurriculum = async (
   }
 };
 
+
 export const __getStudentTypesForSelect = async (): Promise<SelectOption[]> => {
   try {
     const response = await http.get(`/student-type/items/for-select`);

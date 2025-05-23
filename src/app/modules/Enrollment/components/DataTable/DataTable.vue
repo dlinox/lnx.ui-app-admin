@@ -55,6 +55,7 @@
     :studentId="studentId"
     :curriculumId="curriculumId"
     :courseId="courseId"
+    :isSpecial="isSpecial"
     :enrollmetGroup="enrollmetGroup"
     @success="reLoadDataTable"
   />
@@ -104,12 +105,14 @@ const courseId = ref<number | null>(null);
 const enrollmetGroup = ref<any | null>(null);
 const studentId = ref<number | null>(null);
 const curriculumId = ref<number | null>(null);
+const isSpecial = ref<boolean>(false);
 
 const openEnrollmentGroupModal = (item: any) => {
   courseId.value = item.courseId;
   studentId.value = item.studentId;
   curriculumId.value = item.curriculumId;
   enrollmetGroup.value = item;
+  isSpecial.value = item.isSpecial;
   showModal.value = true;
 };
 

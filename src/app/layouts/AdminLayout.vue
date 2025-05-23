@@ -306,7 +306,12 @@ const menuOptions: MenuOption[] = [
         route: "EnrollmentVirtual",
         iconName: "folder-cloud",
       }),
-      //EnrollmentPeriod - habilitar periodo de matricula
+      menuItem({
+        label: "Convalidaciones",
+        key: "Recognition",
+        route: "Recognition",
+        iconName: "convertshape-2",
+      }),
       menuItem({
         label: "Habilitaciones",
         key: "EnrollmentDeadline",

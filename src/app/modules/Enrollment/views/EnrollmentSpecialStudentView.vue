@@ -147,7 +147,7 @@
                           <td>
                             <n-tag
                               v-if="
-                                periodStore.enrollment?.name ==
+                                periodStore.enrollment?.period ==
                                 enrollmentGroup.period
                               "
                               type="info"
@@ -177,7 +177,7 @@
                           <td>
                             <EditEnrollmentGroup
                               v-if="
-                                periodStore.enrollment?.name ==
+                                periodStore.enrollment?.period ==
                                 enrollmentGroup.period
                               "
                               :item="enrollmentGroup"
@@ -224,6 +224,7 @@
     :curriculumId="curriculumId"
     :courseId="courseId"
     :enrollmetGroup="enrollmetGroup"
+    :isSpecial="true"
     @success="getStudentEnrollmentSpecial"
   />
 </template>
@@ -244,11 +245,11 @@ import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/s
 import { __getInfoById } from "@/app/modules/Student/services/student.services";
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
 import { __searchCurriculums } from "@/app/shared/services/selectables.services";
-import EnrollmentGroupForm from "../components/Form/EnrollmentGroupForm.vue";
+import EnrollmentGroupForm from "@/app/modules/Enrollment/components/Form/EnrollmentGroupForm.vue";
 
 import { usePeriodStore } from "@/app/store/period.stores";
 
-import EditEnrollmentGroup from "../components/EditEnrollmentGroup/EditEnrollmentGroup.vue";
+import EditEnrollmentGroup from "@/app/modules/Enrollment/components/EditEnrollmentGroup/EditEnrollmentGroup.vue";
 
 const { screenSize } = useBreakpoints();
 const route = useRoute();
@@ -256,7 +257,6 @@ const periodStore = usePeriodStore();
 
 const showModal = ref<boolean>(false);
 
-// const loadingView = ref<boolean>(true);
 const curriculumId = ref<number | null>(null);
 const periodCurrent = ref<any | null>(null);
 const curriculumItems = ref<any>([]);
