@@ -12,13 +12,21 @@ import { renderIcon } from "@/core/utils/icon.utils";
 import { useDialog } from "naive-ui";
 const dialog = useDialog();
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits(["edit", "delete", "permissions"]);
 
 defineProps<{
   item: any;
 }>();
 
 const options = [
+  {
+    label: "Asignar permisos",
+    key: "assign-permissions",
+    icon: renderIcon("security-safe"),
+    props: {
+      onClick: () => emit("permissions"),
+    },
+  },
   {
     label: "Editar",
     key: "edit",
@@ -61,4 +69,3 @@ const options = [
   },
 ];
 </script>
-

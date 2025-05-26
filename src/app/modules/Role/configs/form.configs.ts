@@ -5,6 +5,7 @@ export const _getRoleInitValues = (level: string): RoleFormDTO => {
     id: null,
     name: null,
     level: level,
+    permissions: [],
     isEnabled: true,
   };
 };

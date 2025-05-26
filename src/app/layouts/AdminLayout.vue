@@ -103,7 +103,6 @@ import useBreakpoints from "@/core/composables/useBreakpoints";
 import { useRoute, useRouter } from "vue-router";
 import { usePeriodStore } from "../store/period.stores";
 import { _signOut } from "@/app/modules/Authentication/services/auth.services";
-
 const route = useRoute();
 const router = useRouter();
 const { screenSize } = useBreakpoints();
@@ -116,7 +115,7 @@ const loading = ref<boolean>(false);
 
 const currentKey = ref<string | null>(route.name as string | null);
 
-const menuOptions: MenuOption[] = [
+const menuOptions = ref<MenuOption[]>([
   menuItem({
     label: "Inicio",
     key: "Dashboard",
@@ -128,6 +127,7 @@ const menuOptions: MenuOption[] = [
     label: "Gestión Académica",
     key: "academic-management",
     icon: renderIcon("book"),
+    permission: ["academic-management"],
     children: [
       {
         type: "group",
@@ -218,16 +218,6 @@ const menuOptions: MenuOption[] = [
     key: "grades",
     icon: renderIcon("archive-book"),
     children: [
-      // {
-      //   label: "Ingreso de Notas",
-      //   key: "grades-entry",
-      //   iconName: "archive-add",
-      // },
-      // {
-      //   label: "Ac de Notas",
-      //   key: "grades-rectification",
-      //   iconName: "archive-slash",
-      // },
       menuItem({
         label: "Acta de Notas",
         key: "AcademicRecord",
@@ -413,7 +403,7 @@ const menuOptions: MenuOption[] = [
       },
     ],
   },
-];
+]);
 
 const profileOptions = [
   menuItem({
@@ -473,6 +463,7 @@ const signOut = async () => {
 
 const initLayout = async () => {
   await periodStore.getEnrollment();
+  // menuOptions filter by permissions
 };
 
 initLayout();

@@ -252,7 +252,7 @@ const onSelectedModule = async (value: any) => {
   moduleItems.value.forEach((item: any) => {
     if (item.value == value) {
       modulePrice.value = parseFloat(item.price);
-      amount.value = modulePrice.value;
+      // amount.value = modulePrice.value;
     }
   });
 };
@@ -267,13 +267,15 @@ const onSelectedGroup = (item: any) => {
   coursePrice.value = parseFloat(item.price);
   if (form.value.groupId && form.value.groupId != item.id) {
     form.value.groupId = item.id;
-    amount.value = modulePrice.value + coursePrice.value;
-  } else if (form.value.groupId == item.id) {
+    amount.value = coursePrice.value;
+  } 
+  else if (form.value.groupId == item.id) {
     form.value.groupId = null;
-    amount.value = modulePrice.value;
-  } else {
+    amount.value = 0.0;
+  } 
+  else {
     form.value.groupId = item.id;
-    amount.value = modulePrice.value + coursePrice.value;
+    amount.value =  coursePrice.value;
   }
 };
 

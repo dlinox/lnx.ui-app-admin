@@ -41,6 +41,12 @@
     :level="props.level"
     @success="reLoadDataTable"
   />
+  <PermisionsForm
+    v-model="showPermissionsModal"
+    :item="editItem!"
+    @success="reLoadDataTable"
+    :level="props.level"
+  />
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
@@ -62,6 +68,8 @@ import {
 } from "@/app/modules/Role/services/role.services";
 
 import RoleForm from "@/app/modules/Role/components/RoleForm.vue";
+import PermisionsForm from "@/app/modules/Role/components/Permission/Form.vue";
+
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import { type RoleDTO } from "@/app/modules/Role/types/Role.types";
@@ -73,6 +81,7 @@ const props = defineProps<{
 const loadingTable = ref(false);
 const items = ref<RoleDTO[]>([]);
 const showModal = ref<boolean>(false);
+const showPermissionsModal = ref<boolean>(false);
 const editItem = ref<RoleDTO | null>(null);
 const pagination = reactive({ ...initValuesDataTablePagination() });
 const request = ref<DataTableRequestDTO>({
@@ -88,13 +97,17 @@ const openFormModal = (item: RoleDTO | null) => {
   editItem.value = item;
   showModal.value = true;
 };
+const asignPermissions = (item: RoleDTO) => {
+  editItem.value = item;
+  showPermissionsModal.value = true;
+};
 
 const deleteItem = async (item: RoleDTO) => {
   await _deleteItem(item);
   await reLoadDataTable();
 };
 
-const columns = _createColumns(openFormModal, deleteItem);
+const columns = _createColumns(openFormModal, deleteItem, asignPermissions);
 
 const reLoadDataTable = async () => {
   request.value.page = 1;

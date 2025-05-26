@@ -93,3 +93,23 @@ export const __getRolesForSelect = async (
     return [];
   }
 };
+
+// permissions
+export const _getPermissions = async (): Promise<any[]> => {
+  try {
+    let response = await http.get("/role/permissions");
+    return response.data.data as any[];
+  } catch (error) {
+    return [];
+  }
+};
+
+//asign permissions
+export const _asignPermissions = async (request: any): Promise<boolean> => {
+  try {
+    await http.post("/role/asign-permissions", request);
+    return true;
+  } catch (error: any) {
+    return false;
+  }
+};

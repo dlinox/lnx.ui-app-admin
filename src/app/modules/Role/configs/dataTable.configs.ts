@@ -10,7 +10,8 @@ import {
 
 export const _createColumns = (
   openModal: (item: RoleDTO) => void,
-  deleteItem: (item: RoleDTO) => void
+  deleteItem: (item: RoleDTO) => void,
+  asignPermissions: (item: RoleDTO) => void
 ): DataTableColumns => [
   {
     title: "Ops.",
@@ -28,6 +29,10 @@ export const _createColumns = (
           onDelete: () => {
             deleteItem(rowItem);
           },
+          onPermissions: () => {
+            asignPermissions(rowItem);
+          },
+
           item: rowItem,
         },
         {
