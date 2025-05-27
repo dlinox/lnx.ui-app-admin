@@ -57,12 +57,6 @@ export const _getCourseRules = () => {
       },
     ],
     areaId: [
-      {
-        type: "number",
-        required: true,
-        trigger: ["blur", "input"],
-        message: "Obligatorio",
-      },
     ],
     moduleId: [
       {
