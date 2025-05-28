@@ -57,33 +57,11 @@
               label="Nivel"
               :feedback="formErrors?.level"
             >
-              <n-select
+              <n-input-number
+                :min="1"
                 clearable
-                placeholder="Seleccione un nivel"
+                placeholder="Ingrese el nivel"
                 v-model:value="form.level"
-                :options="[
-                  { label: 'I', value: 1 },
-                  { label: 'II', value: 2 },
-                  { label: 'III', value: 3 },
-                  { label: 'IV', value: 4 },
-                  { label: 'V', value: 5 },
-                  { label: 'VI', value: 6 },
-                  { label: 'VII', value: 7 },
-                  { label: 'VIII', value: 8 },
-                  { label: 'IX', value: 9 },
-                  { label: 'X', value: 10 },
-                  { label: 'XI', value: 11 },
-                  { label: 'XII', value: 12 },
-                  { label: 'XIII', value: 13 },
-                  { label: 'XIV', value: 14 },
-                  { label: 'XV', value: 15 },
-                  { label: 'XVI', value: 16 },
-                  { label: 'XVII', value: 17 },
-                  { label: 'XVIII', value: 18 },
-                  { label: 'XIX', value: 19 },
-                  { label: 'XX', value: 20 },
-                ]"
-                :virtual-scroll="false"
                 :status="formErrors?.level != undefined ? 'error' : ''"
                 @input="
                   formErrors != null ? (formErrors.level = null) : () => {}

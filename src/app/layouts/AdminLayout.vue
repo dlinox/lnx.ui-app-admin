@@ -103,10 +103,12 @@ import useBreakpoints from "@/core/composables/useBreakpoints";
 import { useRoute, useRouter } from "vue-router";
 import { usePeriodStore } from "../store/period.stores";
 import { _signOut } from "@/app/modules/Authentication/services/auth.services";
+
 const route = useRoute();
 const router = useRouter();
 const { screenSize } = useBreakpoints();
 const periodStore = usePeriodStore();
+
 const active = ref<boolean>(true);
 const collapsed = ref<boolean>(false);
 const inverted = ref(false);
@@ -121,6 +123,7 @@ const menuOptions = ref<MenuOption[]>([
     key: "Dashboard",
     route: "Dashboard",
     iconName: "home",
+    permissions: ["dashboard"],
   }),
 
   {

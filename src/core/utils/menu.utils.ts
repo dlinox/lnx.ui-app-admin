@@ -2,7 +2,10 @@ import { h } from "vue";
 import type { MenuOption } from "naive-ui";
 import { RouterLink } from "vue-router";
 import { renderIcon } from "@/core/utils/icon.utils";
-import type { IconName } from "../constants/icons.constants";
+import type { IconName } from "@/core/constants/icons.constants";
+// import { usePermission } from "@/core/composables/usePermission";
+
+// const { hasPermission } = usePermission();
 
 export interface MenuItemDTO {
   type?: "group" | "item";
@@ -12,6 +15,7 @@ export interface MenuItemDTO {
   iconName?: IconName;
   params?: Record<string, string>;
   children?: MenuOption[];
+  permissions?: string[];
 }
 
 export const menuItem = (params: MenuItemDTO): MenuOption => ({
@@ -33,4 +37,5 @@ export const menuItem = (params: MenuItemDTO): MenuOption => ({
   icon: params.iconName ? renderIcon(params.iconName) : undefined,
   children: params.children,
   type: params.children ?? "item",
+  // show: hasPermission(params.permissions || []),
 });
