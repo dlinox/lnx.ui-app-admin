@@ -23,7 +23,7 @@ const props = defineProps<{
 
 const options = computed(() => [
   {
-    show: props.item.userId == null && hasPermission([""]),
+    show: props.item.userId == null && hasPermission(["student.create-account"]),
     label: "Crear cuenta de usuario",
     id: "create-user",
     key: "create-user",
@@ -33,7 +33,7 @@ const options = computed(() => [
     },
   },
   {
-    show: hasPermission([""]),
+    show: hasPermission(["student.edit"]),
     label: "Editar",
     key: "edit",
     icon: renderIcon("edit-2"),
@@ -42,7 +42,7 @@ const options = computed(() => [
     },
   },
   {
-    show: hasPermission([""]),
+    show: hasPermission(["student.delete"]),
     label: "Eliminar",
     key: "delete",
     icon: renderIcon("trash", "red"),

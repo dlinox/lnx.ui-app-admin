@@ -24,7 +24,7 @@ const props = defineProps<{
 
 const options = computed(() => [
   {
-    show: props.item.userId == null && hasPermission([""]),
+    show: props.item.userId == null && hasPermission(["teacher.create-account"]),
     label: "Crear cuenta de usuario",
     id: "create-user",
     key: "create-user",
@@ -40,11 +40,13 @@ const options = computed(() => [
     props: {
       onClick: () => emit("edit"),
     },
+    show: hasPermission(["teacher.edit"]),
   },
   {
     label: "Eliminar",
     key: "delete",
     icon: renderIcon("trash", "red"),
+    show: hasPermission(["teacher.delete"]),
     props: {
       style: {
         color: "red",

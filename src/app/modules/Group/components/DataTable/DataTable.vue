@@ -3,6 +3,7 @@
     <n-row :gutter="12" style="padding: 12px 16px">
       <n-col :span="12" class="self-center">
         <n-button
+          v-if="hasPermission(['group.clone'])"
           :render-icon="renderIcon('convertshape')"
           @click="showModalClone = true"
         >
@@ -28,6 +29,7 @@
         <n-data-table
           key="id"
           remote
+          size="small"
           :single-line="false"
           :columns="columns"
           :data="items"
@@ -85,6 +87,9 @@ import LnxIcon from "@/core/components/LnxIcon.vue";
 import type { GroupDataTablePropsDTO } from "../../types/Group.types";
 import type { SelectOption } from "naive-ui";
 import { renderIcon } from "@/core/utils/icon.utils";
+
+import { usePermission } from "@/core/composables/usePermission";
+const { hasPermission } = usePermission();
 
 const props = defineProps<GroupDataTablePropsDTO>();
 

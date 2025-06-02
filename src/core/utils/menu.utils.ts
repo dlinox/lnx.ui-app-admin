@@ -3,9 +3,8 @@ import type { MenuOption } from "naive-ui";
 import { RouterLink } from "vue-router";
 import { renderIcon } from "@/core/utils/icon.utils";
 import type { IconName } from "@/core/constants/icons.constants";
-// import { usePermission } from "@/core/composables/usePermission";
-
-// const { hasPermission } = usePermission();
+import { usePermission } from "@/core/composables/usePermission";
+const { hasPermission } = usePermission();
 
 export interface MenuItemDTO {
   type?: "group" | "item";
@@ -37,5 +36,5 @@ export const menuItem = (params: MenuItemDTO): MenuOption => ({
   icon: params.iconName ? renderIcon(params.iconName) : undefined,
   children: params.children,
   type: params.children ?? "item",
-  // show: hasPermission(params.permissions || []),
+  show: hasPermission(params.permissions || [])  || params.key === "Dashboard",
 });

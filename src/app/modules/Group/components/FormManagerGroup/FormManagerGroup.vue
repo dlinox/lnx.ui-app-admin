@@ -95,6 +95,7 @@
         <n-flex justify="end">
           <n-button @click="() => (showModal = false)">Cancelar</n-button>
           <n-button
+            v-if="hasPermission(['group-manager.edit'])"
             type="primary"
             @click="
               form.status === 'CANCELADO' ? comfirmationSubmit() : submit()
@@ -131,6 +132,9 @@ import { useDialog } from "naive-ui";
 import { renderIcon } from "@/core/utils/icon.utils";
 import EnrolledStudents from "@/app/modules/Group/components/EnrolledStudents/EnrolledStudents.vue";
 
+import { usePermission } from "@/core/composables/usePermission";
+
+const { hasPermission } = usePermission();
 const dialog = useDialog();
 
 const emit = defineEmits(["update:modelValue", "success"]);

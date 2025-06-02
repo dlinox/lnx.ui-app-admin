@@ -1,4 +1,3 @@
-
 import {
   type DataTablePaginationDTO,
   initValuesDataTablePagination,
@@ -11,66 +10,79 @@ export const _createColumns = (
   openEnrollmentGroupModal: (item: any) => void,
   reLoadDataTable: () => void
 ): DataTableColumns => [
-    {
-      title: "Ops.",
-      key: "ops",
-      width: "130px",
-      fixed: "left",
-      render(rowData: any) {
-        const rowItem = rowData as any;
-        return h(
-          DataTableOp,
-          {
-            onOpenForm: () => openEnrollmentGroupModal(rowItem),
-            onSuccess: () => reLoadDataTable(),
-            item: rowItem,
-          },
-          {
-            default: () => "Editar",
-          }
-        );
+  {
+    title: "Ops.",
+    key: "ops",
+    width: "100px",
+    fixed: "left",
+    render(rowData: any) {
+      const rowItem = rowData as any;
+      return h(
+        DataTableOp,
+        {
+          onOpenForm: () => openEnrollmentGroupModal(rowItem),
+          onSuccess: () => reLoadDataTable(),
+          item: rowItem,
+        },
+        {
+          default: () => "Editar",
+        }
+      );
+    },
+  },
+  {
+    title: "Período",
+    key: "period",
+    minWidth: "120",
+  },
+
+  {
+    title: "Estudiante",
+    key: "group-student",
+    children: [
+      {
+        title: "Nombre",
+        key: "student",
+
+        minWidth: "250px",
       },
-    },
-    {
-      title: "Período",
-      key: "period",
-      minWidth: "100",
-    },
-    {
-      title: "Estado de mat.",
-      key: "enrollmentStatus",
-      minWidth: "150px",
-    },
-    {
-      title: "Estudiante",
-      key: "student",
-      minWidth: "300px",
-    },
+      {
+        title: "Estado de mat.",
+        key: "enrollmentStatus",
+        minWidth: "150px",
+      },
+    ],
+  },
 
-    {
-      title: "Módulo",
-      key: "module",
-      minWidth: "200px",
-    },
+  {
+    title: "Grupo",
+    key: "group-group",
+    children: [
+      {
+        title: "Módulo",
+        key: "module",
+        minWidth: "200px",
+      },
 
-    {
-      title: "Curso",
-      key: "course",
-      minWidth: "200px",
-    },
-    {
-      title: "Grupo",
-      key: "group",
+      {
+        title: "Curso",
+        key: "course",
+        minWidth: "200px",
+      },
+      {
+        title: "Grupo",
+        key: "group",
 
-      minWidth: "100px",
-    },
-    {
-      title: "Modalidad",
-      key: "modality",
-      minWidth: "100px",
-    },
-   
-  ];
+        minWidth: "100px",
+      },
+      {
+        title: "Modalidad",
+        key: "modality",
+        minWidth: "100px",
+      },
+    ],
+  },
+];
 
 export const _createPagination = (
   data: DataTablePaginationDTO = initValuesDataTablePagination()

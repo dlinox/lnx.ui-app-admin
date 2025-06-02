@@ -1,18 +1,25 @@
 <template>
-  <n-card
-    :segmented="{
-      header: true,
-      content: true,
-    }"
+  <template
+    v-if="hasPermission(['group-manager.send-email', 'group-manager.edit'])"
   >
-    <template #header>
-      <h6 class="text-sm text-gray-400">Gestión de grupos</h6>
-      Grupos aperturados
-    </template>
+    <n-card
+      :segmented="{
+        header: true,
+        content: true,
+      }"
+    >
+      <template #header>
+        <h6 class="text-sm text-gray-400">Gestión de grupos</h6>
+        Grupos aperturados
+      </template>
 
-    <template #action> </template>
-  </n-card>
-  <EnrollmentGroupDataTable />
+      <template #action> </template>
+    </n-card>
+    <EnrollmentGroupDataTable />
+  </template>
+  <template v-else>
+    <AppNotAuthorization />
+  </template>
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
@@ -22,6 +29,10 @@ import {
   __searchPeriods,
   __searchCurriculums,
 } from "@/app/shared/services/selectables.services";
+
+import { usePermission } from "@/core/composables/usePermission";
+
+const { hasPermission } = usePermission();
 
 const loadingSearchPeriod = ref<boolean>(false);
 const optionsPeirod = ref<SelectOption[]>([]);

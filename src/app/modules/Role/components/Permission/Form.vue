@@ -11,7 +11,7 @@
       role="dialog"
       aria-modal="true"
     >
-      <n-row>
+      <n-row style="height: 500px; overflow: auto">
         <n-collapse default-expanded-names="1" accordion>
           <n-collapse-item
             v-for="(permission, index) in allPermissions"

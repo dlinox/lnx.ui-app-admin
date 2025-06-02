@@ -21,6 +21,7 @@
         <n-data-table
           key="id"
           remote
+          size="small"
           :single-line="false"
           :columns="columns"
           :data="items"
@@ -43,7 +44,7 @@
   />
   <PermisionsForm
     v-model="showPermissionsModal"
-    :item="editItem!"
+    :item="editItem"
     @success="reLoadDataTable"
     :level="props.level"
   />
@@ -82,7 +83,7 @@ const loadingTable = ref(false);
 const items = ref<RoleDTO[]>([]);
 const showModal = ref<boolean>(false);
 const showPermissionsModal = ref<boolean>(false);
-const editItem = ref<RoleDTO | null>(null);
+const editItem = ref<RoleDTO>({} as RoleDTO);
 const pagination = reactive({ ...initValuesDataTablePagination() });
 const request = ref<DataTableRequestDTO>({
   search: null,
@@ -93,7 +94,7 @@ const response = ref<DataTableResponseDTO<RoleDTO>>(
   {} as DataTableResponseDTO<RoleDTO>
 );
 
-const openFormModal = (item: RoleDTO | null) => {
+const openFormModal = (item: RoleDTO) => {
   editItem.value = item;
   showModal.value = true;
 };

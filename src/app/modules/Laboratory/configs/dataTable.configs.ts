@@ -39,16 +39,17 @@ export const _createColumns = (
   {
     title: "Nombre",
     key: "name",
-    minWidth: "300px",
+    minWidth: "180px",
   },
   {
     title: "Tipo",
     key: "type",
+    width: "120px",
   },
   {
     title: "Habilitado",
     key: "isEnabled",
-    width: "150px",
+    width: "120px",
     render: (row) => {
       return h(
         NTag,

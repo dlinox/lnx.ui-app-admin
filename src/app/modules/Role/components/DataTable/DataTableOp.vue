@@ -1,5 +1,15 @@
 <template>
-  <n-dropdown :options="options" placement="bottom-start">
+  <n-dropdown
+    :options="options"
+    placement="bottom-start"
+    v-if="
+      hasPermission([
+        'role-admin.edit',
+        'role-admin.delete',
+        'role-admin.assign-permissions',
+      ])
+    "
+  >
     <n-button>
       <LnxIcon icon-name="setting-5" size="20" />
     </n-button>
@@ -10,6 +20,11 @@
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import { renderIcon } from "@/core/utils/icon.utils";
 import { useDialog } from "naive-ui";
+
+import { usePermission } from "@/core/composables/usePermission";
+
+const { hasPermission } = usePermission();
+
 const dialog = useDialog();
 
 const emit = defineEmits(["edit", "delete", "permissions"]);
@@ -23,6 +38,7 @@ const options = [
     label: "Asignar permisos",
     key: "assign-permissions",
     icon: renderIcon("security-safe"),
+    show: hasPermission(["role-admin.assign-permissions"]),
     props: {
       onClick: () => emit("permissions"),
     },
@@ -31,6 +47,7 @@ const options = [
     label: "Editar",
     key: "edit",
     icon: renderIcon("edit-2"),
+    show: hasPermission(["role-admin.edit"]),
     props: {
       onClick: () => emit("edit"),
     },
@@ -39,6 +56,7 @@ const options = [
     label: "Eliminar",
     key: "delete",
     icon: renderIcon("trash", "red"),
+    show: hasPermission(["role-admin.delete"]),
     props: {
       style: {
         color: "red",

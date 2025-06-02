@@ -22,6 +22,7 @@
         <n-data-table
           key="id"
           remote
+          size="small"
           :single-line="false"
           :columns="columns"
           :data="items"

@@ -34,7 +34,12 @@
       <template #footer>
         <n-flex justify="end">
           <n-button @click="() => (showModal = false)">Cerrar</n-button>
-          <n-button type="primary" :loading="loading" @click="sendEmails">
+          <n-button
+            v-if="hasPermission(['group-manager.send-email'])"
+            type="primary"
+            :loading="loading"
+            @click="sendEmails"
+          >
             Enviar correo de confirmación
           </n-button>
         </n-flex>
@@ -50,6 +55,10 @@ import {
   _getStudents,
   _sendMassiveEmail,
 } from "@/app/modules/Group/services/enrollment-group.services";
+
+import { usePermission } from "@/core/composables/usePermission";
+
+const { hasPermission } = usePermission();
 
 const emit = defineEmits(["update:modelValue", "success"]);
 

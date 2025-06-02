@@ -100,14 +100,17 @@ import { renderIcon } from "@/core/utils/icon.utils";
 import { menuItem } from "@/core/utils/menu.utils";
 import { type MenuOption } from "naive-ui";
 import useBreakpoints from "@/core/composables/useBreakpoints";
-import { useRoute, useRouter } from "vue-router";
-import { usePeriodStore } from "../store/period.stores";
 import { _signOut } from "@/app/modules/Authentication/services/auth.services";
 
+import { useRoute, useRouter } from "vue-router";
+import { usePeriodStore } from "../store/period.stores";
 const route = useRoute();
 const router = useRouter();
 const { screenSize } = useBreakpoints();
 const periodStore = usePeriodStore();
+
+import { usePermission } from "@/core/composables/usePermission";
+const { hasPermission } = usePermission();
 
 const active = ref<boolean>(true);
 const collapsed = ref<boolean>(false);
@@ -123,18 +126,50 @@ const menuOptions = ref<MenuOption[]>([
     key: "Dashboard",
     route: "Dashboard",
     iconName: "home",
-    permissions: ["dashboard"],
+    permissions: [],
   }),
 
   {
     label: "Gestión Académica",
     key: "academic-management",
     icon: renderIcon("book"),
-    permission: ["academic-management"],
+    show: hasPermission([
+      "student.create",
+      "student.edit",
+      "student.delete",
+      "teacher.create",
+      "teacher.edit",
+      "teacher.delete",
+      "period.create",
+      "period.edit",
+      "period.delete",
+      "curriculum.create",
+      "curriculum.edit",
+      "curriculum.delete",
+      "area.create",
+      "area.edit",
+      "area.delete",
+      "module.create",
+      "module.edit",
+      "module.delete",
+      "course.create",
+      "course.edit",
+      "course.delete",
+    ]),
     children: [
       {
         type: "group",
         label: "Estudiantes y Docentes",
+        show: hasPermission([
+          "student.create",
+          "student.edit",
+          "student.delete",
+          "student.create-account",
+          "teacher.create",
+          "teacher.edit",
+          "teacher.delete",
+          "teacher.create-account",
+        ]),
         key: "people",
         children: [
           menuItem({
@@ -142,12 +177,24 @@ const menuOptions = ref<MenuOption[]>([
             key: "Student",
             route: "Student",
             iconName: "personalcard",
+            permissions: [
+              "student.create",
+              "student.edit",
+              "student.delete",
+              "student.create-account",
+            ],
           }),
           menuItem({
             label: "Docentes",
             key: "Teacher",
             route: "Teacher",
             iconName: "teacher",
+            permissions: [
+              "teacher.create",
+              "teacher.edit",
+              "teacher.delete",
+              "teacher.create-account",
+            ],
           }),
         ],
       },
@@ -155,14 +202,37 @@ const menuOptions = ref<MenuOption[]>([
         type: "group",
         label: "Planificación Académica",
         key: "academic-planning",
+        show: hasPermission([
+          "period.create",
+          "period.edit",
+          "period.delete",
+          "curriculum.create",
+          "curriculum.edit",
+          "curriculum.delete",
+          "area.create",
+          "area.edit",
+          "area.delete",
+          "module.create",
+          "module.edit",
+          "module.delete",
+          "course.create",
+          "course.edit",
+          "course.delete",
+        ]),
         children: [
           menuItem({
+            permissions: ["period.create", "period.edit", "period.delete"],
             label: "Periodos Académicos",
             key: "Period",
             route: "Period",
             iconName: "calendar-2",
           }),
           menuItem({
+            permissions: [
+              "curriculum.create",
+              "curriculum.edit",
+              "curriculum.delete",
+            ],
             label: "Planes de Estudio",
             key: "Curriculum",
             route: "Curriculum",
@@ -173,18 +243,21 @@ const menuOptions = ref<MenuOption[]>([
             key: "Area",
             route: "Area",
             iconName: "book-square",
+            permissions: ["area.create", "area.edit", "area.delete"],
           }),
           menuItem({
             label: "Módulos",
             key: "Module",
             route: "Module",
             iconName: "bookmark",
+            permissions: ["module.create", "module.edit", "module.delete"],
           }),
           menuItem({
             label: "Cursos",
             key: "Course",
             route: "Course",
             iconName: "book-saved",
+            permissions: ["course.create", "course.edit", "course.delete"],
           }),
         ],
       },
@@ -195,14 +268,23 @@ const menuOptions = ref<MenuOption[]>([
     label: "Carga Académica",
     key: "academic-workload",
     icon: renderIcon("folder-open"),
+    show: hasPermission([
+      "group.create",
+      "group.edit",
+      "group.delete",
+      "group-manager.edit",
+      "group-manager.send-email",
+    ]),
     children: [
       menuItem({
+        permissions: ["group.create", "group.edit", "group.delete"],
         label: "Apertura de Grupos",
         key: "Group",
         route: "Group",
         iconName: "calendar-add",
       }),
       menuItem({
+        permissions: ["group-manager.edit", "group-manager.send-email"],
         label: "Gestión de Grupos",
         key: "GroupManager",
         route: "GroupManager",
@@ -215,54 +297,106 @@ const menuOptions = ref<MenuOption[]>([
     key: "academic-supervision",
     route: "AcademicSupervision",
     iconName: "speedometer",
+    permissions: [
+      "academic-supervision.create",
+      "academic-supervision.edit",
+      "academic-supervision.delete",
+    ],
   }),
   {
     label: "Notas",
     key: "grades",
     icon: renderIcon("archive-book"),
+    show: hasPermission([
+      "academic-record.view",
+      "academic-record.print",
+      "grade-deadline.create",
+      "grade-deadline.extencion",
+    ]),
     children: [
       menuItem({
         label: "Acta de Notas",
         key: "AcademicRecord",
         route: "AcademicRecord",
         iconName: "archive-book",
+        permissions: ["academic-record.view", "academic-record.print"],
       }),
       menuItem({
         label: "Habilitaciones",
         key: "grade-deadline",
         route: "GradeDeadline",
         iconName: "calendar-2",
+        permissions: ["grade-deadline.create", "grade-deadline.extencion"],
       }),
     ],
   },
-
   {
     label: "Administración",
     key: "administration",
     icon: renderIcon("cpu-setting"),
+    show: hasPermission([
+      "document-type.create",
+      "document-type.edit",
+      "document-type.delete",
+      "student-type.create",
+      "student-type.edit",
+      "student-type.delete",
+      "payment-type.create",
+      "payment-type.edit",
+      "payment-type.delete",
+      "laboratory.create",
+      "laboratory.edit",
+      "laboratory.delete",
+    ]),
     children: [
       {
         type: "group",
         label: "Configuraciones Generales",
         key: "general-settings",
+        show: hasPermission([
+          "document-type.create",
+          "document-type.edit",
+          "document-type.delete",
+          "student-type.create",
+          "student-type.edit",
+          "student-type.delete",
+          "payment-type.create",
+          "payment-type.edit",
+          "payment-type.delete",
+        ]),
         children: [
           menuItem({
             label: "Tipos de Documento",
             key: "DocumentType",
             route: "DocumentType",
             iconName: "tag",
+            permissions: [
+              "document-type.create",
+              "document-type.edit",
+              "document-type.delete",
+            ],
           }),
           menuItem({
             label: "Tipos de Estudiante",
             key: "StudentType",
             route: "StudentType",
             iconName: "tag",
+            permissions: [
+              "student-type.create",
+              "student-type.edit",
+              "student-type.delete",
+            ],
           }),
           menuItem({
             label: "Métodos de Pago",
             key: "PaymentType",
             route: "PaymentType",
             iconName: "tag",
+            permissions: [
+              "payment-type.create",
+              "payment-type.edit",
+              "payment-type.delete",
+            ],
           }),
         ],
       },
@@ -270,12 +404,22 @@ const menuOptions = ref<MenuOption[]>([
         type: "group",
         label: "Infraestructura",
         key: "infrastructure",
+        show: hasPermission([
+          "laboratory.create",
+          "laboratory.edit",
+          "laboratory.delete",
+        ]),
         children: [
           menuItem({
             label: "Laboratorios",
             key: "Laboratory",
             route: "Laboratory",
             iconName: "devices",
+            permissions: [
+              "laboratory.create",
+              "laboratory.edit",
+              "laboratory.delete",
+            ],
           }),
         ],
       },
@@ -286,30 +430,52 @@ const menuOptions = ref<MenuOption[]>([
     label: "Matrículas",
     key: "enrollments",
     icon: renderIcon("folder"),
+    show: hasPermission([
+      "enrollment.create",
+      "enrollment.create-special",
+      "enrollment.edit",
+      "enrollment.print-record",
+      "recognition.create",
+      "recognition.delete",
+      "enrollment-deadline.create",
+      "enrollment-deadline.extencion",
+    ]),
     children: [
       menuItem({
         label: "Realizar Matrícula",
         key: "enrollment",
         route: "Enrollment",
         iconName: "folder-add",
+        permissions: [
+          "enrollment.create",
+          "enrollment.create-special",
+          "enrollment.edit",
+          "enrollment.print-record",
+        ],
       }),
       menuItem({
         label: "Matrículas",
         key: "virtual-enrollment",
         route: "EnrollmentVirtual",
         iconName: "folder-cloud",
+        permissions: ["enrollment.edit"],
       }),
       menuItem({
         label: "Convalidaciones",
         key: "Recognition",
         route: "Recognition",
         iconName: "convertshape-2",
+        permissions: ["recognition.create", "recognition.delete"],
       }),
       menuItem({
         label: "Habilitaciones",
         key: "EnrollmentDeadline",
         route: "EnrollmentDeadline",
         iconName: "calendar-2",
+        permissions: [
+          "enrollment-deadline.create",
+          "enrollment-deadline.extencion",
+        ],
       }),
     ],
   },
@@ -318,18 +484,36 @@ const menuOptions = ref<MenuOption[]>([
     label: "Costos",
     key: "financial",
     icon: renderIcon("money"),
+    show: hasPermission([
+      "module-price.create",
+      "module-price.edit",
+      "module-price.delete",
+      "course-price.create",
+      "course-price.edit",
+      "course-price.delete",
+    ]),
     children: [
       menuItem({
         label: "Matrícula (Módulos)",
         key: "ModulePrice",
         route: "ModulePrice",
         iconName: "moneys",
+        permissions: [
+          "module-price.create",
+          "module-price.edit",
+          "module-price.delete",
+        ],
       }),
       menuItem({
         label: "Mensualidad (Cursos)",
         key: "CoursePrice",
         route: "CoursePrice",
         iconName: "moneys",
+        permissions: [
+          "course-price.create",
+          "course-price.edit",
+          "course-price.delete",
+        ],
       }),
     ],
   },
@@ -338,12 +522,14 @@ const menuOptions = ref<MenuOption[]>([
     label: "Reportes",
     key: "reports",
     icon: renderIcon("archive"),
+    show: hasPermission(["report.student", "report.group"]),
     children: [
       menuItem({
         label: "Reporte de Estudiantes",
         key: "StudentReportView",
         route: "StudentReportView",
         iconName: "document-filter",
+        permissions: ["report.student"],
       }),
       // GroupReportView
       menuItem({
@@ -351,6 +537,7 @@ const menuOptions = ref<MenuOption[]>([
         key: "GroupReportView",
         route: "GroupReportView",
         iconName: "document-filter",
+        permissions: ["report.group"],
       }),
     ],
   },
@@ -358,23 +545,58 @@ const menuOptions = ref<MenuOption[]>([
     label: "Seguridad",
     key: "security",
     icon: renderIcon("shield"),
+    show: hasPermission([
+      "user-admin.create",
+      "user-admin.edit",
+      "user-admin.delete",
+      "role-admin.create",
+      "role-admin.edit",
+      "role-admin.delete",
+      "role-admin.assign-permissions",
+      "user-teacher.create",
+      "user-teacher.edit",
+      "user-teacher.delete",
+      "user-student.create",
+      "user-student.edit",
+      "user-student.delete",
+    ]),
     children: [
       {
         type: "group",
         label: "Administradores",
         key: "security-admins",
+        show: hasPermission([
+          "user-admin.create",
+          "user-admin.edit",
+          "user-admin.delete",
+          "role-admin.create",
+          "role-admin.edit",
+          "role-admin.delete",
+          "role-admin.assign-permissions",
+        ]),
         children: [
           menuItem({
             label: "Usuarios Administradores",
             key: "UserAdmin",
             route: "UserAdmin",
             iconName: "security-user",
+            permissions: [
+              "user-admin.create",
+              "user-admin.edit",
+              "user-admin.delete",
+            ],
           }),
           menuItem({
             label: "Roles Administradores",
             key: "RoleAdmin",
             route: "RoleAdmin",
             iconName: "key-square",
+            permissions: [
+              "role-admin.create",
+              "role-admin.edit",
+              "role-admin.delete",
+              "role-admin.assign-permissions",
+            ],
           }),
         ],
       },
@@ -382,12 +604,22 @@ const menuOptions = ref<MenuOption[]>([
         type: "group",
         label: "Docentes",
         key: "security-teachers",
+        show: hasPermission([
+          "user-teacher.create",
+          "user-teacher.edit",
+          "user-teacher.delete",
+        ]),
         children: [
           menuItem({
             label: "Usuarios Docentes",
             key: "UserTeacher",
             route: "UserTeacher",
             iconName: "security-user",
+            permissions: [
+              "user-teacher.create",
+              "user-teacher.edit",
+              "user-teacher.delete",
+            ],
           }),
         ],
       },
@@ -395,12 +627,22 @@ const menuOptions = ref<MenuOption[]>([
         type: "group",
         label: "Estudiantes",
         key: "security-students",
+        show: hasPermission([
+          "user-student.create",
+          "user-student.edit",
+          "user-student.delete",
+        ]),
         children: [
           menuItem({
             label: "Usuarios Estudiantes",
             key: "UserStudent",
             route: "UserStudent",
             iconName: "security-user",
+            permissions: [
+              "user-student.create",
+              "user-student.edit",
+              "user-student.delete",
+            ],
           }),
         ],
       },

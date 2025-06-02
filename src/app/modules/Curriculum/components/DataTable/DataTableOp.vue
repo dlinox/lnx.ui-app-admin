@@ -1,6 +1,10 @@
 <template>
   <n-button-group vertical>
-    <n-dropdown :options="options" placement="bottom-start">
+    <n-dropdown
+      v-if="hasPermission(['curriculum.edit', 'curriculum.delete'])"
+      :options="options"
+      placement="bottom-start"
+    >
       <n-button>
         <LnxIcon icon-name="setting-5" size="20" />
       </n-button>
@@ -31,6 +35,8 @@ import LnxIcon from "@/core/components/LnxIcon.vue";
 import { renderIcon } from "@/core/utils/icon.utils";
 import { useRouter } from "vue-router";
 import { useDialog } from "naive-ui";
+import { usePermission } from "@/core/composables/usePermission";
+const { hasPermission } = usePermission();
 const dialog = useDialog();
 
 const emit = defineEmits(["edit", "delete", "curriculum"]);
@@ -42,19 +48,8 @@ const props = defineProps<{
 const router = useRouter();
 
 const options = [
-  // {
-  //   label: "Gestionar cursos",
-  //   key: "CurriculumCourse",
-  //   icon: renderIcon("grid-2"),
-  //   props: {
-  //     onClick: () =>
-  //       router.push({
-  //         name: "CurriculumCourse",
-  //         params: { id: props.item.id },
-  //       }),
-  //   },
-  // },
   {
+    show: hasPermission(["curriculum.edit"]),
     label: "Editar",
     key: "edit",
     icon: renderIcon("edit-2"),
@@ -63,6 +58,7 @@ const options = [
     },
   },
   {
+    show: hasPermission(["curriculum.delete"]),
     label: "Eliminar",
     key: "delete",
     icon: renderIcon("trash", "red"),

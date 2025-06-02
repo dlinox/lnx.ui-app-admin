@@ -1,161 +1,175 @@
 <template>
-  <template v-if="records.length > 1">
-    <n-button @click="showModal = true">
-      Registros
-      <template #icon>
-        <LnxIcon icon-name="task" size="20" />
-      </template>
-    </n-button>
-  </template>
-  <template v-else>
-    <n-button-group>
-      <n-button @click="getRecordPdf(records[0].id, null)" :loading="loading">
-        Ver
+  <template
+    v-if="hasPermission(['academic-record.view', 'academic-record.print'])"
+  >
+    <template v-if="records.length > 1">
+      <n-button @click="showModal = true">
+        Registros
         <template #icon>
-          <LnxIcon icon-name="document-download" size="20" />
+          <LnxIcon icon-name="task" size="20" />
         </template>
       </n-button>
-      <n-button
-        @click="handleModalPrint(records[0])"
-        :loading="loading"
+    </template>
+    <template v-else>
+      <n-button-group>
+        <n-button
+          v-if="hasPermission(['academic-record.view'])"
+          @click="getRecordPdf(records[0].id, null)"
+          :loading="loading"
+        >
+          Ver
+          <template #icon>
+            <LnxIcon icon-name="document-download" size="20" />
+          </template>
+        </n-button>
+        <n-button
+          v-if="hasPermission(['academic-record.print'])"
+          @click="handleModalPrint(records[0])"
+          :loading="loading"
+        >
+          Imprimir
+          <template #icon>
+            <LnxIcon icon-name="printer" size="20" />
+          </template>
+        </n-button>
+      </n-button-group>
+    </template>
+
+    <n-modal v-model:show="showModal">
+      <n-card
+        style="width: 600px"
+        role="dialog"
+        aria-modal="true"
+        :segmented="{
+          content: true,
+          footer: true,
+        }"
+        size="small"
       >
-        Imprimir
-        <template #icon>
-          <LnxIcon icon-name="printer" size="20" />
+        <n-table :bordered="false" :single-line="false" size="small">
+          <thead>
+            <tr>
+              <th width="160px">Fecha del registro</th>
+              <th width="160px">Código</th>
+              <th>Observaciones</th>
+              <th width="120px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(element, index) in records" :key="index">
+              <td>
+                {{ element.createdAt }}
+              </td>
+              <td>
+                {{ element.code }}
+              </td>
+              <td>
+                {{ element.observations }}
+              </td>
+              <td>
+                <n-button-group>
+                  <n-button
+                    v-if="hasPermission(['academic-record.view'])"
+                    @click="getRecordPdf(element.id, index)"
+                    :loading="element.loading"
+                  >
+                    Ver
+                    <template #icon>
+                      <LnxIcon icon-name="document-download" size="20" />
+                    </template>
+                  </n-button>
+                  <n-button
+                    v-if="
+                      element.isEnabled &&
+                      hasPermission(['academic-record.print'])
+                    "
+                    @click="handleModalPrint(element)"
+                    :loading="element.loading"
+                  >
+                    Imprimir
+                    <template #icon>
+                      <LnxIcon icon-name="printer" size="20" />
+                    </template>
+                  </n-button>
+                </n-button-group>
+              </td>
+            </tr>
+          </tbody>
+        </n-table>
+
+        <template #footer>
+          <n-space justify="end">
+            <n-button class="" @click="showModal = false"> Cerrar </n-button>
+          </n-space>
         </template>
-      </n-button>
-    </n-button-group>
-  </template>
-  <n-modal v-model:show="showModal">
-    <n-card
-      style="width: 600px"
-      role="dialog"
-      aria-modal="true"
-      :segmented="{
-        content: true,
-        footer: true,
-      }"
-      size="small"
-    >
-      <n-table :bordered="false" :single-line="false" size="small">
-        <thead>
-          <tr>
-            <th width="160px">Fecha del registro</th>
-            <th width="160px">Código</th>
-            <th>Observaciones</th>
-            <th width="120px"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(element, index) in records" :key="index">
-            <td>
-              {{ element.createdAt }}
-            </td>
-            <td>
-              {{ element.code }}
-            </td>
-            <td>
-              {{ element.observations }}
-            </td>
-            <td>
-              <n-button-group>
-                <n-button
-                  @click="getRecordPdf(element.id, index)"
-                  :loading="element.loading"
-                >
-                  Ver
-                  <template #icon>
-                    <LnxIcon icon-name="document-download" size="20" />
-                  </template>
-                </n-button>
-                <n-button
-                  v-if="element.isEnabled"
-                  @click="handleModalPrint(element)"
-                  :loading="element.loading"
-                >
-                  Imprimir
-                  <template #icon>
-                    <LnxIcon icon-name="printer" size="20" />
-                  </template>
-                </n-button>
-              </n-button-group>
-            </td>
-          </tr>
-        </tbody>
-      </n-table>
+      </n-card>
+    </n-modal>
 
-      <template #footer>
-        <n-space justify="end">
-          <n-button class="" @click="showModal = false"> Cerrar </n-button>
-        </n-space>
-      </template>
-    </n-card>
-  </n-modal>
-
-  <n-modal v-model:show="showModalPrint">
-    <n-card
-      style="width: 400px"
-      role="dialog"
-      aria-modal="true"
-      :segmented="{
-        content: true,
-        footer: true,
-      }"
-      size="small"
-      title="Imprimir Acta"
-    >
-      <n-form
-        ref="formPrintRef"
-        :model="formPrint"
-        :rules="formPrintRules"
-        size="large"
+    <n-modal v-model:show="showModalPrint">
+      <n-card
+        style="width: 400px"
+        role="dialog"
+        aria-modal="true"
+        :segmented="{
+          content: true,
+          footer: true,
+        }"
+        size="small"
+        title="Imprimir Acta"
       >
-        <n-row :gutter="16">
-          <n-col span="24">
-            <n-form-item
-              path="code"
-              label="Codigo"
-              :feedback="formPrintErrors?.code"
+        <n-form
+          ref="formPrintRef"
+          :model="formPrint"
+          :rules="formPrintRules"
+          size="large"
+        >
+          <n-row :gutter="16">
+            <n-col span="24">
+              <n-form-item
+                path="code"
+                label="Codigo"
+                :feedback="formPrintErrors?.code"
+              >
+                <n-input
+                  type="text"
+                  v-model:value="formPrint.code"
+                  :status="formPrintErrors?.code != undefined ? 'error' : ''"
+                  @update:value="
+                    () =>
+                      formPrintErrors != null
+                        ? (formPrintErrors.code = null)
+                        : () => {}
+                  "
+                  clearable
+                  placeholder="Ingrese observaciones"
+                />
+              </n-form-item>
+            </n-col>
+          </n-row>
+        </n-form>
+        <template #footer>
+          <n-space justify="end">
+            <n-button
+              tertiary
+              size="large"
+              @click="showModalPrint = false"
+              :disabled="loading"
             >
-              <n-input
-                type="text"
-                v-model:value="formPrint.code"
-                :status="formPrintErrors?.code != undefined ? 'error' : ''"
-                @update:value="
-                  () =>
-                    formPrintErrors != null
-                      ? (formPrintErrors.code = null)
-                      : () => {}
-                "
-                clearable
-                placeholder="Ingrese observaciones"
-              />
-            </n-form-item>
-          </n-col>
-        </n-row>
-      </n-form>
-      <template #footer>
-        <n-space justify="end">
-          <n-button
-            tertiary
-            size="large"
-            @click="showModalPrint = false"
-            :disabled="loading"
-          >
-            Cancelar
-          </n-button>
-          <n-button
-            size="large"
-            type="primary"
-            @click="handlePrint"
-            :loading="loading"
-          >
-            Guardar
-          </n-button>
-        </n-space>
-      </template>
-    </n-card>
-  </n-modal>
+              Cancelar
+            </n-button>
+            <n-button
+              size="large"
+              type="primary"
+              @click="handlePrint"
+              :loading="loading"
+            >
+              Guardar
+            </n-button>
+          </n-space>
+        </template>
+      </n-card>
+    </n-modal>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -169,7 +183,9 @@ import {
   _printRecord,
 } from "@/app/modules/AcademicRecord/services/academicRecord.services";
 import type { FormInst } from "naive-ui";
+import { usePermission } from "@/core/composables/usePermission";
 
+const { hasPermission } = usePermission();
 const emit = defineEmits(["edit", "delete", "success"]);
 
 const props = defineProps<{
@@ -199,7 +215,6 @@ const formPrintRules = ref({
 });
 
 const handleModalPrint = (record: any) => {
-
   showModalPrint.value = !showModalPrint.value;
   formPrint.value.id = record.id;
   formPrint.value.code = record.code;

@@ -1,5 +1,9 @@
 <template>
-  <n-dropdown :options="options" placement="bottom-start">
+  <n-dropdown
+    :options="options"
+    placement="bottom-start"
+    v-if="hasPermission(['module-price.edit', 'module-price.delete'])"
+  >
     <n-button>
       <LnxIcon icon-name="setting-5" size="20" />
     </n-button>
@@ -10,6 +14,9 @@
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import { renderIcon } from "@/core/utils/icon.utils";
 import { useDialog } from "naive-ui";
+import { usePermission } from "@/core/composables/usePermission";
+
+const { hasPermission } = usePermission();
 const dialog = useDialog();
 
 const emit = defineEmits(["edit", "delete"]);
@@ -23,6 +30,7 @@ const options = [
     label: "Editar",
     key: "edit",
     icon: renderIcon("edit-2"),
+    show: hasPermission(["module-price.edit"]),
     props: {
       onClick: () => emit("edit"),
     },
@@ -31,6 +39,7 @@ const options = [
     label: "Eliminar",
     key: "delete",
     icon: renderIcon("trash", "red"),
+    show: hasPermission(["module-price.delete"]),
     props: {
       style: {
         color: "red",
@@ -60,4 +69,3 @@ const options = [
   },
 ];
 </script>
-

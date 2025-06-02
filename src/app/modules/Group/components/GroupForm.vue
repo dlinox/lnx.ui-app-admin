@@ -95,6 +95,7 @@
                       type="time"
                       v-model:value="value.schedule.startHour"
                       placeholder=""
+                      use-12-hours
                       style="width: 100%"
                     />
                   </n-form-item>
@@ -115,6 +116,7 @@
               </n-row>
               <div class="absolute top-0 right-0">
                 <n-button
+                  v-if="hasPermission(['group.delete'])"
                   secondary
                   type="error"
                   :render-icon="renderIcon('trash')"
@@ -163,7 +165,7 @@
           secondary
           type="primary"
           class="mt-4"
-          v-if="form.length > 0"
+          v-if="form.length > 0 && hasPermission(['group.create'])"
           @click="() => form.push(initGroupValues())"
         >
           Agregar grupo
@@ -172,7 +174,14 @@
       <template #footer>
         <n-flex justify="end">
           <n-button @click="() => (showModal = false)">Cancelar</n-button>
-          <n-button type="primary" @click="submit">Guardar</n-button>
+          <n-button
+            v-if="
+              hasPermission(['group.create']) || hasPermission(['group.edit'])
+            "
+            type="primary"
+            @click="submit"
+            >Guardar</n-button
+          >
         </n-flex>
       </template>
     </n-card>
@@ -203,6 +212,9 @@ import { MODALITIES } from "@/core/constants/modalities.constants";
 import { useDialog } from "naive-ui";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 
+import { usePermission } from "@/core/composables/usePermission";
+
+const { hasPermission } = usePermission();
 const dialog = useDialog();
 const emit = defineEmits(["update:modelValue", "success"]);
 

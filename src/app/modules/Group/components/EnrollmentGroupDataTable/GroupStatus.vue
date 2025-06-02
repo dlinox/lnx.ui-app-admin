@@ -4,7 +4,10 @@
       {{ status }}
     </n-button>
     <n-button
-      v-if="status == 'ABIERTO' || status == 'CERRADO' ? true : false"
+      v-if="
+        (status == 'ABIERTO' || status == 'CERRADO' ? true : false) &&
+        hasPermission(['group-manager.edit', 'group-manager.send-email'])
+      "
       tertiary
       @click="showModal = true"
     >
@@ -24,6 +27,8 @@ import { ref } from "vue";
 import FormManagerGroup from "@/app/modules/Group/components/FormManagerGroup/FormManagerGroup.vue";
 import { _changeStatusGroup } from "@/app/modules/Group/services/enrollment-group.services";
 
+import { usePermission } from "@/core/composables/usePermission";
+const { hasPermission } = usePermission();
 const emit = defineEmits(["success"]);
 
 defineProps<{

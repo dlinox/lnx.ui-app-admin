@@ -35,6 +35,8 @@
         <n-data-table
           key="id"
           remote
+          size="small"
+          :row-class-name="rowClassName"
           :single-line="false"
           :columns="columns"
           :data="items"
@@ -164,5 +166,18 @@ const init = async () => {
   await loadDataTable();
 };
 
+const rowClassName = ref((row: any) => {
+  console.log("Row Class Name", row.enrollmentModality);
+  if (row.enrollmentModality == 'VIRTUAL') {
+    return "enrollment-virtual";
+  }
+  return "";
+});
+
 init();
 </script>
+<style scoped>
+:deep(.enrollment-virtual td) {
+  background-color: rgba(184, 202, 243, 0.2) !important;
+}
+</style>

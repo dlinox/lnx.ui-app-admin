@@ -7,6 +7,10 @@ import {
   initValuesDataTablePagination,
 } from "@/core/types/DataTable.types";
 
+import { usePermission } from "@/core/composables/usePermission";
+
+const { hasPermission } = usePermission();
+
 export const _createColumns = (
   openModal: (item: GradeDeadlineDTO) => void
 ): DataTableColumns => [
@@ -15,8 +19,12 @@ export const _createColumns = (
     key: "ops",
     width: "80px",
     fixed: "left",
+
     render(rowData: any) {
       const rowItem = rowData as GradeDeadlineDTO;
+      if (!hasPermission(["grade-deadline.extencion"])) {
+        return null;
+      }
       return h(
         NButton,
         {

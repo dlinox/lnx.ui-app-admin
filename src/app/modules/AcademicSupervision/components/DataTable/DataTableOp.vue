@@ -1,5 +1,14 @@
 <template>
-  <n-dropdown :options="options" placement="bottom-start">
+  <n-dropdown
+    :options="options"
+    placement="bottom-start"
+    v-if="
+      hasPermission([
+        'academic-supervision.edit',
+        'academic-supervision.delete',
+      ])
+    "
+  >
     <n-button>
       <LnxIcon icon-name="setting-5" size="20" />
     </n-button>
@@ -10,6 +19,9 @@
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import { renderIcon } from "@/core/utils/icon.utils";
 import { useDialog } from "naive-ui";
+
+import { usePermission } from "@/core/composables/usePermission";
+const { hasPermission } = usePermission();
 const dialog = useDialog();
 
 const emit = defineEmits(["edit", "delete"]);
@@ -26,11 +38,13 @@ const options = [
     props: {
       onClick: () => emit("edit"),
     },
+    show: hasPermission(["academic-supervision.edit"]),
   },
   {
     label: "Eliminar",
     key: "delete",
     icon: renderIcon("trash", "red"),
+    show: hasPermission(["academic-supervision.delete"]),
     props: {
       style: {
         color: "red",

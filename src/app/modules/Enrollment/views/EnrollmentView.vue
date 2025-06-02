@@ -1,122 +1,136 @@
 <template>
-  <n-card
-    :segmented="{
-      header: true,
-      footer: true,
-      content: true,
-    }"
+  <template
+    v-if="
+      hasPermission([
+        'enrollment.create',
+        'enrollment.create-special',
+        'enrollment.edit',
+        'enrollment.print-record',
+      ])
+    "
   >
-    <template #header>
-      <h6 class="text-sm text-gray-500">
-        Matriculas
-      </h6>
-      Realizar la matricula de los estudiantes
-    </template>
-    <template #header-extra>
-      <n-button
-        :render-icon="renderIcon('additem')"
-        type="primary"
-        @click="showModal = true"
-      >
-        Estudiante
-      </n-button>
-    </template>
-    <template #action>
-      <n-divider title-placement="left" style="margin: 0 0 1rem 0">
-        Buscar estudiantes
-      </n-divider>
-      <n-row gutter="16">
-        <n-col span="5">
-          <n-input
-            type="text"
-            v-model:value="search.documentNumber"
-            placeholder="N° de Documento"
-          />
-        </n-col>
-        <n-col span="7">
-          <n-input
-            type="text"
-            v-model:value="search.name"
-            placeholder="Nombre"
-          />
-        </n-col>
-        <n-col span="6">
-          <n-input
-            type="text"
-            v-model:value="search.lastNameFather"
-            placeholder="Apellido Paterno"
-          />
-        </n-col>
-        <n-col span="6">
-          <n-input
-            type="text"
-            v-model:value="search.lastNameMother"
-            placeholder="Apellido Materno"
-          />
-        </n-col>
-      </n-row>
-    </template>
-  </n-card>
-
-  <n-list hoverable clickable>
-    <template #header>
-      <div style="text-align: end">
-        <i style="padding: 0 1rem; color: #999; font-size: 0.8rem">
-          Se muestran los 10 mejores resultados de la busqueda |
-          <strong> Total de resultados: {{ listStudent.length }} </strong>
-        </i>
-      </div>
-    </template>
-    <n-list-item
-      style="margin: 0 1rem"
-      v-for="student in listStudent"
-      :key="student.id"
+    <n-card
+      :segmented="{
+        header: true,
+        footer: true,
+        content: true,
+      }"
     >
-      <n-thing
-        :title="`${student.name} ${student.lastName}`"
-        :description="`${
-          student.documentType ? student.documentType : '-'
-        }    ${student.documentNumber ? student.documentNumber : '-'}`"
-      >
-        <n-tag :bordered="false">
-          {{ student.studentType }}
-        </n-tag>
-      </n-thing>
+      <template #header>
+        <h6 class="text-sm text-gray-500">Matriculas</h6>
+        Realizar la matricula de los estudiantes
+      </template>
+      <template #header-extra>
+        <n-button
+          :render-icon="renderIcon('additem')"
+          type="primary"
+          @click="showModal = true"
+        >
+          Estudiante
+        </n-button>
+      </template>
+      <template #action>
+        <n-divider title-placement="left" style="margin: 0 0 1rem 0">
+          Buscar estudiantes
+        </n-divider>
+        <n-row gutter="16">
+          <n-col span="5">
+            <n-input
+              type="text"
+              v-model:value="search.documentNumber"
+              placeholder="N° de Documento"
+            />
+          </n-col>
+          <n-col span="7">
+            <n-input
+              type="text"
+              v-model:value="search.name"
+              placeholder="Nombre"
+            />
+          </n-col>
+          <n-col span="6">
+            <n-input
+              type="text"
+              v-model:value="search.lastNameFather"
+              placeholder="Apellido Paterno"
+            />
+          </n-col>
+          <n-col span="6">
+            <n-input
+              type="text"
+              v-model:value="search.lastNameMother"
+              placeholder="Apellido Materno"
+            />
+          </n-col>
+        </n-row>
+      </template>
+    </n-card>
 
-      <div class="pt-3 text-end">
-        <n-space align="center" justify="end">
-          <n-button
-            class="ms-2"
-            @click="
-              router.push({
-                name: 'EnrollmentStudent',
-                params: { id: student.id },
-              })
-            "
-          >
-            Matricular
-          </n-button>
-          <n-button
-            @click="
-              router.push({
-                name: 'EnrollmentSpecialStudent',
-                params: { id: student.id },
-              })
-            "
-          >
-            Matriculas Especiales
-          </n-button>
-        </n-space>
-      </div>
-    </n-list-item>
-  </n-list>
-  <StudentForm
-    v-if="!loadingView"
-    v-model="showModal"
-    :item="null"
-    :selectables="selectables"
-    @success="onRegister"
-  />
+    <n-list hoverable clickable>
+      <template #header>
+        <div style="text-align: end">
+          <i style="padding: 0 1rem; color: #999; font-size: 0.8rem">
+            Se muestran los 10 mejores resultados de la busqueda |
+            <strong> Total de resultados: {{ listStudent.length }} </strong>
+          </i>
+        </div>
+      </template>
+      <n-list-item
+        style="margin: 0 1rem"
+        v-for="student in listStudent"
+        :key="student.id"
+      >
+        <n-thing
+          :title="`${student.name} ${student.lastName}`"
+          :description="`${
+            student.documentType ? student.documentType : '-'
+          }    ${student.documentNumber ? student.documentNumber : '-'}`"
+        >
+          <n-tag :bordered="false">
+            {{ student.studentType }}
+          </n-tag>
+        </n-thing>
+
+        <div class="pt-3 text-end">
+          <n-space align="center" justify="end">
+            <n-button
+              class="ms-2"
+              @click="
+                router.push({
+                  name: 'EnrollmentStudent',
+                  params: { id: student.id },
+                })
+              "
+              v-if="hasPermission(['enrollment.create'])"
+            >
+              Matricular
+            </n-button>
+            <n-button
+              @click="
+                router.push({
+                  name: 'EnrollmentSpecialStudent',
+                  params: { id: student.id },
+                })
+              "
+              v-if="hasPermission(['enrollment.create-special'])"
+            >
+              Matriculas Especiales
+            </n-button>
+          </n-space>
+        </div>
+      </n-list-item>
+    </n-list>
+    <StudentForm
+      v-if="!loadingView"
+      v-model="showModal"
+      :item="null"
+      :selectables="selectables"
+      @success="onRegister"
+    />
+  </template>
+  <template v-else>
+    <AppNotAuthorization />
+  </template>
 </template>
 <script lang="ts" setup>
 import { ref, watch } from "vue";
@@ -135,6 +149,9 @@ import { __searchListStudent } from "@/app/modules/Student/services/student.serv
 import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
 
+import { usePermission } from "@/core/composables/usePermission";
+
+const { hasPermission } = usePermission();
 const router = useRouter();
 const showModal = ref<boolean>(false);
 const selectables = ref<any>({});
