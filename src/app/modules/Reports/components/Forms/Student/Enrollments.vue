@@ -147,7 +147,6 @@ const search = ref<any>({
 watch(
   search.value,
   debounce(async (value) => {
-    console.log(value);
     loading.value = true;
     listStudent.value = await __searchListStudent(value);
     loading.value = false;

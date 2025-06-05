@@ -166,7 +166,6 @@ const getModuleOptions = async () => {
   form.value.courseRecognitionId = null;
   form.value.courseId = null;
 
-  console.log("getModuleOptions");
   if (!form.value.studentId) {
     moduleOptions.value = [];
     courseOptions.value = [];

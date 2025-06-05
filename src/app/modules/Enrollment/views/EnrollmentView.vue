@@ -94,6 +94,8 @@
         <div class="pt-3 text-end">
           <n-space align="center" justify="end">
             <n-button
+              secondary
+              type="primary"
               class="ms-2"
               @click="
                 router.push({
@@ -106,6 +108,8 @@
               Matricular
             </n-button>
             <n-button
+              strong
+              secondary
               @click="
                 router.push({
                   name: 'EnrollmentSpecialStudent',
@@ -176,7 +180,6 @@ const onRegister = (e: any) => {
 watch(
   search.value,
   debounce(async (value) => {
-    console.log(value);
     loadingSearch.value = true;
     listStudent.value = await __searchListStudent(value);
     loadingSearch.value = false;

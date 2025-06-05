@@ -118,7 +118,6 @@ const handleValidatePayment = async () => {
     });
   }
   loadingPaymentValidation.value = false;
-  console.log("Validando pago", response);
 };
 
 const initForm = () => {

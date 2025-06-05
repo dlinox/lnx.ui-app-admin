@@ -113,7 +113,7 @@ const submitForm = async () => {
     if (valid) {
       form.value.curriculumId = props.curriculumId;
       form.value.periodId = props.periodId;
-      console.log("form", form.value);
+
       const response = await _clone(form.value);
       if (response) {
         emit("success");

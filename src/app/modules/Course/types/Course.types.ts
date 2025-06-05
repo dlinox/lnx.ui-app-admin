@@ -1,17 +1,4 @@
-/*
-  'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'hoursPractice' => $this->hours_practice,
-            'hoursTheory' => $this->hours_theory,
-            'credits' => $this->credits,
-            'area' => $this->area,
-            'module' => $this->module,
-            'curriculum' => $this->curriculum,
-            'preRequisite' => $this->pre_requisite,
-            'description' => $this->description,
-            'isEnabled' => $this->is_enabled,
-*/
+
 export interface CourseDTO {
   id: number | null;
   name: string | null;

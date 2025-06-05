@@ -26,23 +26,23 @@
                 :class="{ 'item-selected': form.groupId == item.id }"
                 :extra="item.price"
               >
-                <n-thing
-                  :title="`${item.group} - S/. ${item.price}`"
-                  @click="onSelectedGroup(item)"
-                >
+                <n-thing @click="onSelectedGroup(item)">
+                  <template #header>
+                    <n-tag
+                      :bordered="false"
+                      :type="item.modality == 'VIRTUAL' ? 'info' : 'success'"
+                      size="small"
+                    >
+                      {{ item.modality }}
+                    </n-tag>
+                    {{ `${item.group} - S/. ${item.price}` }}
+                  </template>
                   <template v-if="form.groupId == item.id" #header-extra>
                     <n-button
                       circle
                       type="warning"
                       :render-icon="renderIcon('verify')"
                     ></n-button>
-                  </template>
-                  <template #description>
-                    <n-space size="small">
-                      <n-tag :bordered="false" type="info" size="small">
-                        {{ item.modality }}
-                      </n-tag>
-                    </n-space>
                   </template>
 
                   Min.: <b> {{ item.minStudents }} </b> | Matriculados:
@@ -184,7 +184,6 @@ const form = ref<EnrollmentGroupFormDTO>(
 );
 
 const onSuccessPaymentValidation = (value: any) => {
-  console.log("Pago validado", value);
   form.value.payments.push(value.token);
   payments.value.push({
     token: value.token,
@@ -306,7 +305,7 @@ watch(showModal, (value) => {
 <style>
 .wrapper-list-groups {
   width: 100%;
-  max-height: 300px;
+  max-height: 200px;
   overflow-y: auto;
 }
 

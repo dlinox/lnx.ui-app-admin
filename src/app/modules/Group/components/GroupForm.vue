@@ -249,9 +249,6 @@ const removeItem = (index: number) => {
 };
 
 const submit = async () => {
-  console.log("Enviando formulario");
-  console.log(form.value);
-  console.log(props.item);
   loading.value = true;
   const response = await _saveItems(form.value, props.periodId, props.item!.id);
   if (response.status) {

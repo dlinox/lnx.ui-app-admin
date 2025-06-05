@@ -220,7 +220,6 @@ const coursePrice = ref<number>(0);
 const amount = ref<number>(0);
 
 const onSuccessPaymentValidation = (value: any) => {
-  console.log("Pago validado", value);
   form.value.payments.push(value.token);
   payments.value.push({
     token: value.token,
@@ -317,7 +316,6 @@ const handleSubmit = async () => {
     }
     loading.value = false;
   }
-  console.log("Guardando matricula", form.value);
 };
 
 const init = () => {

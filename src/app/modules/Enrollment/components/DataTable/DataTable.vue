@@ -167,7 +167,6 @@ const init = async () => {
 };
 
 const rowClassName = ref((row: any) => {
-  console.log("Row Class Name", row.enrollmentModality);
   if (row.enrollmentModality == 'VIRTUAL') {
     return "enrollment-virtual";
   }

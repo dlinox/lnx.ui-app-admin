@@ -36,5 +36,8 @@ export const menuItem = (params: MenuItemDTO): MenuOption => ({
   icon: params.iconName ? renderIcon(params.iconName) : undefined,
   children: params.children,
   type: params.children ?? "item",
-  show: hasPermission(params.permissions || [])  || params.key === "Dashboard",
+  show:
+    hasPermission(params.permissions || []) ||
+    params.key === "Dashboard" ||
+    params.key === "Profile",
 });
