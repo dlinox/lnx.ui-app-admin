@@ -2,7 +2,7 @@ import {
   type DataTablePaginationDTO,
   initValuesDataTablePagination,
 } from "@/core/types/DataTable.types";
-import type { DataTableColumns } from "naive-ui";
+import { NTag, type DataTableColumns } from "naive-ui";
 import { h } from "vue";
 import DataTableOp from "./DataTableOp.vue";
 
@@ -49,7 +49,27 @@ export const _createColumns = (
       {
         title: "Estado de mat.",
         key: "enrollmentStatus",
+
         minWidth: "150px",
+        render(rowData: any) {
+          const rowItem = rowData as any;
+          return h(
+            NTag,
+            {
+              // 'MATRICULADO', 'RESERVADO', 'RETIRADO', 'EXPULSADO', 'CANCELADO'
+              type: rowItem.enrollmentStatus === "MATRICULADO"
+                ? "info"
+                : rowItem.enrollmentStatus === "RESERVADO"
+                ? "warning"
+                : "error",
+              size: "small",
+              bordered: false,
+            },
+            {
+              default: () => rowItem.enrollmentStatus,
+            }
+          );
+        },
       },
     ],
   },

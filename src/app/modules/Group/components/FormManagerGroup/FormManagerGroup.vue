@@ -74,7 +74,7 @@
                 form.status === "CERRADO"
                   ? "Las inscripciones virtuales para este grupo están cerradas, pero aún puede realizarse la matrícula de manera presencial."
                   : form.status === "CANCELADO"
-                  ? "Los estudiantes no podrán realizar la matrícula de manera presencial ni virtual, y los estudiantes que ya están matriculados serán desvinculados del grupo, sus inscripciones pasarán a un estado de 'CANCELADO'."
+                  ? "Los estudiantes no podrán realizar la matrícula de manera presencial ni virtual, y los estudiantes que ya están matriculados en el grupo serán desvinculados; su matrícula pasará a un estado de 'RESERVADO'."
                   : "Las inscripciones estan habilitada para todos los estudiantes, tanto virtual como presencialmente."
               }}
             </n-alert>

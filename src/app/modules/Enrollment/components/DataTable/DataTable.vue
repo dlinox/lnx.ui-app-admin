@@ -1,22 +1,32 @@
 <template>
   <div style="border-bottom: 1px solid #e9e9e9">
     <n-row :gutter="12" class="p-4 flex justify-between">
-      <n-col :span="6">
-        <n-select
-          v-model:value="request.filters.periodId"
-          placeholder="Seleccionar Periodo Académico"
-          filterable
-          :options="optionsPeirod"
-          :loading="loadingSearchPeriod"
-          clearable
-          remote
-          size="large"
-          :virtual-scroll="false"
-          @search="debouncedhandleSearchPeriod"
-          @update:value="reLoadDataTable"
-        />
-      </n-col>
       <n-col :span="12">
+        <n-space>
+          <n-select
+            v-model:value="request.filters.periodId"
+            placeholder="Seleccionar Periodo Académico"
+            filterable
+            :options="optionsPeirod"
+            :loading="loadingSearchPeriod"
+            clearable
+            remote
+            size="large"
+            :virtual-scroll="false"
+            @search="debouncedhandleSearchPeriod"
+            @update:value="reLoadDataTable"
+          />
+          <n-button
+          v-if="request.filters.periodId"
+            size="large"
+            :render-icon="renderIcon('convertshape')"
+            @click="showModalReservation = true"
+          >
+            Reservas
+          </n-button>
+        </n-space>
+      </n-col>
+      <n-col :span="10">
         <n-input
           size="large"
           placeholder="Buscar"
@@ -61,10 +71,19 @@
     :enrollmetGroup="enrollmetGroup"
     @success="reLoadDataTable"
   />
+
+  <ReservationEnrollments
+    v-model="showModalReservation"
+    :periodId="request.filters.periodId"
+    @success="reLoadDataTable"
+    @cancel="showModalReservation = false"
+    @update:modelValue="showModalReservation = $event"
+  />
 </template>
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import EnrollmentGroupForm from "@/app/modules/Enrollment/components/Form/EnrollmentGroupForm.vue";
+import ReservationEnrollments from "@/app/modules/Enrollment/components/Form/ReservationEnrollments.vue";
 
 import {
   type DataTableRequestDTO,
@@ -82,7 +101,10 @@ import { _loadDataTable } from "@/app/modules/Enrollment/services/enrollment.ser
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
 import type { SelectOption } from "naive-ui";
+import { renderIcon } from "@/core/utils/icon.utils";
+
 const showModal = ref<boolean>(false);
+const showModalReservation = ref<boolean>(false);
 
 const loadingSearchPeriod = ref<boolean>(false);
 const optionsPeirod = ref<SelectOption[]>([]);
@@ -167,7 +189,7 @@ const init = async () => {
 };
 
 const rowClassName = ref((row: any) => {
-  if (row.enrollmentModality == 'VIRTUAL') {
+  if (row.enrollmentModality == "VIRTUAL") {
     return "enrollment-virtual";
   }
   return "";

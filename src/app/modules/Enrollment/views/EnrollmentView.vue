@@ -17,21 +17,17 @@
       }"
     >
       <template #header>
-        <h6 class="text-sm text-gray-500">Matriculas</h6>
-        Realizar la matricula de los estudiantes
+        <h6 class="text-sm text-gray-500">Matrícula</h6>
+        Matrícula de Estudiantes
       </template>
       <template #header-extra>
-        <n-button
-          :render-icon="renderIcon('additem')"
-          type="primary"
-          @click="showModal = true"
-        >
-          Estudiante
+        <n-button type="primary" @click="showModal = true">
+          Nuevo Estudiante
         </n-button>
       </template>
       <template #action>
         <n-divider title-placement="left" style="margin: 0 0 1rem 0">
-          Buscar estudiantes
+          Buscar estudiante
         </n-divider>
         <n-row gutter="16">
           <n-col span="5">
@@ -139,7 +135,6 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { renderIcon } from "@/core/utils/icon.utils";
 import { _createColumns } from "@/app/modules/Course/configs/dataTable.configs";
 import debounce from "@/core/utils/debounce.utils";
 import StudentForm from "@/app/modules/Student/components/StudentForm.vue";

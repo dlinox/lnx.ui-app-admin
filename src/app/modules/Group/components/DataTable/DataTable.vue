@@ -2,13 +2,15 @@
   <div style="border-bottom: 1px solid #e9e9e9">
     <n-row :gutter="12" style="padding: 12px 16px">
       <n-col :span="12" class="self-center">
-        <n-button
-          v-if="hasPermission(['group.clone'])"
-          :render-icon="renderIcon('convertshape')"
-          @click="showModalClone = true"
-        >
-          Clonar grupos
-        </n-button>
+        <n-space>
+          <n-button
+            v-if="hasPermission(['group.clone'])"
+            :render-icon="renderIcon('convertshape')"
+            @click="showModalClone = true"
+          >
+            Clonar grupos
+          </n-button>
+        </n-space>
       </n-col>
       <n-col :span="12">
         <n-input
@@ -57,6 +59,7 @@
     :curriculumId="curriculumId"
     @success="reLoadDataTable"
   />
+
 </template>
 <script setup lang="ts">
 import { reactive, computed, ref, watch } from "vue";

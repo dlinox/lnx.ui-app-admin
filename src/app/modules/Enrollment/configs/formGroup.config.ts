@@ -6,6 +6,7 @@ export const _getFormInitValues = (): EnrollmentGroupFormDTO => {
     studentId: null,
     groupId: null,
     payments: [],
+    includeEnrollmentPrice: false,
   };
 };
 
@@ -20,5 +21,6 @@ export const _getFormRules = () => {
         message: "Obligatorio",
       },
     ],
+    
   };
 };

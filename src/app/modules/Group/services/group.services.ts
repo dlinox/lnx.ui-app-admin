@@ -64,9 +64,7 @@ export const _saveItems = async (
   }
 };
 
-export const _deleteItem = async (
-  request: GroupFormDTO
-): Promise<boolean> => {
+export const _deleteItem = async (request: GroupFormDTO): Promise<boolean> => {
   try {
     await http.delete("/group", { data: { id: request.id } });
     return true;
@@ -75,12 +73,18 @@ export const _deleteItem = async (
   }
 };
 
-
-export const _clone = async (
-  request: any
-): Promise<boolean> => {
+export const _clone = async (request: any): Promise<boolean> => {
   try {
     await http.post("/group/clone", request);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const _reservations = async (request: any): Promise<boolean> => {
+  try {
+    await http.post("/group/reservations", request);
     return true;
   } catch (error) {
     return false;
@@ -94,7 +98,7 @@ export const _getTeacherOptions = async (): Promise<any[]> => {
   } catch (error) {
     return [];
   }
-}
+};
 
 export const _getLaboratoryOptions = async (): Promise<any[]> => {
   try {
@@ -103,16 +107,13 @@ export const _getLaboratoryOptions = async (): Promise<any[]> => {
   } catch (error) {
     return [];
   }
-}
+};
 
-
-export const _saveGroupStatus = async (
-  request: any
-): Promise<boolean> => {
+export const _saveGroupStatus = async (request: any): Promise<boolean> => {
   try {
     await http.post("/group/save-status", request);
     return true;
   } catch (error) {
     return false;
   }
-}
+};

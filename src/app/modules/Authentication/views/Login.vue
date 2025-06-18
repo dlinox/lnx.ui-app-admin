@@ -52,7 +52,7 @@
         </n-form-item>
       </n-form>
       <div class="text-center w-full text-slate-500 text-xs">
-        © {{ new Date().getFullYear() }} Instituto de Informática - UNAP. v1.0
+        © {{ new Date().getFullYear() }} Instituto de Informática - UNAP. v1.1
       </div>
     </div>
   </div>

@@ -88,7 +88,7 @@
       class="px-3 py-2 text-end text-xs"
     >
       <span>
-        © {{ new Date().getFullYear() }} Instituto de Informática - UNAP. v1.0
+        © {{ new Date().getFullYear() }} Instituto de Informática - UNAP. v1.1
       </span>
     </n-layout-footer>
   </n-layout>

@@ -95,12 +95,12 @@
                 <td class="text-end px-4 py-2">S/. {{ item.amount }}</td>
               </tr>
               <tr class="border-b-2 border-gray-500">
-                <td class="px-4 py-2">Total pagado</td>
+                <td class="px-4 py-2">Total importe</td>
                 <td class="px-4 py-2 font-bold text-lg text-end">
                   S/.
                   {{
                     payments.reduce(
-                      (acc, item: any) => acc + parseInt(item.amount),
+                      (acc, item: any) => acc + parseFloat(item.amount),
                       0
                     )
                   }}
@@ -110,6 +110,20 @@
                 <td class="px-4 py-2">Total a pagar</td>
                 <td class="px-4 py-2 font-bold text-lg text-end">
                   S/. {{ amount }}
+                </td>
+              </tr>
+
+              <tr class="bg-gray-100" v-if="enrollmentPrice > 0">
+                <td class="px-4 py-2">
+                  ¿Incluye matrícula?
+                  <strong> S/. {{ enrollmentPrice }}</strong>
+                </td>
+                <td class="px-4 py-2 font-bold text-lg text-end">
+                  <n-switch
+                    :disabled="!form.groupId"
+                    v-model:value="form.includeEnrollmentPrice"
+                    @update:value="handleIncludeEnrollmentPrice"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -179,9 +193,20 @@ const groupItems = ref<any>([]);
 const payments = ref<PaymentDTO[]>([]);
 const amount = ref<number>(0);
 
+const enrollmentPrice = ref<number>(0);
+const groupPrice = ref<number>(0);
+
 const form = ref<EnrollmentGroupFormDTO>(
   Object.assign({}, { ..._getFormInitValues() })
 );
+
+const handleIncludeEnrollmentPrice = (value: boolean) => {
+  if (value) {
+    amount.value = Number(groupPrice.value) + Number(enrollmentPrice.value);
+  } else {
+    amount.value = Number(groupPrice.value);
+  }
+};
 
 const onSuccessPaymentValidation = (value: any) => {
   form.value.payments.push(value.token);
@@ -195,13 +220,46 @@ const onSuccessPaymentValidation = (value: any) => {
 const onSelectedGroup = (item: any) => {
   if (form.value.groupId && form.value.groupId != item.id) {
     form.value.groupId = item.id;
-    amount.value = item.price;
+    enrollmentPrice.value = item.enrollmentPrice;
+    groupPrice.value = item.groupPrice;
+
+    if (props.enrollmetGroup) {
+      if (props.enrollmetGroup.withEnrollment) {
+        form.value.includeEnrollmentPrice = true;
+        amount.value = item.groupPrice + item.enrollmentPrice;
+      } else {
+        form.value.includeEnrollmentPrice = false;
+        amount.value = item.groupPrice;
+      }
+    } else {
+      form.value.includeEnrollmentPrice = item.requireEnrollmentPrice;
+      amount.value = item.price;
+    }
   } else if (form.value.groupId == item.id) {
     form.value.groupId = null;
     amount.value = 0;
+    enrollmentPrice.value = 0;
+    groupPrice.value = 0;
+    form.value.includeEnrollmentPrice = false;
   } else {
     form.value.groupId = item.id;
-    amount.value = item.price;
+    // amount.value = item.price;
+    //
+    enrollmentPrice.value = item.enrollmentPrice;
+    groupPrice.value = item.groupPrice;
+
+    if (props.enrollmetGroup) {
+      if (props.enrollmetGroup.withEnrollment) {
+        form.value.includeEnrollmentPrice = true;
+        amount.value = item.groupPrice + item.enrollmentPrice;
+      } else {
+        form.value.includeEnrollmentPrice = false;
+        amount.value = item.groupPrice;
+      }
+    } else {
+      form.value.includeEnrollmentPrice = item.requireEnrollmentPrice;
+      amount.value = item.price;
+    }
   }
 };
 
@@ -228,7 +286,7 @@ const removePayment = (index: number) => {
 
 const validatePayments = () => {
   let total = payments.value.reduce(
-    (acc, item: any) => acc + parseInt(item.amount),
+    (acc, item: any) => acc + parseFloat(item.amount),
     0
   );
   return total >= amount.value ? null : "El monto pagado es menor al total";
@@ -274,7 +332,9 @@ const init = async () => {
   form.value.payments = [];
   form.value.groupId = null;
   amount.value = 0;
+
   await getEnabledGroupEnrollment();
+
   if (props.enrollmetGroup) {
     let group = groupItems.value.find(
       (item: any) => item.id == props.enrollmetGroup.groupId
@@ -282,6 +342,13 @@ const init = async () => {
     if (group) {
       form.value.groupId = group.id;
       amount.value = group.price;
+      enrollmentPrice.value = group.enrollmentPrice;
+      groupPrice.value = group.groupPrice;
+      form.value.includeEnrollmentPrice = props.enrollmetGroup.withEnrollment;
+
+      if (!form.value.includeEnrollmentPrice) {
+        amount.value = Number(groupPrice.value);
+      }
     }
     form.value.id = props.enrollmetGroup.id;
     await getPayments(props.enrollmetGroup.id);
