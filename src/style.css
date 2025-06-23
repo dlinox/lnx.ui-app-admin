@@ -16,3 +16,7 @@
   border-top: 1px solid #EAEAEA;
 
 }
+
+.no-padding .n-card__content {
+  padding: 0;
+}

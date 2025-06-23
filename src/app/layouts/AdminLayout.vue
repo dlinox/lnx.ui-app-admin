@@ -315,6 +315,13 @@ const menuOptions = ref<MenuOption[]>([
     ]),
     children: [
       menuItem({
+        label: "Ingreso de Notas",
+        key: "Grade",
+        route: "Grade",
+        iconName: "archive-book",
+        permissions: ["enrollment-grade.view", "enrollment-grade.create"],
+      }),
+      menuItem({
         label: "Acta de Notas",
         key: "AcademicRecord",
         route: "AcademicRecord",
