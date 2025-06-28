@@ -4,6 +4,7 @@ export interface PaymentFormDTO {
   date: string | null;
   sequenceNumber: string | null;
   paymentTypeId: number;
+  paymentFile: File | null;
 }
 
 export interface PaymentDTO {

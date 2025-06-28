@@ -15,6 +15,7 @@ export const _getFormInitValues = (): PaymentFormDTO => {
     date: null,
     sequenceNumber: null,
     paymentTypeId: 7,
+    paymentFile: null,
   };
 };
 

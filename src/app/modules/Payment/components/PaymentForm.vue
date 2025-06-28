@@ -56,6 +56,19 @@
             </n-form-item>
           </n-col>
           <n-col span="24">
+            <n-form-item path="paymentFile" label="Archivo de pago">
+              <input
+                class="border w-full p-2 rounded"
+                ref="fileInput"
+                @change="onUploadFile"
+                :show-button="false"
+                :accept="'image/*'"
+                type="file"
+                placeholder=""
+              />
+            </n-form-item>
+          </n-col>
+          <n-col span="24">
             <n-button
               :loading="loadingPaymentValidation"
               secondary
@@ -98,6 +111,45 @@ const showModal = computed({
 const formRef = ref<FormInst | null>(null);
 const form = ref<PaymentFormDTO>({} as PaymentFormDTO);
 const formRules = computed(() => _getFormRules(form.value.paymentTypeId));
+const fileInput = ref<null>(null);
+
+const onUploadFile = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+
+  if (!target.files || target.files.length === 0) {
+    form.value.paymentFile = null;
+    return;
+  }
+
+  const file = target.files[0];
+
+  // Validar tipo de archivo
+  if (
+    ![
+      "image/jpeg",
+      "image/gif",
+      "image/jpg",
+      "image/png",
+      "image/webp",
+    ].includes(file.type)
+  ) {
+    alert("El archivo debe ser una imagen válida (JPEG, PNG o WEBP).");
+    form.value.paymentFile = null;
+    target.value = ""; // Resetea el input
+    return;
+  }
+
+  // Validar tamaño (5 MB = 5 * 1024 * 1024 bytes)
+  if (file.size > 5 * 1024 * 1024) {
+    alert("El archivo no debe superar los 5 MB.");
+    form.value.paymentFile = null;
+    target.value = ""; // Resetea el input
+    return;
+  }
+
+  // Si pasa las validaciones
+  form.value.paymentFile = file;
+};
 
 const handleValidatePayment = async () => {
   if (formRef.value) {
