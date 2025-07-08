@@ -15,6 +15,26 @@
           </template>
         </n-input>
       </n-col>
+      <n-col :span="24" class="mt-2" v-if="selectedItems.length">
+        <n-alert :show-icon="false">
+          Seleccione uno, el cual permanecerá en la lista de estudiantes, los
+          demás serán eliminados de la lista y sus datos relacionados serán
+          asociados al estudiante seleccionado.
+          <br />
+          <strong class="text-red-500">* Esta acción es irreversible.</strong>
+          <n-space class="mt-2">
+            <n-button
+              strong
+              secondary
+              v-for="item in selectedItems"
+              :key="item.id"
+              @click="openFormModalWithAssociatedItems(item, selectedItems)"
+            >
+              {{ item.code }}
+            </n-button>
+          </n-space>
+        </n-alert>
+      </n-col>
     </n-row>
     <n-row>
       <n-col :span="24">
@@ -30,6 +50,7 @@
           :loading="loadingTable"
           @update:page="onPageChange"
           @update:page-size="onPageSizeChange"
+          v-model:checked-row-keys="checkedRowKeys"
         />
       </n-col>
     </n-row>
@@ -44,12 +65,13 @@
   <StudentForm
     v-model="showModal"
     :item="editItem"
+    :associatedItems="associatedItems"
     @success="reLoadDataTable"
     :selectables="selectables"
   />
 </template>
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 
 import debounce from "@/core/utils/debounce.utils";
 import LnxIcon from "@/core/components/LnxIcon.vue";
@@ -79,6 +101,7 @@ import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/s
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
 import type { TableColumns } from "naive-ui/es/data-table/src/interface";
 
+const checkedRowKeys = ref<number[]>([]);
 const loadingTable = ref(false);
 const items = ref<StudentDataTableItemDTO[]>([]);
 const showModal = ref<boolean>(false);
@@ -97,7 +120,14 @@ const selectables = ref<any>({});
 
 const columns = ref<TableColumns>([]);
 
+const selectedItems = computed(() => {
+  return items.value.filter((item) => checkedRowKeys.value.includes(item.id));
+});
+
+const associatedItems = ref<StudentDataTableItemDTO[] | null>(null);
+
 const reLoadDataTable = async () => {
+  checkedRowKeys.value = [];
   request.value.page = 1;
   console.log("reloading data table");
   await loadDataTable();
@@ -129,8 +159,18 @@ const onPageSizeChange = async (pageSize: number) => {
   await loadDataTable();
 };
 
+const openFormModalWithAssociatedItems = (
+  item: StudentDataTableItemDTO,
+  _associatedItems: StudentDataTableItemDTO[]
+) => {
+  editItem.value = item;
+  associatedItems.value = _associatedItems.filter((e) => e.id !== item.id);
+  showModal.value = true;
+};
+
 const openFormModal = (item: StudentDataTableItemDTO | null) => {
   editItem.value = item;
+  associatedItems.value = null;
   showModal.value = true;
 };
 

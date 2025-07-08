@@ -16,6 +16,10 @@ export const _createColumns = (
   createUser: (item: StudentDataTableItemDTO) => void
 ): DataTableColumns => [
   {
+    type: "selection",
+    fixed: "left",
+  },
+  {
     title: "Ops.",
     key: "ops",
     width: "80px",
@@ -31,7 +35,7 @@ export const _createColumns = (
           onDelete: () => {
             deleteItem(rowItem);
           },
-          onCreateUser : () => {
+          onCreateUser: () => {
             createUser(rowItem);
           },
           item: rowItem,

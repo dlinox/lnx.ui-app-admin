@@ -86,6 +86,29 @@ export const _updateItem = async (
   }
 };
 
+export const _associatedItem = async (
+  request: any
+): Promise<ResponseServiceDTO<StudentDTO | StudentFormErrorsDTO>> => {
+  try {
+    let reponse = await http.post("/student/associated", request);
+    return {
+      status: true,
+      data: reponse.data.data as StudentFormDTO,
+    };
+  } catch (error: any) {
+    if (error.response.status === 422) {
+      return {
+        status: false,
+        data: error.response.data.errors as StudentFormErrorsDTO,
+      };
+    }
+    return {
+      status: false,
+      data: null,
+    };
+  }
+};
+
 export const _deleteItem = async (
   request: StudentDataTableItemDTO
 ): Promise<boolean> => {
