@@ -67,6 +67,22 @@ export const _pdfEnabledGroups = async (request: any) => {
         responseType: "blob",
       }
     );
+    pdfDownload(response.data, `reporte-grupos-aperturados`);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const _pdfAvailableGroups = async (request: any) => {
+  try {
+    const response = await http.post(
+      `${baseUrl}group/available-groups`,
+      request,
+      {
+        responseType: "blob",
+      }
+    );
     pdfDownload(response.data, `reporte-grupos-habilitados`);
     return true;
   } catch (error) {

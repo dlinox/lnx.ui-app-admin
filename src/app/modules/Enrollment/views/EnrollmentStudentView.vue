@@ -120,8 +120,11 @@
                     <n-thing :title="`${course.code} - ${course.name}`">
                       <template #header-extra>
                         <n-button
-                          v-if="course.enrollmentGroups.length == 0 ||
-                            course.enrollmentGroups.filter((obj: any) => obj.groupStatus == 'ABIERTO').length == 0"
+                          v-if="
+                          periodStore.enrollment?.period
+                          &&
+                          (course.enrollmentGroups.length == 0 ||
+                            course.enrollmentGroups.filter((obj: any) => obj.period == periodStore.enrollment?.period).length == 0)"
                           type="primary"
                           @click="openEnrollmentGroupModal(course.id)"
                         >
@@ -136,7 +139,6 @@
                           </n-tag>
                         </n-space>
                       </template>
-
                       <n-table
                         v-if="course.enrollmentGroups.length > 0"
                         :single-line="false"
