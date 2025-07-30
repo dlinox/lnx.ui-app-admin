@@ -5,6 +5,7 @@ import {
 import { NTag, type DataTableColumns } from "naive-ui";
 import { h } from "vue";
 import DataTableOp from "./DataTableOp.vue";
+import DataTablePayments from "./DataTablePayments.vue";
 
 export const _createColumns = (
   openEnrollmentGroupModal: (item: any) => void,
@@ -71,6 +72,18 @@ export const _createColumns = (
           );
         },
       },
+      {
+        // paymentFiles
+        minWidth: "80px",
+        title: "Pagos",
+        key: "payments",
+        render(rowData: any) {
+          const rowItem = rowData as any;
+          return h(DataTablePayments, {
+            payments: rowItem.payments,
+          });
+        },
+      }
     ],
   },
 

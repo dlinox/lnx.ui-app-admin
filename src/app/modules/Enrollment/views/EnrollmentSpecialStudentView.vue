@@ -86,6 +86,26 @@
                 </strong>
               </n-tag>
             </template>
+            <div
+              class="flex bg-gray-100 p-4 -mx-6 -mt-6 mb-4"
+              v-permission="['enrollment.extraordinary']"
+            >
+              <n-row>
+                <n-col span="24">
+                  <n-select
+                    v-model:value="periodSelectId"
+                    placeholder="Seleccionar Periodo Académico"
+                    filterable
+                    :options="periodItems"
+                    :loading="loadingPeriod"
+                    clearable
+                    remote
+                    size="large"
+                    :virtual-scroll="false"
+                    @search="debouncedhandleSearchPeriod"
+                /></n-col>
+              </n-row>
+            </div>
             <n-collapse>
               <n-collapse-item
                 v-for="item in studentEnrollment?.enrollments"
@@ -98,14 +118,13 @@
                     {{ item.isExtracurricular ? "(Extracurricular)" : "" }}
                   </h2>
                 </template>
+
                 <n-list hoverable clickable>
                   <n-list-item v-for="course in item.courses" :key="course.id">
                     <n-thing :title="`${course.code} - ${course.name}`">
                       <template #header-extra>
                         <n-button
                           v-if="
-                              periodStore.enrollment?.period
-                              &&
                               (course.enrollmentGroups.length == 0 ||
                               course.enrollmentGroups.filter((obj: any) => obj.period == periodStore.enrollment?.period).length == 0)"
                           type="primary"
@@ -181,7 +200,8 @@
                               <EditEnrollmentGroup
                                 v-if="
                                   periodStore.enrollment?.period ==
-                                  enrollmentGroup.period
+                                    enrollmentGroup.period ||
+                                  enrollmentGroup.periodId == periodSelectId
                                 "
                                 :item="enrollmentGroup"
                                 @resetEnrollment="
@@ -229,6 +249,7 @@
       :curriculumId="curriculumId"
       :courseId="courseId"
       :enrollmetGroup="enrollmetGroup"
+      :periodId="periodSelectId"
       :isSpecial="true"
       @success="getStudentEnrollmentSpecial"
     />
@@ -253,7 +274,10 @@ import {
 import { __getStudentTypesForSelect } from "@/app/modules/StudentType/services/studentType.services";
 import { __getInfoById } from "@/app/modules/Student/services/student.services";
 import { __getDocumentTypesForSelect } from "@/app/modules/DocumentType/services/documentType.services";
-import { __searchCurriculums } from "@/app/shared/services/selectables.services";
+import {
+  __searchPeriods,
+  __searchCurriculums,
+} from "@/app/shared/services/selectables.services";
 import EnrollmentGroupForm from "@/app/modules/Enrollment/components/Form/EnrollmentGroupForm.vue";
 
 import { usePeriodStore } from "@/app/store/period.stores";
@@ -261,6 +285,7 @@ import { usePeriodStore } from "@/app/store/period.stores";
 import EditEnrollmentGroup from "@/app/modules/Enrollment/components/EditEnrollmentGroup/EditEnrollmentGroup.vue";
 
 import { usePermission } from "@/core/composables/usePermission";
+import debounce from "@/core/utils/debounce.utils";
 
 const { hasPermission } = usePermission();
 
@@ -273,6 +298,8 @@ const showModal = ref<boolean>(false);
 const curriculumId = ref<number | null>(null);
 const periodCurrent = ref<any | null>(null);
 const curriculumItems = ref<any>([]);
+const periodItems = ref<any[]>([]);
+const loadingPeriod = ref<boolean>(false);
 
 const loadingStudentInfo = ref<boolean>(true);
 const student = ref<any>({});
@@ -280,6 +307,17 @@ const loadingStudentEnrollment = ref<boolean>(true);
 const studentEnrollment = ref<any | null>(null);
 const courseId = ref<number | null>(null);
 const enrollmetGroup = ref<any | null>(null);
+const periodSelectId = ref<number | null>(null);
+
+const debouncedhandleSearchPeriod = debounce((search) => {
+  handleSearchPeriod(search);
+}, 400);
+
+const handleSearchPeriod = async (search: string) => {
+  loadingPeriod.value = true;
+  periodItems.value = await __searchPeriods(search);
+  loadingPeriod.value = false;
+};
 
 const downloadEnrollmentPDF = async (enrollmentGroupId: number) => {
   let response = await _downloadEnrollmentPDF({ id: enrollmentGroupId });
@@ -326,6 +364,7 @@ const openEnrollmentGroupModal = (
 const initView = async () => {
   curriculumItems.value = await __searchCurriculums("");
   curriculumId.value = curriculumItems.value[0].value;
+  await handleSearchPeriod("");
   getStudentInfo();
   getStudentEnrollmentSpecial();
 };

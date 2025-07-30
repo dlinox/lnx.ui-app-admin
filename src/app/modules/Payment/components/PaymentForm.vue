@@ -62,7 +62,7 @@
                 ref="fileInput"
                 @change="onUploadFile"
                 :show-button="false"
-                :accept="'image/*'"
+                :accept="'image/*,application/pdf'"
                 type="file"
                 placeholder=""
               />
@@ -123,7 +123,6 @@ const onUploadFile = (event: Event) => {
 
   const file = target.files[0];
 
-  // Validar tipo de archivo
   if (
     ![
       "image/jpeg",
@@ -131,9 +130,10 @@ const onUploadFile = (event: Event) => {
       "image/jpg",
       "image/png",
       "image/webp",
+      "application/pdf",
     ].includes(file.type)
   ) {
-    alert("El archivo debe ser una imagen válida (JPEG, PNG o WEBP).");
+    alert("El archivo debe ser una imagen válida (JPEG, PNG, WEBP o PDF).");
     form.value.paymentFile = null;
     target.value = ""; // Resetea el input
     return;

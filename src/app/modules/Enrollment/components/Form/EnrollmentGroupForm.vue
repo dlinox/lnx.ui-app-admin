@@ -175,6 +175,7 @@ const props = defineProps<{
   isSpecial: boolean;
   studentId: any;
   curriculumId: any;
+  periodId?: any;
   courseId: any;
   enrollmetGroup: any | null;
 }>();
@@ -269,6 +270,7 @@ const getEnabledGroupEnrollment = async () => {
     curriculumId: props.curriculumId,
     courseId: props.courseId,
     isSpecial: props.isSpecial,
+    periodId: props.periodId,
   });
 
   groupItems.value = response.data;
@@ -300,6 +302,7 @@ const handleSubmit = async () => {
     const response = await _enrollmentGroupUpdate({
       ...form.value,
       isSpecial: props.isSpecial,
+      periodId: props.periodId,
     });
     if (response.status) {
       emit("success");
@@ -311,6 +314,7 @@ const handleSubmit = async () => {
     const response = await _enrollmentGroupStore({
       ...form.value,
       isSpecial: props.isSpecial,
+      periodId: props.periodId,
     });
     if (response.status) {
       emit("success");

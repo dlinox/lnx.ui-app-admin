@@ -196,6 +196,7 @@ const props = defineProps<{
   modelValue: boolean;
   studentId: any;
   curriculumId: any;
+  periodId: any;
 }>();
 
 const showModal = computed({
@@ -267,14 +268,12 @@ const onSelectedGroup = (item: any) => {
   if (form.value.groupId && form.value.groupId != item.id) {
     form.value.groupId = item.id;
     amount.value = coursePrice.value;
-  } 
-  else if (form.value.groupId == item.id) {
+  } else if (form.value.groupId == item.id) {
     form.value.groupId = null;
     amount.value = 0.0;
-  } 
-  else {
+  } else {
     form.value.groupId = item.id;
-    amount.value =  coursePrice.value;
+    amount.value = coursePrice.value;
   }
 };
 
@@ -283,6 +282,7 @@ const getEnabledGroupEnrollment = async (courseId: number) => {
     studentId: props.studentId,
     curriculumId: props.curriculumId,
     courseId: courseId,
+    periodId: props.periodId,
   });
 
   groupItems.value = response.data;
@@ -309,7 +309,10 @@ const handleSubmit = async () => {
     const valid = await formRef.value.validate();
     if (!valid) return;
     loading.value = true;
-    const response = await _enrollmentModuleStore(form.value);
+    const response = await _enrollmentModuleStore({
+      periodId: props.periodId,
+      ...form.value,
+    });
     if (response.status) {
       emit("success");
       showModal.value = false;
