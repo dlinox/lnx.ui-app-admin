@@ -42,6 +42,18 @@ export const _getGroupsByModuleAndPeriod = async (request: any) => {
   }
 };
 
+
+export const _pdfAttendanceTemplate = async (request: any) => {
+  try {
+    const response = await http.post(`${baseUrl}group/attendance-template`, request, {
+      responseType: "blob",
+    });
+    pdfDownload(response.data, `reporte-plantilla-asistencia`);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 export const _pdfGroupEnrolledStudents = async (request: any) => {
   try {
     const response = await http.post(

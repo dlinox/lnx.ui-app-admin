@@ -58,8 +58,23 @@
             description="Recaudación por grupo en un periodo"
           />
         </n-list-item>
+        <n-list-item>
+          <template #suffix>
+            <n-button @click="attendanceTemplateFormModal = true">
+              Generar reporte
+            </n-button>
+          </template>
+          <n-thing
+            title="Plantilla de Asistencia"
+            description="Plantilla de asistencia para grupos"
+          />
+        </n-list-item>
       </n-list>
     </n-card>
+    <AttendanceGroups
+      v-model="attendanceTemplateFormModal"
+      :curriculumOptions="curriculumOptions"
+    />
     <GroupEnrollmentForm
       v-model="groupEnrollmentFormModal"
       :curriculumOptions="curriculumOptions"
@@ -77,6 +92,7 @@ import { ref } from "vue";
 import { __searchCurriculums } from "@/app/shared/services/selectables.services";
 import type { SelectOption } from "naive-ui";
 
+import AttendanceGroups from "@/app/modules/Reports/components/Forms/Group/AttendanceGroups.vue";
 import AvailableGroupsForm from "@/app/modules/Reports/components/Forms/Group/AvailableGroups.vue";
 import EnabledGroupsForm from "@/app/modules/Reports/components/Forms/Group/EnabledGroups.vue";
 import GroupEnrollmentForm from "@/app/modules/Reports/components/Forms/Group/Enrollments.vue";
@@ -91,6 +107,7 @@ const enabledGroupsFormModal = ref<boolean>(false);
 const availableGroupsFormModal = ref<boolean>(false);
 const groupEnrollmentFormModal = ref<boolean>(false);
 const collectionGroupsFormModal = ref<boolean>(false);
+const attendanceTemplateFormModal = ref<boolean>(false);
 
 const initView = async () => {
   curriculumOptions.value = await __searchCurriculums("");

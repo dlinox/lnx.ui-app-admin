@@ -2,7 +2,7 @@
   <n-modal v-model:show="showModal">
     <n-card
       style="width: 800px"
-      :title="'Generar Reporte - Matrículas'"
+      :title="'Generar Plantilla - Asistencia'"
       :segmented="{
         content: true,
         footer: true,
@@ -120,7 +120,7 @@
 import { ref, computed, watch } from "vue";
 
 import {
-  _pdfGroupEnrolledStudents,
+  _pdfAttendanceTemplate,
   _getGroupsByModuleAndPeriod,
 } from "@/app/modules/Reports/services/report.services";
 import { __searchModulesByCurriculum } from "@/app/shared/services/selectables.services";
@@ -158,7 +158,7 @@ const search = ref<any>({
 
 const pdfGroupEnrolledStudents = async (groupId: number) => {
   loading.value = true;
-  await _pdfGroupEnrolledStudents({ groupId: groupId });
+  await _pdfAttendanceTemplate({ groupId: groupId });
   loading.value = false;
 };
 
