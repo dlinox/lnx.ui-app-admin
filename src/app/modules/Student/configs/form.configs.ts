@@ -21,13 +21,7 @@ export const _getStudentFormInitValues = (): StudentFormDTO => {
 
 export const _getStudentFormRules = () => {
   return {
-    code: [
-      {
-        required: true,
-        trigger: ["blur", "input"],
-        message: "Obligatorio",
-      },
-    ],
+    code: [],
     documentTypeId: [
       {
         type: "number",
@@ -63,7 +57,7 @@ export const _getStudentFormRules = () => {
         type: "email",
         trigger: ["blur", "input"],
         message: "Correo inválido",
-      }
+      },
     ],
     phone: [],
     address: [],

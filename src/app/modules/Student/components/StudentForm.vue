@@ -20,7 +20,15 @@
       @submit="handleSubmit"
     >
       <n-row :gutter="16">
-        <n-col :span="screenSize === 'sm' ? 12 : 8">
+        <n-col :span="screenSize === 'sm' ? 12 : 6">
+          <n-form-item path="code" label="Código de Estudiante">
+            <n-input
+              v-model:value="form.code"
+              clearable
+            />
+          </n-form-item>
+        </n-col>
+                <n-col :span="screenSize === 'sm' ? 12 : 6">
           <n-form-item path="studentTypeId" label="Tipo de Estudiante">
             <n-select
               v-model:value="form.studentTypeId"
@@ -31,7 +39,7 @@
             />
           </n-form-item>
         </n-col>
-        <n-col :span="screenSize === 'sm' ? 12 : 8">
+        <n-col :span="screenSize === 'sm' ? 12 : 6">
           <n-form-item path="documentTypeId" label="Tipo de Documento">
             <n-select
               v-model:value="form.documentTypeId"
@@ -43,7 +51,7 @@
           </n-form-item>
         </n-col>
 
-        <n-col :span="screenSize === 'sm' ? 12 : 8">
+        <n-col :span="screenSize === 'sm' ? 12 : 6">
           <n-form-item
             path="documentNumber"
             label="Número de Documento"
