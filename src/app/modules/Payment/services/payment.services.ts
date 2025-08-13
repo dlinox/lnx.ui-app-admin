@@ -18,10 +18,10 @@ export const _validatePayment = async (
         reader.onerror = reject;
       });
     }
-    
+
     let reponse = await http.post(`/payment/validate`, auxForm);
     return reponse.data.data as PaymentResponseDTO;
   } catch (error: any) {
-    return { token: null };
+    return { token: null, amount: 0 };
   }
 };

@@ -23,4 +23,5 @@ export interface PaymentFormErrorsDTO {
 
 export interface PaymentResponseDTO {
   token: string | null;
+  amount: number;
 }

@@ -164,6 +164,7 @@ const handleValidatePayment = async () => {
 
   if (response.token !== null) {
     showModal.value = false;
+    form.value.amount = response.amount;
     emit("success", {
       token: response.token,
       payment: form.value,
