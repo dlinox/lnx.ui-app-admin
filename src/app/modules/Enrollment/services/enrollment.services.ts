@@ -1,10 +1,11 @@
-
 import { useHttp } from "@/core/composables/useHttp";
 
-import { initValuesDataTableResponse, type DataTableResponseDTO } from "@/core/types/DataTable.types";
+import {
+  initValuesDataTableResponse,
+  type DataTableResponseDTO,
+} from "@/core/types/DataTable.types";
 import type { ResponseServiceDTO } from "@/core/types/Response.types";
 import type { PaymentDTO } from "../../Payment/types/Payment.types";
-
 
 const http = useHttp();
 
@@ -140,14 +141,11 @@ export const _getStudentEnrollment = async (
   periodId: number
 ): Promise<any> => {
   try {
-    let reponse = await http.post(
-      `/enrollment/student-enrollment-avaliable`,
-      {
-        studentId: id,
-        curriculumId: curriculumId,
-        periodId: periodId,
-      }
-    );
+    let reponse = await http.post(`/enrollment/student-enrollment-avaliable`, {
+      studentId: id,
+      curriculumId: curriculumId,
+      periodId: periodId,
+    });
 
     return reponse.data.data;
   } catch (error: any) {
@@ -163,6 +161,23 @@ export const _getModulesEnrollment = async (
     let reponse = await http.post(
       `/enrollment/${studentId}/student/${curriculumId}/curriculum`
     );
+    return {
+      status: true,
+      data: reponse.data.data as any,
+    };
+  } catch (error: any) {
+    return {
+      status: false,
+      data: [],
+    };
+  }
+};
+
+export const _getModulesEnrollmentByStudent = async (
+  studentId: any
+): Promise<ResponseServiceDTO<any>> => {
+  try {
+    let reponse = await http.get(`/enrollment/student/${studentId}/modules`);
     return {
       status: true,
       data: reponse.data.data as any,
@@ -195,7 +210,9 @@ export const _downloadEnrollmentPDF = async (request: any): Promise<any> => {
 };
 
 // Route::post('get-enrollment-group-payments', [EnrollmentController::class, 'getEnrollmentGroupPayments']);
-export const _getEnrollmentGroupPayments = async (request: any): Promise<PaymentDTO[]> => {
+export const _getEnrollmentGroupPayments = async (
+  request: any
+): Promise<PaymentDTO[]> => {
   try {
     let reponse = await http.post(`/enrollment/get-enrollment-group-payments`, {
       ...request,
@@ -205,7 +222,6 @@ export const _getEnrollmentGroupPayments = async (request: any): Promise<Payment
     return [];
   }
 };
-
 
 export const _getStudentEnrollmentSpecial = async (
   id: any,
@@ -226,5 +242,4 @@ export const _getStudentEnrollmentSpecial = async (
   } catch (error: any) {
     return null;
   }
-}
-
+};

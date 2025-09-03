@@ -1,7 +1,7 @@
 <template>
   <n-modal v-model:show="showModal">
     <n-card
-      style="width: 500px"
+      style="width: 600px"
       :title="isSpecial ? 'Matricula Especial' : 'Matricula Regular'"
       :segmented="{
         content: true,
@@ -12,7 +12,38 @@
       aria-modal="true"
     >
       <n-row :gutter="[16, 16]">
-        <n-col span="24">
+        <n-col span="24" v-if="enrollmetGroup" class="border-b">
+          <n-collapse>
+            <n-collapse-item title="Cambiar curso" name="1">
+              <template #header-extra>
+                <LnxIcon icon-name="book" class="text-gray-400" />
+              </template>
+              <n-form-item label="Módulo">
+                <n-select
+                  placeholder="Seleccionar modulo"
+                  :options="moduleItems"
+                  :virtual-scroll="false"
+                  clearable
+                  filterable
+                  @update:value="onSelectedModule"
+                />
+              </n-form-item>
+
+              <n-form-item label="Curso">
+                <n-select
+                  v-model:value="filterForm.courseId"
+                  placeholder="Seleccionar curso"
+                  :options="courseItems"
+                  :virtual-scroll="false"
+                  clearable
+                  filterable
+                  @update:value="onSelectedCourse"
+                />
+              </n-form-item>
+            </n-collapse-item>
+          </n-collapse>
+        </n-col>
+        <n-col span="24" >
           <div class="wrapper-list-groups">
             <n-list hoverable clickable>
               <template #header>
@@ -157,16 +188,19 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue";
 import {
+  _getModulesEnrollmentByStudent,
   _enrollmentGroupStore,
   _getEnabledGroupEnrollment,
   _getEnrollmentGroupPayments,
   _enrollmentGroupUpdate,
 } from "@/app/modules/Enrollment/services/enrollment.services";
+import { __getItemsByModuleForSelect } from "@/app/modules/Course/services/course.services";
 import { renderIcon } from "@/core/utils/icon.utils";
 import type { PaymentDTO } from "@/app/modules/Payment/types/Payment.types";
 import type { EnrollmentGroupFormDTO } from "../../types/EnrollmentGroup.types";
 import { _getFormInitValues } from "../../configs/formGroup.config";
 import PaymentForm from "@/app/modules/Payment/components/PaymentForm.vue";
+import LnxIcon from "@/core/components/LnxIcon.vue";
 
 const emit = defineEmits(["update:modelValue", "success"]);
 
@@ -189,6 +223,8 @@ const showModal = computed({
 
 const showPaymentModal = ref<boolean>(false);
 
+const moduleItems = ref<any>([]);
+const courseItems = ref<any>([]);
 const groupItems = ref<any>([]);
 
 const payments = ref<PaymentDTO[]>([]);
@@ -200,6 +236,32 @@ const groupPrice = ref<number>(0);
 const form = ref<EnrollmentGroupFormDTO>(
   Object.assign({}, { ..._getFormInitValues() })
 );
+
+const filterForm = ref<any>({
+  moduleId: null,
+  courseId: null,
+});
+
+const getModulesByStudentItems = async () => {
+  const response = await _getModulesEnrollmentByStudent(props.studentId);
+  moduleItems.value = response.data;
+};
+
+const onSelectedModule = async (value: any) => {
+  courseItems.value = await __getItemsByModuleForSelect(value);
+  filterForm.value.courseId = null;
+};
+
+const onSelectedCourse = async () => {
+  const response = await _getEnabledGroupEnrollment({
+    studentId: props.studentId,
+    curriculumId: props.curriculumId,
+    courseId: filterForm.value.courseId,
+    isSpecial: props.isSpecial,
+    periodId: props.periodId,
+  });
+  groupItems.value = response.data;
+};
 
 const handleIncludeEnrollmentPrice = (value: boolean) => {
   if (value) {
@@ -340,6 +402,7 @@ const init = async () => {
   await getEnabledGroupEnrollment();
 
   if (props.enrollmetGroup) {
+    await getModulesByStudentItems();
     let group = groupItems.value.find(
       (item: any) => item.id == props.enrollmetGroup.groupId
     );
