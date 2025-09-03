@@ -20,6 +20,7 @@
               </template>
               <n-form-item label="Módulo">
                 <n-select
+                  v-model:value="filterForm.moduleId"
                   placeholder="Seleccionar modulo"
                   :options="moduleItems"
                   :virtual-scroll="false"
@@ -43,7 +44,7 @@
             </n-collapse-item>
           </n-collapse>
         </n-col>
-        <n-col span="24" >
+        <n-col span="24">
           <div class="wrapper-list-groups">
             <n-list hoverable clickable>
               <template #header>
@@ -250,17 +251,32 @@ const getModulesByStudentItems = async () => {
 const onSelectedModule = async (value: any) => {
   courseItems.value = await __getItemsByModuleForSelect(value);
   filterForm.value.courseId = null;
+
+  if (value == null) {
+    await onSelectedCourse();
+  }
 };
 
 const onSelectedCourse = async () => {
-  const response = await _getEnabledGroupEnrollment({
-    studentId: props.studentId,
-    curriculumId: props.curriculumId,
-    courseId: filterForm.value.courseId,
-    isSpecial: props.isSpecial,
-    periodId: props.periodId,
-  });
-  groupItems.value = response.data;
+  let _courseId = filterForm.value.courseId;
+  if (!_courseId) {
+    _courseId = props.courseId;
+    await init();
+  } else {
+    const response = await _getEnabledGroupEnrollment({
+      studentId: props.studentId,
+      curriculumId: props.curriculumId,
+      courseId: _courseId,
+      isSpecial: props.isSpecial,
+      periodId: props.periodId,
+    });
+    groupItems.value = response.data;
+    form.value.groupId = null;
+    amount.value = 0;
+    enrollmentPrice.value = 0;
+    groupPrice.value = 0;
+    form.value.includeEnrollmentPrice = false;
+  }
 };
 
 const handleIncludeEnrollmentPrice = (value: boolean) => {
@@ -412,6 +428,9 @@ const init = async () => {
       enrollmentPrice.value = group.enrollmentPrice;
       groupPrice.value = group.groupPrice;
       form.value.includeEnrollmentPrice = props.enrollmetGroup.withEnrollment;
+
+      filterForm.value.courseId = null;
+      filterForm.value.moduleId = null;
 
       if (!form.value.includeEnrollmentPrice) {
         amount.value = Number(groupPrice.value);
